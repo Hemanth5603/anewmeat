@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  get: ^4.6.6
+  sms_autofill: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -17,3 +19,11 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  fonts:
+    - family: poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+
+  assets:
+   - assets/icons/
