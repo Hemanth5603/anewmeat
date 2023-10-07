@@ -28,7 +28,7 @@ class _OTPState extends State<OTP> {
                 child: IconButton(
                   icon:const Icon(Icons.arrow_back_ios_new_rounded,size: 30,color: Color.fromARGB(255, 204, 32, 46),weight: 1,),
                   onPressed: (){
-                    Get.to(Login(),transition: Transition.leftToRight,duration: 300.milliseconds);
+                    Get.to(const Login(),transition: Transition.leftToRight,duration: 300.milliseconds);
                   },
                 ),
               ),
@@ -52,7 +52,7 @@ class _OTPState extends State<OTP> {
                 child: PinFieldAutoFill(
                   currentCode: otpCode,
                   decoration: BoxLooseDecoration(
-                    textStyle: TextStyle(fontFamily: 'poppins',color: Colors.black,fontSize: 20),
+                    textStyle: const TextStyle(fontFamily: 'poppins',color: Colors.black,fontSize: 20),
                   radius:const Radius.circular(8),
                   strokeColorBuilder:const FixedColorBuilder(
                     Color.fromARGB(255, 204, 32, 46))),
@@ -62,21 +62,20 @@ class _OTPState extends State<OTP> {
                       otpCode = code;
                     },
                   onCodeSubmitted: (val) {
-                    print("OnCodeSubmitted : $val");
-
+                    
                   }
                 )
               ),
               Container(
-                margin: EdgeInsets.only(left: w* 0.1,top: 20),
+                margin: EdgeInsets.only(left: w* 0.1,top: 0),
                 child: Row(
                   children: [
-                    Text("Didn't recieve OTP ?",style: TextStyle(fontFamily: 'poppins',fontSize: 16),),
-                    SizedBox(width: 10,),
+                    const Text("Didn't recieve OTP ?",style: TextStyle(fontFamily: 'poppins',fontSize: 14),),
+                    const SizedBox(width: 10,),
                     TextButton(onPressed: (){
 
                     },
-                    child: Text("Resend OTP",style: TextStyle(color:Color.fromARGB(255, 204, 32, 46),fontFamily: 'poppins',fontSize: 18),))
+                    child:const Text("Resend OTP",style: TextStyle(color:Color.fromARGB(255, 204, 32, 46),fontFamily: 'poppins',fontSize: 14),))
                   ],
                 ) ,
               ),

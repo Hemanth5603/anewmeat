@@ -7,7 +7,6 @@ class CustomButton extends StatefulWidget {
   double height;
   double width;
   final VoidCallback callback;
-  
   @override
   State<CustomButton> createState() => _CustomButtonState();
 }

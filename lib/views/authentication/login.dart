@@ -1,5 +1,6 @@
 import 'package:anewmeat/controllers/auth_controller.dart';
 import 'package:anewmeat/views/components/custom_button.dart';
+import 'package:anewmeat/views/components/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -38,7 +39,7 @@ class _LoginState extends State<Login> {
                 padding: EdgeInsets.only(left: 40),
                 child: Text("Enter Mobile Number to Login",style:TextStyle(fontFamily: 'poppins',fontSize: 16),),
               ),
-              customTextField(w, h * 0.07,1,TextInputType.number,"Phone Number"),
+              CustomTextField(w:w,h: h * 0.07,maxLines: 1,keyboardType: TextInputType.number,hint:"Phone Number"),
               SizedBox(
                 width: w,
                 height : h * 0.15,
@@ -91,5 +92,5 @@ OutlineInputBorder getBorder() {
       borderRadius: BorderRadius.all(Radius.circular(8.0)),
       borderSide: BorderSide(width: 1.5, color: Color.fromARGB(255, 204, 32, 46)),
       gapPadding: 2,
-    );
-  }
+  );
+}
