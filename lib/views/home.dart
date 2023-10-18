@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
       bottomNavigationBar:WaterDropNavBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Constants.customRed,
         onItemSelected: (index){
           setState(() {
             selectedIndex = index;
@@ -43,8 +43,8 @@ class _HomeState extends State<Home> {
                 curve: Curves.easeOutQuad);
         }, 
         selectedIndex: selectedIndex,
-        bottomPadding: 10,
-        waterDropColor :Constants().customRed,
+        bottomPadding: 15,
+        waterDropColor :Colors.white,
           barItems : <BarItem>[
             BarItem(filledIcon: Icons.home, outlinedIcon:Icons.home_outlined,),
             BarItem(filledIcon: Icons.shopping_cart, outlinedIcon:Icons.shopping_cart_outlined),

@@ -10,6 +10,6 @@ class Constants{
       const ProfilePage()
   ];
 
-  Color customRed =const Color.fromARGB(255, 206, 53, 65);
+  static Color customRed =const Color.fromARGB(255, 206, 53, 65);
 
 }

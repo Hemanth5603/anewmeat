@@ -4,7 +4,6 @@ import 'package:anewmeat/views/components/custom_button.dart';
 import 'package:anewmeat/views/components/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -14,6 +13,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  // ignore: prefer_typing_uninitialized_variables
   var otpCode;
   bool checkBoxValue = false;
   @override
