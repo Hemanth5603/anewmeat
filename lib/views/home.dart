@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
                 curve: Curves.easeOutQuad);
         }, 
         selectedIndex: selectedIndex,
-        bottomPadding: 15,
+        bottomPadding: 10,
         waterDropColor :Colors.white,
           barItems : <BarItem>[
             BarItem(filledIcon: Icons.home, outlinedIcon:Icons.home_outlined,),

@@ -5,6 +5,7 @@ import 'package:anewmeat/models/user_model.dart';
 import 'package:anewmeat/views/authentication/otp.dart';
 import 'package:anewmeat/views/authentication/signup.dart';
 import 'package:anewmeat/views/authorized/tabs/home_page.dart';
+import 'package:anewmeat/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
@@ -23,7 +24,7 @@ class AuthController extends GetxController{
   }
 
   void verifyOtp(){
-    Get.to(const HomePage(),transition: Transition.rightToLeft,duration: 300.milliseconds);
+    Get.to(const Home(),transition: Transition.rightToLeft,duration: 300.milliseconds);
   }
 
   void register() async {

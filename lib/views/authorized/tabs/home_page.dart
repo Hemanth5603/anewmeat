@@ -1,6 +1,12 @@
 import 'package:anewmeat/constants/app_constants.dart';
+import 'package:anewmeat/views/components/all_button.dart';
+import 'package:anewmeat/views/components/category_item.dart';
+import 'package:anewmeat/views/components/order_again_card.dart';
+import 'package:anewmeat/views/components/product_card.dart';
+import 'package:anewmeat/views/components/product_listing_card.dart';
+import 'package:anewmeat/views/products_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,12 +25,11 @@ class _HomePageState extends State<HomePage> {
         child: DefaultTabController(
           length: 1,
           child: NestedScrollView(
-            physics:const NeverScrollableScrollPhysics(),
             headerSliverBuilder: (context,isScrolled){
               return [
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.only(top: 5,left: 10),
+                    padding:const EdgeInsets.only(top: 5,left: 10),
                      child: Row(
                       children: [
                         Row(
@@ -62,14 +67,14 @@ class _HomePageState extends State<HomePage> {
                         Container(
                           width: w * 0.8,
                           height: h * 0.05,
-                          padding: EdgeInsets.all(12),
+                          padding:const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 228, 228, 228),
+                            color:const Color.fromARGB(255, 228, 228, 228),
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child:const Row(
                             children: [
-                              Icon(Icons.search,color: const Color.fromARGB(255, 33, 33, 33),),
+                              Icon(Icons.search,color: Color.fromARGB(255, 33, 33, 33),),
                               SizedBox(width: 10,),
                               Text("Search for Meat Items",style: TextStyle(fontFamily: 'poppins',fontSize: 14),)
                             ],
@@ -109,132 +114,192 @@ class _HomePageState extends State<HomePage> {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        categoryItem(w, h,"https://dao54xqhg9jfa.cloudfront.net/OMS-Category/d654ce6f-3b1a-efb1-ce66-64b3a4afb655/original/Chicken_(1)_(1).png","Chicken"),
-                        categoryItem(w, h,"https://dao54xqhg9jfa.cloudfront.net/OMS-Category/2119874c-38a6-df8c-22f1-5cd8a2eb4d80/original/Mutton_(1)_(1).png","Mutton"),
+                        GestureDetector(
+                          onTap: (){
+                            Get.to(const ProductsPage());
+                          },
+                          child: categoryItem(w, h,"https://dao54xqhg9jfa.cloudfront.net/OMS-Category/2119874c-38a6-df8c-22f1-5cd8a2eb4d80/original/Mutton_(1)_(1).png","Mutton")),
+                        GestureDetector(
+                          onTap: (){
+                          },
+                          child: categoryItem(w, h,"https://dao54xqhg9jfa.cloudfront.net/OMS-Category/d654ce6f-3b1a-efb1-ce66-64b3a4afb655/original/Chicken_(1)_(1).png","Chicken")
+                        ),
                         categoryItem(w, h,"https://dao54xqhg9jfa.cloudfront.net/OMS-Category/52ed9676-ec28-711e-dd8a-55d4ea17c324/original/Fish_(1)_(1)_(1).png","Sea Food"),
                         categoryItem(w, h,"https://dao54xqhg9jfa.cloudfront.net/OMS-Category/dfcc622c-de6a-7ad7-7329-23239fbab0af/original/Combo_(1).png","Combo"),
                       ],
                     ),
                   ),
                 ),
+                 SliverToBoxAdapter(
+                  child:Padding(
+                    padding:const EdgeInsets.all(10.0),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: w * 0.75,
+                          child:const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Looking for Frest Meat?",style: TextStyle(fontFamily: 'poppins',fontSize: 20,fontWeight: FontWeight.bold),),
+                              Text("Here's what you might like",style: TextStyle(fontFamily: 'poppins',fontSize: 16,))
+                            ],
+                          ),
+                        ),
+                        allButton(w, h)
+                      ],
+                    ),
+                  ) ,
+                ),
                 SliverToBoxAdapter(
-                  child: Container(
+                  child: SizedBox(
                     width: w,
                     height: h * 0.34,
                     child: ListView(
-                      scrollDirection: Axis.horizontal,
+                      scrollDirection: Axis.horizontal, 
                       children: [
-                        productItem(w,h,"https://assets.tendercuts.in/product/P/R/63c42955-a41b-45ce-98e1-cb7510eeac4f.jpg",
+                        productCard(w,h,"https://assets.tendercuts.in/product/P/R/63c42955-a41b-45ce-98e1-cb7510eeac4f.jpg",
                           "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true
                         ),
-                        productItem(w,h,"https://assets.tendercuts.in/product/C/H/a6b6b1db-2b6b-4129-a557-fbd9811c8888.webp",
-                          "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true
+                        productCard(w,h,"https://assets.tendercuts.in/product/C/H/a6b6b1db-2b6b-4129-a557-fbd9811c8888.webp",
+                          "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,false
                         ),
-                        productItem(w,h,"https://assets.tendercuts.in/product/P/R/f9d8d6f5-26df-44bf-9e1b-bf5687801870.jpg",
+                        productCard(w,h,"https://assets.tendercuts.in/product/P/R/f9d8d6f5-26df-44bf-9e1b-bf5687801870.jpg",
                           "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true
                         ),
                       ],
                     ),
                   ),
-                )
+                ),
+                SliverToBoxAdapter(
+                  child:Padding(
+                    padding:const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: w * 0.76,
+                          child:const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Flat 50% off on SEA FOODS",style: TextStyle(fontFamily: 'poppins',fontSize: 20,fontWeight: FontWeight.bold),),
+                              Text("Here's what you might like",style: TextStyle(fontFamily: 'poppins',fontSize: 16,))
+                            ],
+                          ),
+                        ),
+                        allButton(w,h)
+                      ],
+                    ),
+                  ) ,
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    width: w,
+                    height: h * 0.34,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal, 
+                      children: [
+                        productCard(w,h,"https://www.licious.in/_next/image?url=https%3A%2F%2Fdao54xqhg9jfa.cloudfront.net%2FOMS-ProductMerchantdising%2F1ea5ff1f-52f3-c7aa-953a-a4d287e40247%2Foriginal%2Fp0_tile_images-15_(2).jpg&w=384&q=75",
+                          "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true
+                        ),
+                        productCard(w,h,"https://www.licious.in/_next/image?url=https%3A%2F%2Fdao54xqhg9jfa.cloudfront.net%2FOMS-ProductMerchantdising%2F4f3ba1b6-7a8d-5938-5415-07789653b203%2Foriginal%2FMurrel_Fry_Cut.jpg&w=384&q=75",
+                          "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,false
+                        ),
+                        productCard(w,h,"https://www.licious.in/_next/image?url=https%3A%2F%2Fassets.licious.in%2FOMS-ProductMerchantdising%2F7eb50f35-dfa1-87db-aa2e-04eda16267f3%2Foriginal%2F1694450355159.jpg&w=384&q=75",
+                          "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true
+                        ),
+                        productCard(w,h,"https://www.licious.in/_next/image?url=https%3A%2F%2Fassets.licious.in%2FOMS-ProductMerchantdising%2F5b5f3fc7-a78e-c207-b643-24fb3123f92d%2Foriginal%2F1694596151996.jpg&w=384&q=75",
+                          "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Container(
+                    padding:const EdgeInsets.all(10),
+                    child:Row(
+                      children: [
+                        SizedBox(
+                          width: w * 0.75,
+                          child: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Order Again",style: TextStyle(fontSize:20,fontFamily: 'poppins',fontWeight: FontWeight.bold),),
+                              Text("You Ordered 3 Items",style: TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.grey))
+                            ],
+                          ),
+                        ),
+                        allButton(w, h),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    width: w,
+                    height: h * 0.2,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        orderAgainCard(w, h,"Chicken/Fish/Combo","1250","4 aug 2023","1 Chicken . 1 Fish Combo with Prawns",),
+                        orderAgainCard(w, h,"Chicken/Fish/Combo","1250","4 aug 2023","1 Chicken . 1 Fish Combo with Prawns",),
+                        orderAgainCard(w, h,"Chicken/Fish/Combo","1250","4 aug 2023","1 Chicken . 1 Fish Combo with Prawns",),
+                      ],
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: Container(
+                    padding:const EdgeInsets.all(10),
+                    child:Row(
+                      children: [
+                        SizedBox(
+                          width: w * 0.75,
+                          child: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("ALL Products",style: TextStyle(fontSize:20,fontFamily: 'poppins',fontWeight: FontWeight.bold),),
+                              Text("26 Total Items",style: TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.grey))
+                            ],
+                          ),
+                        ),
+                        allButton(w, h),
+                      ],
+                    ),
+                  ),
+                ),
               ];
             },
-            body: Container(),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-
-
-Widget categoryItem(w,h,imageURL,categoryName){
-  return GestureDetector(
-    child: Container(
-      width: w * 0.2,
-      height: h * 0.1,
-      margin:const EdgeInsets.all(10),
-
-      child: Column(
-        children: [
-          Container(
-            width: w * 0.16,
-            height: w * 0.16,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(imageURL),
-                fit: BoxFit.cover
-              )
-            ),
-          ),
-          const SizedBox(height: 5,),
-          Text(categoryName,style:const TextStyle(fontFamily: 'poppins',fontSize: 16,),)
-        ],
-      ),
-  
-    ),
-  );
-}
-
-
-Widget productItem(w,h,imageURL,productName,productDescription,quantity,originalPrice,finalPrice,offer,isOffer,isFreeDelivery){
-  return Container(
-    width: w * 0.5,
-    margin:const EdgeInsets.only(left: 10,right: 5),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(15),
-    ),
-    child: Stack(
-      children: [
-        Positioned(
-          child: Container(
-            width: w,
-            height: h * 0.15,
-            decoration: BoxDecoration(
-              borderRadius:const BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15)),
-              image: DecorationImage(
-                image: NetworkImage(imageURL),
-                fit: BoxFit.cover
-              )
-            ),
-          ),
-        ),
-        Positioned(
-          top: h * 0.15,
-          child:Container(
-            width: w * 0.5,
-            height: h * 0.15,
-            padding:const EdgeInsets.all(10),
-            decoration:const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15),bottomRight: Radius.circular(15)),
-              boxShadow: [
-                BoxShadow(color: Color.fromARGB(255, 225, 225, 225),blurRadius: 10)
-              ]
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            body: TabBarView(
               children: [
-                Text(productName,style: TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold),maxLines: 2,overflow: TextOverflow.ellipsis,),
-                Text(productDescription,style: TextStyle(fontFamily: 'poppins',fontSize: 10,color: Colors.grey),maxLines: 2,overflow: TextOverflow.ellipsis,),
-                Text(quantity,style: TextStyle(fontFamily: 'poppins',fontSize: 12,color: const Color.fromARGB(255, 68, 68, 68)),maxLines: 1,overflow: TextOverflow.ellipsis,),
-                SizedBox(height: 10,),
-                Row(
+                ListView(
                   children: [
-                    Text("₹" + originalPrice,style:const TextStyle(decoration: TextDecoration.lineThrough,fontFamily: 'poppins',fontSize: 14),),
-                    const SizedBox(width: 5,),
-                    Text("₹" + finalPrice,style: TextStyle(decoration: TextDecoration.lineThrough,fontFamily: 'poppins',fontSize: 16,color: Constants.customRed,fontWeight: FontWeight.bold),)
+                    productListingItem(w,h,"https://assets.tendercuts.in/product/P/R/63c42955-a41b-45ce-98e1-cb7510eeac4f.jpg",
+                      "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true),
+
+                    productListingItem(w,h,"https://assets.tendercuts.in/product/C/H/a6b6b1db-2b6b-4129-a557-fbd9811c8888.webp",
+                      "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true),
+
+                    productListingItem(w,h,"https://assets.tendercuts.in/product/S/F/75fcc3f5-8f77-4cb5-97e2-b82ff73ff9f3.webp",
+                      "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true),
+                    
+                    productListingItem(w,h,"https://assets.tendercuts.in/product/P/R/1806bbf4-76f4-48b2-a2b8-618b526bf044.webp",
+                      "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true),
+                    
+                    productListingItem(w,h,"https://assets.tendercuts.in/product/R/M/2fa6b2bd-884e-4ecb-ac32-09bd7134a854.webp",
+                      "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true),
+
+                    productListingItem(w,h,"https://assets.tendercuts.in/product/C/H/7bfc5e2d-3857-4f3e-a736-222c7a617b67.webp",
+                      "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true),
                   ],
                 )
               ],
-            ),
-          )
-        )
-      ],
-    ),
-
-  );
+            )
+          ),
+        ),
+      ),
+    ); 
+  }
 }
 
 
