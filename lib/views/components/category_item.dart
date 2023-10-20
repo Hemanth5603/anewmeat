@@ -13,6 +13,7 @@ Widget categoryItem(w,h,imageURL,categoryName){
             width: w * 0.16,
             height: w * 0.16,
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
               image: DecorationImage(
                 image: NetworkImage(imageURL),
                 fit: BoxFit.cover

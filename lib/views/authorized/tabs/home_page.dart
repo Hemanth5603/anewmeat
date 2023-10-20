@@ -118,14 +118,14 @@ class _HomePageState extends State<HomePage> {
                           onTap: (){
                             Get.to(const ProductsPage());
                           },
-                          child: categoryItem(w, h,"https://dao54xqhg9jfa.cloudfront.net/OMS-Category/2119874c-38a6-df8c-22f1-5cd8a2eb4d80/original/Mutton_(1)_(1).png","Mutton")),
+                          child: categoryItem(w, h,"https://assets.tendercuts.in/category/M/u/96059dfe-3207-4fda-9b96-b99f07eea4dc.jpg","Mutton")),
                         GestureDetector(
                           onTap: (){
                           },
-                          child: categoryItem(w, h,"https://dao54xqhg9jfa.cloudfront.net/OMS-Category/d654ce6f-3b1a-efb1-ce66-64b3a4afb655/original/Chicken_(1)_(1).png","Chicken")
+                          child: categoryItem(w, h,"https://assets.tendercuts.in/category/C/h/444c122b-a639-48ff-8078-5b9b5af74596.jpg","Chicken")
                         ),
-                        categoryItem(w, h,"https://dao54xqhg9jfa.cloudfront.net/OMS-Category/52ed9676-ec28-711e-dd8a-55d4ea17c324/original/Fish_(1)_(1)_(1).png","Sea Food"),
-                        categoryItem(w, h,"https://dao54xqhg9jfa.cloudfront.net/OMS-Category/dfcc622c-de6a-7ad7-7329-23239fbab0af/original/Combo_(1).png","Combo"),
+                        categoryItem(w, h,"https://assets.tendercuts.in/category/S/e/f9a8cb8c-ac77-44dd-9be2-e0e80c0db433.jpg","Sea Food"),
+                        categoryItem(w, h,"https://assets.tendercuts.in/category/C/o/fb564e26-8a77-4350-8e38-f5073ec8eae6.jpg","Combo"),
                       ],
                     ),
                   ),
