@@ -71,11 +71,11 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
 
-              SizedBox(
+              /*SizedBox(
                  width: w,
                 height : h * 0.1,
                 child: CustomButton(title: "Continue", height: h * 0.07, width: w * 0.8, callback: authController.register)
-              )
+              )*/
               
 
 
