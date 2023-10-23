@@ -1,4 +1,7 @@
 import 'package:anewmeat/constants/app_constants.dart';
+import 'package:anewmeat/controllers/category_controller.dart';
+import 'package:anewmeat/controllers/products_controller.dart';
+import 'package:anewmeat/models/category_model.dart';
 import 'package:anewmeat/views/components/all_button.dart';
 import 'package:anewmeat/views/components/category_item.dart';
 import 'package:anewmeat/views/components/order_again_card.dart';
@@ -7,6 +10,7 @@ import 'package:anewmeat/views/components/product_listing_card.dart';
 import 'package:anewmeat/views/products_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,6 +20,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var categoryController = Get.put(CategoryController());
+  var productController = Get.put(ProductController());
+
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -111,23 +118,19 @@ class _HomePageState extends State<HomePage> {
                   child: SizedBox(
                     width: w,
                     height: h * 0.15,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        GestureDetector(
-                          onTap: (){
-                            Get.to(const ProductsPage());
+                    child: Obx(
+                      () => categoryController.isLoading.value 
+                      ? const Center(
+                        child: CircularProgressIndicator(),
+                      ) 
+                        : ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: categoryController.categoryModel?.categories.length ?? 0,
+                          itemBuilder:(context,index){
+                            return categoryItem(w, h,"https://anewmeat.onrender.com/Chicken.jpg", categoryController.categoryModel?.categories[index].name);
                           },
-                          child: categoryItem(w, h,"https://assets.tendercuts.in/category/M/u/96059dfe-3207-4fda-9b96-b99f07eea4dc.jpg","Mutton")),
-                        GestureDetector(
-                          onTap: (){
-                          },
-                          child: categoryItem(w, h,"https://assets.tendercuts.in/category/C/h/444c122b-a639-48ff-8078-5b9b5af74596.jpg","Chicken")
-                        ),
-                        categoryItem(w, h,"https://assets.tendercuts.in/category/S/e/f9a8cb8c-ac77-44dd-9be2-e0e80c0db433.jpg","Sea Food"),
-                        categoryItem(w, h,"https://assets.tendercuts.in/category/C/o/fb564e26-8a77-4350-8e38-f5073ec8eae6.jpg","Combo"),
-                      ],
-                    ),
+                      )
+                    )
                   ),
                 ),
                  SliverToBoxAdapter(
@@ -272,26 +275,27 @@ class _HomePageState extends State<HomePage> {
             },
             body: TabBarView(
               children: [
-                ListView(
-                  children: [
-                    productListingItem(w,h,"https://assets.tendercuts.in/product/P/R/63c42955-a41b-45ce-98e1-cb7510eeac4f.jpg",
-                      "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true),
-
-                    productListingItem(w,h,"https://assets.tendercuts.in/product/C/H/a6b6b1db-2b6b-4129-a557-fbd9811c8888.webp",
-                      "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true),
-
-                    productListingItem(w,h,"https://assets.tendercuts.in/product/S/F/75fcc3f5-8f77-4cb5-97e2-b82ff73ff9f3.webp",
-                      "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true),
-                    
-                    productListingItem(w,h,"https://assets.tendercuts.in/product/P/R/1806bbf4-76f4-48b2-a2b8-618b526bf044.webp",
-                      "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true),
-                    
-                    productListingItem(w,h,"https://assets.tendercuts.in/product/R/M/2fa6b2bd-884e-4ecb-ac32-09bd7134a854.webp",
-                      "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true),
-
-                    productListingItem(w,h,"https://assets.tendercuts.in/product/C/H/7bfc5e2d-3857-4f3e-a736-222c7a617b67.webp",
-                      "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true),
-                  ],
+                Obx(
+                  () => productController.isLoading.value 
+                    ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                    : ListView.builder(
+                      itemCount: productController.productModel?.products.length ?? 0,
+                      itemBuilder:(context,index){
+                        return productListingItem(w, h,
+                         "https://anewmeat.onrender.com/Chicken.jpg",
+                        productController.productModel?.products[index].productName, 
+                        productController.productModel?.products[index].productDesc,
+                        productController.productModel?.products[index].servings, 
+                        productController.productModel?.products[index].originalPrice,
+                        productController.productModel?.products[index].finalPrice,
+                        productController.productModel?.products[index].discount,
+                        true, 
+                        productController.productModel?.products[index].isFreeDelivery
+                        );
+                      } ,
+                    )
                 )
               ],
             )
@@ -306,8 +310,30 @@ class _HomePageState extends State<HomePage> {
 
 
 
+//productListingItem(w,h,"https://assets.tendercuts.in/product/C/H/7bfc5e2d-3857-4f3e-a736-222c7a617b67.webp",
+                     // "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true),
 
 
+
+
+
+/*
+return FutureBuilder<CategoryModel>(
+                          future: categoryController.fetchCategories(),
+                          builder: (context,snapshot){
+                            if(snapshot.hasData){
+                              return ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: snapshot.data!.categories.length,
+                                itemBuilder: (context,index){
+                                  return categoryItem(w, h, "https://anewmeat.onrender.com/Chicken.jpg"/*snapshot.data!.categories[index].imageUrl*/, snapshot.data!.categories[index].name);
+                              },
+                            );
+                            }else{
+                              return const Center(child: CircularProgressIndicator());
+                            }
+                          },
+                        );*/
 
 
 

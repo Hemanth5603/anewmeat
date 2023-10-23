@@ -11,40 +11,48 @@ Widget productListingItem(w,h,imageURL,productName,productDescription,quantity,o
     height: h * 0.17,
     child: Row(
       children: [
-        Container(
-          width: w * 0.35,
-          height: h * 0.17,
-          decoration:BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            image: DecorationImage(
-              image: NetworkImage(imageURL),
-              fit: BoxFit.cover
+        Stack(
+          children: [
+            Container(
+              width: w * 0.35,
+              height: h * 0.17,
+              decoration:BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                image: DecorationImage(
+                  image: NetworkImage(imageURL),
+                  fit: BoxFit.cover
+                )
+              ),
+            ),
+            Positioned(
+              bottom: 8,
+              left:30,
+              child: addButton(w, h),
             )
-          ),
+          ],
         ),
-        SizedBox(width: 10,),
+        const SizedBox(width: 10,),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(productName,style:const TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold),),
-            Container(width:w * 0.56, child: Text(productDescription,style:const TextStyle(fontSize: 12,color: Colors.grey,fontFamily: 'poppins'),maxLines: 2,)),
+            SizedBox(width:w * 0.56,height: h * 0.04, child: Text(productDescription,style:const TextStyle(fontSize: 12,color: Colors.grey,fontFamily: 'poppins'),maxLines: 2,)),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(offer + "% OFF",style: TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold,color: Colors.green),),
-                SizedBox(width: 10,),
+                Text(offer + "% OFF",style:const TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold,color: Colors.green),),
+
                 freeDelivery(w, h)
               ],
             ),
             SizedBox(height: h * 0.03,),
             Row(
               children: [
-                Text("₹"+originalPrice,style: TextStyle(decoration: TextDecoration.lineThrough,fontSize: 14,color: Colors.grey,),),
-                SizedBox(width: 10,),
-                Text("₹"+finalPrice,style: TextStyle(decoration: TextDecoration.lineThrough,fontSize: 18,color: Constants.customRed,fontWeight: FontWeight.bold,fontFamily: 'poppins'),),
+                Text("₹$originalPrice",style:const TextStyle(decoration: TextDecoration.lineThrough,fontSize: 14,color: Colors.grey,),),
+                const SizedBox(width: 10,),
+                Text("₹$finalPrice",style: TextStyle(fontSize: 18,color: Constants.customRed,fontWeight: FontWeight.bold,fontFamily: 'poppins'),),
                 SizedBox(width: w*0.12,),
-                GestureDetector(
-                  child: addButton(w, h)
-                )
+                
               ],
             )
           ],
