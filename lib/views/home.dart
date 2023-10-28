@@ -1,4 +1,5 @@
 import 'package:anewmeat/constants/app_constants.dart';
+import 'package:anewmeat/views/authorized/product_page.dart';
 import 'package:anewmeat/views/authorized/tabs/cart_page.dart';
 import 'package:anewmeat/views/authorized/tabs/home_page.dart';
 import 'package:anewmeat/views/authorized/tabs/profile_page.dart';
@@ -57,7 +58,7 @@ class _HomeState extends State<Home> {
         children:const <Widget> [
           HomePage(),
           CartPage(),
-          ProfilePage(),
+          ProductPage(),
         ],
       )
     );

@@ -8,16 +8,16 @@ Widget productListingItem(w,h,imageURL,productName,productDescription,quantity,o
   return Container(
     margin:const EdgeInsets.all(10),
     width: w,
-    height: h * 0.17,
+    height: h * 0.2,
     child: Row(
       children: [
         Stack(
           children: [
             Container(
               width: w * 0.35,
-              height: h * 0.17,
+              height: h * 0.2,
               decoration:BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
                   image: NetworkImage(imageURL),
                   fit: BoxFit.cover
@@ -28,7 +28,18 @@ Widget productListingItem(w,h,imageURL,productName,productDescription,quantity,o
               bottom: 8,
               left:30,
               child: addButton(w, h),
-            )
+            ),
+            /*Positioned(
+              top: 10,
+              child: Container(
+                width: w * 0.2,
+                height: h * 0.03,
+                decoration: BoxDecoration(
+                  color: Constants.customRed,
+                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(15),topRight: Radius.circular(15))
+                ),
+              ),
+            )*/
           ],
         ),
         const SizedBox(width: 10,),
@@ -37,13 +48,16 @@ Widget productListingItem(w,h,imageURL,productName,productDescription,quantity,o
           children: [
             Text(productName,style:const TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold),),
             SizedBox(width:w * 0.56,height: h * 0.04, child: Text(productDescription,style:const TextStyle(fontSize: 12,color: Colors.grey,fontFamily: 'poppins'),maxLines: 2,)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(offer + "% OFF",style:const TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold,color: Colors.green),),
-
-                freeDelivery(w, h)
-              ],
+            SizedBox(
+              width: w * 0.56,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(offer + "% OFF",style:const TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold,color: Colors.green),),
+            
+                  freeDelivery(w, h)
+                ],
+              ),
             ),
             SizedBox(height: h * 0.03,),
             Row(

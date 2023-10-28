@@ -1,6 +1,6 @@
 import 'package:anewmeat/views/authentication/login.dart';
 import 'package:anewmeat/views/home.dart';
-import 'package:anewmeat/views/products_page.dart';
+import 'package:anewmeat/views/authorized/products_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 

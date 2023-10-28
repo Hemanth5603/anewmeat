@@ -4,5 +4,4 @@ class APIConstants{
   static String register = "register";
   static String getCategories = "getCategories";
   static String getProducts = "getProducts";
-
 }

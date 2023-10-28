@@ -1,3 +1,4 @@
+import 'package:anewmeat/constants/api_constants.dart';
 import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/category_controller.dart';
 import 'package:anewmeat/controllers/products_controller.dart';
@@ -7,7 +8,7 @@ import 'package:anewmeat/views/components/category_item.dart';
 import 'package:anewmeat/views/components/order_again_card.dart';
 import 'package:anewmeat/views/components/product_card.dart';
 import 'package:anewmeat/views/components/product_listing_card.dart';
-import 'package:anewmeat/views/products_page.dart';
+import 'package:anewmeat/views/authorized/products_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -127,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                           scrollDirection: Axis.horizontal,
                           itemCount: categoryController.categoryModel?.categories.length ?? 0,
                           itemBuilder:(context,index){
-                            return categoryItem(w, h,"https://anewmeat.onrender.com/Chicken.jpg", categoryController.categoryModel?.categories[index].name);
+                            return categoryItem(w, h, APIConstants.baseUrl + categoryController.categoryModel!.categories[0].imageUrl, categoryController.categoryModel?.categories[index].name);
                           },
                       )
                     )
@@ -277,7 +278,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Obx(
                   () => productController.isLoading.value 
-                    ? Center(
+                    ?const Center(
                       child: CircularProgressIndicator(),
                     )
                     : ListView.builder(
@@ -363,3 +364,16 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
     return false;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

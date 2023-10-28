@@ -1,5 +1,6 @@
 
 import 'package:anewmeat/constants/app_constants.dart';
+import 'package:anewmeat/views/components/add_button.dart';
 import 'package:anewmeat/views/components/free_delivery.dart';
 import 'package:flutter/material.dart';
 
@@ -44,12 +45,14 @@ Widget productCard(w,h,imageURL,productName,productDescription,quantity,original
                 Text(productName,style:const TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold),maxLines: 2,overflow: TextOverflow.ellipsis,),
                 Text(productDescription,style:const TextStyle(fontFamily: 'poppins',fontSize: 10,color: Colors.grey),maxLines: 2,overflow: TextOverflow.ellipsis,),
                 Text(quantity,style:const TextStyle(fontFamily: 'poppins',fontSize: 12,color: Color.fromARGB(255, 68, 68, 68)),maxLines: 1,overflow: TextOverflow.ellipsis,),
-                const SizedBox(height: 10,),
+                const SizedBox(height: 5,),
                 Row(
                   children: [
                     Text("₹" + originalPrice,style:const TextStyle(decoration: TextDecoration.lineThrough,fontFamily: 'poppins',fontSize: 14),),
                     const SizedBox(width: 5,),
                     Text("₹" + finalPrice,style: TextStyle(fontFamily: 'poppins',fontSize: 16,color: Constants.customRed,fontWeight: FontWeight.bold),),
+                    const SizedBox(width: 12,),
+                    addButton(w, h)
                   ],
                 )
               ],

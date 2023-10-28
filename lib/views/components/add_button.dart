@@ -8,6 +8,12 @@ Widget addButton(w,h){
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(15),
+      boxShadow: [
+        BoxShadow(
+          color: Color.fromARGB(255, 219, 219, 219),
+          blurRadius: 5
+        )
+      ]
       
     ),
     child: Center(child: Text("ADD",style: TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold,color: Constants.customRed,),)),

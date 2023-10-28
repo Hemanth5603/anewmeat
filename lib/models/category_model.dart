@@ -34,7 +34,7 @@ class CategoryModel {
 class CategoryModelElement {
     CategoryModelElement({
         this.id,
-        this.imageUrl,
+        required this.imageUrl,
         this.name,
         this.tag,
         this.isNew,
@@ -42,7 +42,7 @@ class CategoryModelElement {
     });
 
     String? id;
-    String? imageUrl;
+    String imageUrl;
     String? name;
     String? tag;
     String? isNew;
