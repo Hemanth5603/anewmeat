@@ -10,8 +10,9 @@ import 'package:http/http.dart' as http;
 class ProductController extends GetxController{
 
   var isLoading = false.obs;
-
+  var categoryName = "";
   ProductModel? productModel;
+
 
   @override
   void onInit() {
@@ -24,9 +25,8 @@ class ProductController extends GetxController{
     try{
       isLoading(true);
       final uri = Uri.parse(APIConstants.baseUrl + APIConstants.getProducts);
-      final headers = {'Content-Type': 'application/json'};
 
-      var response = await http.get(uri,headers: headers);
+      var response = await http.get(uri,headers: APIConstants.headers);
    
       if(response.statusCode == 200){
         var data = jsonDecode(response.body.toString());
@@ -40,5 +40,33 @@ class ProductController extends GetxController{
       isLoading(false);
     }
   }
+
+
+
+
+  Future<void> fetchCategoryProducts() async{
+    try{
+      isLoading(true);
+      final uri = Uri.parse(APIConstants.baseUrl +APIConstants.getProducts);
+
+      final body = {
+        "categorieName":categoryName
+      };
+
+      var response = await http.post(uri,headers: APIConstants.headers,body: body);
+
+      if(response.statusCode == 200){
+        var data = jsonDecode(response.body.toString());
+        productModel = ProductModel.fromJson(data);
+      }else{
+        print("Error Fetching specific products");
+      }
+    }catch(e){
+      print("$e");
+    }finally{
+      isLoading(false);
+    }
+  }
+
 
 }

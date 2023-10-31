@@ -1,5 +1,6 @@
 import 'package:anewmeat/constants/api_constants.dart';
 import 'package:anewmeat/constants/app_constants.dart';
+import 'package:anewmeat/controllers/banners_controller.dart';
 import 'package:anewmeat/controllers/category_controller.dart';
 import 'package:anewmeat/controllers/products_controller.dart';
 import 'package:anewmeat/models/category_model.dart';
@@ -9,6 +10,7 @@ import 'package:anewmeat/views/components/order_again_card.dart';
 import 'package:anewmeat/views/components/product_card.dart';
 import 'package:anewmeat/views/components/product_listing_card.dart';
 import 'package:anewmeat/views/authorized/products_page.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -23,6 +25,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var categoryController = Get.put(CategoryController());
   var productController = Get.put(ProductController());
+  var bannerController = Get.put(BannersController());
 
   @override
   Widget build(BuildContext context) {
@@ -109,16 +112,51 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: Container(
-                    height: h * 0.15,
+                  child: SizedBox(
+                    height: h * 0.22,
                     width: w,
-                    color: const Color.fromARGB(255, 215, 215, 215),
+                    child:Obx(() => 
+                      bannerController.isLoading.value ? 
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      ) :
+                      CarouselSlider.builder(
+                        itemCount: bannerController.bannerModel!.banners?.length ?? 0,
+                        itemBuilder:(context,index,realIndex){
+                          return Container(
+                            width: w,
+                            margin:const EdgeInsets.all(12),
+                            height: h * 0.18,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                image: NetworkImage(bannerController.bannerModel!.banners![index]!.imageURL),
+                                fit: BoxFit.cover
+                              )
+                            ),
+                          );
+                        } ,
+                        options: CarouselOptions(
+                          height: h * 0.22,
+                          aspectRatio: 16/3,
+                          viewportFraction: 0.9,
+                          autoPlay: true,
+                          autoPlayCurve: Curves.ease,
+                          enableInfiniteScroll: true,
+                          autoPlayAnimationDuration: const Duration(seconds: 1),
+                          enlargeCenterPage: false,
+                          onPageChanged: (index,reason){
+                          }
+                        ),
+                      )
+                    )
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: SizedBox(
+                  child: Container(
                     width: w,
                     height: h * 0.15,
+                    margin: EdgeInsets.only(top:10),
                     child: Obx(
                       () => categoryController.isLoading.value 
                       ? const Center(
@@ -128,15 +166,22 @@ class _HomePageState extends State<HomePage> {
                           scrollDirection: Axis.horizontal,
                           itemCount: categoryController.categoryModel?.categories.length ?? 0,
                           itemBuilder:(context,index){
-                            return categoryItem(w, h, APIConstants.baseUrl + categoryController.categoryModel!.categories[0].imageUrl, categoryController.categoryModel?.categories[index].name);
+                            return categoryItem(
+                              w:w,
+                              h: h,
+                              imageURL: categoryController.categoryModel!.categories[index].imageUrl,
+                              categoryName: categoryController.categoryModel!.categories[index].name,
+                              productsController: productController,
+                            );
                           },
                       )
                     )
                   ),
                 ),
+                
                  SliverToBoxAdapter(
                   child:Padding(
-                    padding:const EdgeInsets.all(10.0),
+                    padding:const EdgeInsets.symmetric(horizontal: 10.0),
                     child: Row(
                       children: [
                         SizedBox(
@@ -285,7 +330,7 @@ class _HomePageState extends State<HomePage> {
                       itemCount: productController.productModel?.products.length ?? 0,
                       itemBuilder:(context,index){
                         return productListingItem(w, h,
-                         "https://anewmeat.onrender.com/Chicken.jpg",
+                        productController.productModel?.products[index].productImage,
                         productController.productModel?.products[index].productName, 
                         productController.productModel?.products[index].productDesc,
                         productController.productModel?.products[index].servings, 

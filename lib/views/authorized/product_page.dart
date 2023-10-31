@@ -69,7 +69,7 @@ class _ProductPageState extends State<ProductPage> {
             children: [
               SizedBox(
                 width: w,
-                height: h * 0.06,
+                height: h * 0.05,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -80,26 +80,47 @@ class _ProductPageState extends State<ProductPage> {
                   ],
                 ),
               ),
-              const SizedBox(height:5,),
-              Container(
-                width: w,
-                height: h * 0.3,
-                padding:const EdgeInsets.all(15),
-                child: PageView(
-                  children: [
-                    Container(
-                      width: w,
-                      height: h * 0.1,
-                      decoration:const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                        image: DecorationImage(
-                          image: NetworkImage("https://assets.tendercuts.in/product/C/H/a6b6b1db-2b6b-4129-a557-fbd9811c8888.webp"),
-                          fit: BoxFit.cover,
+              Stack(
+                children: [
+                  Container(
+                    width: w,
+                    height: h * 0.3,
+                    padding:const EdgeInsets.symmetric(horizontal: 15),
+                    child: PageView(
+                      children: [
+                        Container(
+                          width: w,
+                          height: h * 0.1,
+                          decoration:const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            image: DecorationImage(
+                              image: NetworkImage("https://assets.tendercuts.in/product/C/H/a6b6b1db-2b6b-4129-a557-fbd9811c8888.webp"),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 15,
+                    right: 30,
+                    child: Container(
+                      width: w * 0.1,
+                      height: w * 0.1,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(50)
+                      ),
+                      child: IconButton(
+                        onPressed: (){
+                          
+                        },
+                        icon: Icon(Icons.favorite,color: Constants.customRed,),
                       ),
                     ),
-                  ],
-                ),
+                  )
+                ],
               ),
               SizedBox(height: h * 0.02,),
               Container(
