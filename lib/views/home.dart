@@ -58,7 +58,7 @@ class _HomeState extends State<Home> {
         physics: NeverScrollableScrollPhysics(),
         children:const <Widget> [
           HomePage(),
-          ProductsPage(),
+          CartPage(),
           ProductPage(),
         ],
       )
