@@ -356,30 +356,8 @@ class _HomePageState extends State<HomePage> {
 
 
 
-//productListingItem(w,h,"https://assets.tendercuts.in/product/C/H/7bfc5e2d-3857-4f3e-a736-222c7a617b67.webp",
-                     // "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true),
 
 
-
-
-
-/*
-return FutureBuilder<CategoryModel>(
-                          future: categoryController.fetchCategories(),
-                          builder: (context,snapshot){
-                            if(snapshot.hasData){
-                              return ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: snapshot.data!.categories.length,
-                                itemBuilder: (context,index){
-                                  return categoryItem(w, h, "https://anewmeat.onrender.com/Chicken.jpg"/*snapshot.data!.categories[index].imageUrl*/, snapshot.data!.categories[index].name);
-                              },
-                            );
-                            }else{
-                              return const Center(child: CircularProgressIndicator());
-                            }
-                          },
-                        );*/
 
 
 
@@ -422,3 +400,28 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
 
 
 
+
+
+
+
+
+
+
+
+/*
+return FutureBuilder<CategoryModel>(
+                          future: categoryController.fetchCategories(),
+                          builder: (context,snapshot){
+                            if(snapshot.hasData){
+                              return ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: snapshot.data!.categories.length,
+                                itemBuilder: (context,index){
+                                  return categoryItem(w, h, "https://anewmeat.onrender.com/Chicken.jpg"/*snapshot.data!.categories[index].imageUrl*/, snapshot.data!.categories[index].name);
+                              },
+                            );
+                            }else{
+                              return const Center(child: CircularProgressIndicator());
+                            }
+                          },
+                        );*/

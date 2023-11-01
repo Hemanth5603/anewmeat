@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:anewmeat/constants/api_constants.dart';
+import 'package:anewmeat/models/product_category_model.dart';
 import 'package:anewmeat/models/product_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -12,6 +13,7 @@ class ProductController extends GetxController{
   var isLoading = false.obs;
   var categoryName = "";
   ProductModel? productModel;
+  ProductCategoryModel? productCategoryModel;
 
 
   @override
@@ -53,11 +55,12 @@ class ProductController extends GetxController{
         "categorieName":categoryName
       };
 
-      var response = await http.post(uri,headers: APIConstants.headers,body: body);
+      var response = await http.post(uri,body: body);
 
       if(response.statusCode == 200){
         var data = jsonDecode(response.body.toString());
-        productModel = ProductModel.fromJson(data);
+        productCategoryModel = ProductCategoryModel.fromJson(data);
+        print(data);
       }else{
         print("Error Fetching specific products");
       }

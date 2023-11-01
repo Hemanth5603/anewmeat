@@ -1,6 +1,9 @@
 
 import 'package:anewmeat/controllers/products_controller.dart';
+import 'package:anewmeat/views/authorized/products_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class categoryItem extends StatefulWidget {
   categoryItem({
@@ -53,7 +56,8 @@ class _categoryItemState extends State<categoryItem> {
     onTap: (){
       setState(() {
         widget.productsController.categoryName = widget.categoryName!;
-        widget.productsController.fetchAllProducts();
+        widget.productsController.fetchCategoryProducts();
+        Get.to(const ProductsPage());
         
       });
     },
