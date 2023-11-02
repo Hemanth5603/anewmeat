@@ -8,7 +8,7 @@ import 'package:get/get_core/src/get_main.dart';
 class categoryItem extends StatefulWidget {
   categoryItem({
     super.key,
-    this.categoryName,
+    required this.categoryName,
     required this.imageURL,
     required this.h,
     required this.w,
@@ -17,7 +17,7 @@ class categoryItem extends StatefulWidget {
 
   double w;
   double h;
-  String? categoryName;
+  String categoryName;
   String imageURL;
   ProductController productsController;
 
@@ -57,8 +57,10 @@ class _categoryItemState extends State<categoryItem> {
       setState(() {
         widget.productsController.categoryName = widget.categoryName!;
         widget.productsController.fetchCategoryProducts();
-        Get.to(const ProductsPage());
-        
+        Get.to(ProductsPage(
+          heroImage: widget.imageURL,
+          title: widget.categoryName,
+        ));
       });
     },
   );

@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ProductPage extends StatefulWidget {
-  const ProductPage({super.key});
+  const ProductPage({super.key,required this.imageURL, required this.productName,required this.productDesc,required this.price});
+  final String imageURL;
+  final String productName;
+  final String productDesc;
+  final String price;
 
   @override
   State<ProductPage> createState() => _ProductPageState();
@@ -27,7 +31,7 @@ class _ProductPageState extends State<ProductPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text("Total Price",style: TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold),),
-                Text("₹200",style: TextStyle(fontFamily: 'poppins',fontSize:20,color: Constants.customRed,fontWeight: FontWeight.bold),)
+                Text("₹"+widget.price,style: TextStyle(fontFamily: 'poppins',fontSize:20,color: Constants.customRed,fontWeight: FontWeight.bold),)
               ],
             ),
             GestureDetector(
@@ -74,7 +78,9 @@ class _ProductPageState extends State<ProductPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     IconButton(
-                      onPressed: (){},
+                      onPressed: (){
+                        Get.back();
+                      },
                       icon: const Icon(Icons.arrow_back_ios_new_rounded)
                     )
                   ],
@@ -91,10 +97,10 @@ class _ProductPageState extends State<ProductPage> {
                         Container(
                           width: w,
                           height: h * 0.1,
-                          decoration:const BoxDecoration(
+                          decoration:BoxDecoration(
                             borderRadius: BorderRadius.all(Radius.circular(15)),
                             image: DecorationImage(
-                              image: NetworkImage("https://assets.tendercuts.in/product/C/H/a6b6b1db-2b6b-4129-a557-fbd9811c8888.webp"),
+                              image: NetworkImage(widget.imageURL),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -135,7 +141,8 @@ class _ProductPageState extends State<ProductPage> {
                   children: [
                     SizedBox(
                       width: w * 0.5,
-                      child:const Text("Chicken Curry Cut",style: TextStyle(fontFamily: 'poppins',fontSize: 20,fontWeight: FontWeight.bold,),overflow: TextOverflow.ellipsis,maxLines: 2,),
+                      child:Text(widget.productName ?? widget.productName ,
+                      style:const TextStyle(fontFamily: 'poppins',fontSize: 20,fontWeight: FontWeight.bold,),overflow: TextOverflow.ellipsis,maxLines: 2,),
                     ),
 
                     SizedBox(
@@ -178,8 +185,8 @@ class _ProductPageState extends State<ProductPage> {
                 padding: const EdgeInsets.all(12),
                 width: w,
                 height: h * 0.14,
-                child:const Text("A premium Licious cut that has the perfect balance of fat & meat for a delicious and rich mouthfeel.Expect rich-flavoured dishes and fall-off-the-bone tenderness.There is consistency in the type & size of pieces in every instance so you have a consistent experience every time.",
-                  style: TextStyle(fontFamily: 'poppins',fontSize: 12,color: Color.fromARGB(255, 156, 156, 156)),textAlign: TextAlign.justify,
+                child:Text(widget.productDesc,
+                  style: const TextStyle(fontFamily: 'poppins',fontSize: 12,color: Color.fromARGB(255, 156, 156, 156)),textAlign: TextAlign.justify,
                 )
               ),
               Container(

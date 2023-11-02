@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                               w:w,
                               h: h,
                               imageURL: categoryController.categoryModel!.categories[index].imageUrl,
-                              categoryName: categoryController.categoryModel!.categories[index].name,
+                              categoryName: categoryController.categoryModel!.categories[index].name!,
                               productsController: productController,
                             );
                           },

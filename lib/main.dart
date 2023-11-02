@@ -1,5 +1,5 @@
 import 'package:anewmeat/views/authentication/login.dart';
-import 'package:anewmeat/views/authorized/tabs/cart_page.dart';
+import 'package:anewmeat/views/authorized/cart_page.dart';
 import 'package:anewmeat/views/home.dart';
 import 'package:anewmeat/views/authorized/products_page.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home:const Scaffold(
         body: Center(
-          child: CartPage(),
+          child: Home(),
         ),
       ),
     );

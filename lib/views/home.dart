@@ -1,9 +1,11 @@
 import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/views/authorized/product_page.dart';
 import 'package:anewmeat/views/authorized/products_page.dart';
-import 'package:anewmeat/views/authorized/tabs/cart_page.dart';
+import 'package:anewmeat/views/authorized/cart_page.dart';
+import 'package:anewmeat/views/authorized/tabs/categories_page.dart';
 import 'package:anewmeat/views/authorized/tabs/home_page.dart';
 import 'package:anewmeat/views/authorized/tabs/profile_page.dart';
+import 'package:anewmeat/views/authorized/tabs/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
@@ -34,7 +36,7 @@ class _HomeState extends State<Home> {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
-      bottomNavigationBar:WaterDropNavBar(
+       bottomNavigationBar:WaterDropNavBar(
         backgroundColor: Constants.customRed,
         onItemSelected: (index){
           setState(() {
@@ -49,19 +51,62 @@ class _HomeState extends State<Home> {
         waterDropColor :Colors.white,
           barItems : <BarItem>[
             BarItem(filledIcon: Icons.home, outlinedIcon:Icons.home_outlined,),
-            BarItem(filledIcon: Icons.shopping_cart, outlinedIcon:Icons.shopping_cart_outlined),
-            BarItem(filledIcon: Icons.person_2, outlinedIcon:Icons.person_2_outlined),
+            BarItem(filledIcon: Icons.category, outlinedIcon:Icons.category_outlined),
+            BarItem(filledIcon: Icons.search, outlinedIcon:Icons.search_outlined),
+            BarItem(filledIcon: Icons.person, outlinedIcon:Icons.person_outlined),
           ],
       ) ,
       body: PageView(
         controller: pageController,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children:const <Widget> [
           HomePage(),
-          CartPage(),
-          ProductPage(),
+          CategoriesPage(),
+          SearchPage(),
+          ProfilePage(),
         ],
       )
     );
   }
 }
+
+Widget BottomNavBar(w,h){
+  return Container(
+    width: w,
+    height: h * 0.08,
+    padding: EdgeInsets.only(top: 10),
+    color: Constants.customRed,
+    child: ListView(
+      scrollDirection: Axis.horizontal,
+      physics: NeverScrollableScrollPhysics(),
+     children: [
+      GestureDetector(child: BottomNavbarItem(Icons.home_outlined,"Home")),
+      BottomNavbarItem(Icons.home_outlined,"Home"),
+      BottomNavbarItem(Icons.home_outlined,"Home"),
+      BottomNavbarItem(Icons.home_outlined,"Home"),
+     ],
+        
+      
+    ),
+
+  );
+}
+
+
+
+Widget BottomNavbarItem(icon,iconName){
+  return Container(
+    width: 95,
+    height: 150,
+    child: Column(
+      children: [
+        Icon(icon,size: 30,color: Colors.white,),
+        SizedBox(height: 5,),
+        Text(iconName,style: TextStyle(fontFamily: 'poppins',fontSize: 12,fontWeight: FontWeight.bold,color: Colors.white),)
+      ],
+    ),
+
+  );
+
+}
+
