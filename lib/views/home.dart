@@ -8,6 +8,7 @@ import 'package:anewmeat/views/authorized/tabs/profile_page.dart';
 import 'package:anewmeat/views/authorized/tabs/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+import 'package:gap/gap.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -26,8 +27,6 @@ class _HomeState extends State<Home> {
   
   @override
   void initState() {
-    // TODO: implement initState
-    
     pageController = PageController(initialPage: selectedIndex);
   }
 
@@ -70,25 +69,24 @@ class _HomeState extends State<Home> {
   }
 }
 
+
+
 Widget BottomNavBar(w,h){
   return Container(
     width: w,
     height: h * 0.08,
-    padding: EdgeInsets.only(top: 10),
+    padding:const EdgeInsets.only(top: 10),
     color: Constants.customRed,
     child: ListView(
       scrollDirection: Axis.horizontal,
-      physics: NeverScrollableScrollPhysics(),
+      physics:const NeverScrollableScrollPhysics(),
      children: [
       GestureDetector(child: BottomNavbarItem(Icons.home_outlined,"Home")),
       BottomNavbarItem(Icons.home_outlined,"Home"),
       BottomNavbarItem(Icons.home_outlined,"Home"),
       BottomNavbarItem(Icons.home_outlined,"Home"),
      ],
-        
-      
     ),
-
   );
 }
 
@@ -101,12 +99,10 @@ Widget BottomNavbarItem(icon,iconName){
     child: Column(
       children: [
         Icon(icon,size: 30,color: Colors.white,),
-        SizedBox(height: 5,),
-        Text(iconName,style: TextStyle(fontFamily: 'poppins',fontSize: 12,fontWeight: FontWeight.bold,color: Colors.white),)
+        const Gap(5),
+        Text(iconName,style:const TextStyle(fontFamily: 'poppins',fontSize: 12,fontWeight: FontWeight.bold,color: Colors.white),)
       ],
     ),
-
   );
-
 }
 

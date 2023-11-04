@@ -6,4 +6,7 @@ class APIConstants{
   static String getCategories = "getCategories";
   static String getProducts = "getProducts";
   static String getBanners = "getBanners";
+  static String saveToCart = "saveCart";
+  static String getCart = "getCart";
+
 }

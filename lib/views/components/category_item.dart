@@ -21,18 +21,17 @@ class categoryItem extends StatefulWidget {
   String imageURL;
   ProductController productsController;
 
-
   @override
   State<categoryItem> createState() => _categoryItemState();
 }
 
-class _categoryItemState extends State<categoryItem> {
 
+class _categoryItemState extends State<categoryItem> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
     child: Container(
-      width:widget.w * 0.2,
+      width:widget.w * 0.19,
       height:widget.h * 0.1,
       margin:const EdgeInsets.all(10),
       child: Column(
@@ -54,7 +53,7 @@ class _categoryItemState extends State<categoryItem> {
       ),
     ),
     onTap: (){
-      setState(() {
+      setState((){
         widget.productsController.categoryName = widget.categoryName!;
         widget.productsController.fetchCategoryProducts();
         Get.to(ProductsPage(

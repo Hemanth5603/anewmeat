@@ -41,6 +41,7 @@ class Product {
         required this.isFreeDelivery,
         required this.servings,
         required this.pieces,
+        required this.value,
         required this.v,
     });
 
@@ -54,6 +55,7 @@ class Product {
     final String? isFreeDelivery;
     final String? servings;
     final String? pieces;
+    int? value = 1;
     final int? v;
 
     Product copyWith({
@@ -80,6 +82,7 @@ class Product {
             isFreeDelivery: isFreeDelivery ?? this.isFreeDelivery,
             servings: servings ?? this.servings,
             pieces: pieces ?? this.pieces,
+            value: value ?? this.value,
             v: v ?? this.v,
         );
     }
@@ -96,6 +99,7 @@ class Product {
             isFreeDelivery: json["isFreeDelivery"],
             servings: json["servings"],
             pieces: json["pieces"],
+            value: json["value"],
             v: json["__v"],
         );
     }
@@ -111,6 +115,7 @@ class Product {
         "isFreeDelivery": isFreeDelivery,
         "servings": servings,
         "pieces": pieces,
+        "value": value,
         "__v": v,
     };
 

@@ -13,15 +13,17 @@ Widget productListingItem(w,h,imageURL,productName,productDescription,quantity,o
       children: [
         Stack(
           children: [
-            Container(
-              width: w * 0.35,
-              height: h * 0.2,
-              decoration:BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                image: DecorationImage(
-                  image: NetworkImage(imageURL),
-                  fit: BoxFit.cover
-                )
+            GestureDetector(
+              child: Container(
+                width: w * 0.35,
+                height: h * 0.2,
+                decoration:BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  image: DecorationImage(
+                    image: NetworkImage(imageURL),
+                    fit: BoxFit.cover
+                  )
+                ),
               ),
             ),
             Positioned(

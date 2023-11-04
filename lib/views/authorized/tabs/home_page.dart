@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> {
                   child: Container(
                     width: w,
                     height: h * 0.15,
-                    margin: EdgeInsets.only(top:10),
+                    margin:const EdgeInsets.only(top:10),
                     child: Obx(
                       () => categoryController.isLoading.value 
                       ? const Center(
