@@ -42,7 +42,7 @@ class Product {
         required this.servings,
         required this.pieces,
         required this.quantity,
-        required this.value,
+        this.value,
         required this.v,
     });
 
@@ -71,6 +71,7 @@ class Product {
         String? isFreeDelivery,
         String? servings,
         String? pieces,
+        String? quantity,
         int? v,
     }) {
         return Product(

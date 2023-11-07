@@ -9,6 +9,7 @@ import 'package:http/http.dart';
 
 class CategoryController extends GetxController{
   var isLoading = false.obs;
+  bool isPageLoading = false;
 
   CategoryModel? categoryModel;
 
@@ -37,6 +38,7 @@ class CategoryController extends GetxController{
       print('Error while getting data is $e');
     } finally {
       isLoading(false);
+      isPageLoading = true;
     }
 
     

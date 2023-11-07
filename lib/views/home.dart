@@ -1,4 +1,5 @@
 import 'package:anewmeat/constants/app_constants.dart';
+import 'package:anewmeat/controllers/category_controller.dart';
 import 'package:anewmeat/views/authorized/product_page.dart';
 import 'package:anewmeat/views/authorized/products_page.dart';
 import 'package:anewmeat/views/authorized/cart_page.dart';
@@ -9,6 +10,9 @@ import 'package:anewmeat/views/authorized/tabs/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -34,6 +38,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
+    var categoriesController = Get.put(CategoryController());
     return Scaffold(
        bottomNavigationBar:WaterDropNavBar(
         backgroundColor: Constants.customRed,
@@ -55,15 +60,18 @@ class _HomeState extends State<Home> {
             BarItem(filledIcon: Icons.person, outlinedIcon:Icons.person_outlined),
           ],
       ) ,
-      body: PageView(
-        controller: pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children:const <Widget> [
-          HomePage(),
-          CategoriesPage(),
-          SearchPage(),
-          ProfilePage(),
-        ],
+      body: Skeletonizer(
+        enabled: false,
+        child: PageView(
+          controller: pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          children:const <Widget> [
+            HomePage(),
+            CartPage(),
+            SearchPage(),
+            ProfilePage(),
+          ],
+        ),
       )
     );
   }

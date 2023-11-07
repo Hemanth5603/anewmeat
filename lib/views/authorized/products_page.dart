@@ -24,10 +24,30 @@ class _ProductsPageState extends State<ProductsPage> {
   Widget build(BuildContext context) {
     var cartController = Get.put(CartController());
     var productsController = Get.put(ProductController());
-    int? productsCount;
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
+      floatingActionButton:  Visibility(
+        visible: !cartController.isCartEmpty,
+        child: Container(
+          width: w * 0.92,
+          height: h * 0.05,
+          padding:const EdgeInsets.symmetric(horizontal: 15),
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child:const Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("5 Items",style: TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.white),),
+                Text("View Cart",style: TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.white),)
+              ],
+            ),
+          ),
+        ),
+      ),
       appBar: AppBar(
         title: Row(
           children: [
@@ -127,7 +147,6 @@ class _ProductsPageState extends State<ProductsPage> {
                     : ListView.builder(
                       itemCount: productsController.productCategoryModel?.categoryProducts.length ?? 0,
                       itemBuilder:(context,index){
-                        productsCount = productsController.productCategoryModel?.categoryProducts.length;
                         return ProductCard(
                             w:w, 
                             h:h,
@@ -142,7 +161,7 @@ class _ProductsPageState extends State<ProductsPage> {
                             quantity: productsController.productCategoryModel?.categoryProducts[index].quantity,
                             cartController: cartController,
                         );
-                    } ,
+                    },
                   )
                 )
               )

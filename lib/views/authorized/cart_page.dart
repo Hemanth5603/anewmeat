@@ -1,6 +1,10 @@
 import 'package:anewmeat/constants/app_constants.dart';
+import 'package:anewmeat/controllers/cart_controller.dart';
+import 'package:anewmeat/views/authorized/products_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 
 class CartPage extends StatefulWidget {
@@ -11,10 +15,22 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    cartController.getCartItems();
+    
+  }
   @override
   Widget build(BuildContext context){
+    CartController cartController = Get.put(CartController());
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
+
+
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -105,11 +121,14 @@ class _CartPageState extends State<CartPage> {
                             SizedBox(
                               width: w,
                               height: h * 0.22,
-                              child: ListView(
-                                children: [
-                                  cartItem(w, h),
-                                  cartItem(w, h)
-                                ],
+                              child: Obx(() => cartController.isLoading.value
+                              ? const CircularProgressIndicator()
+                              : ListView.builder(
+                                itemCount: cartController.getCartModel!.items?.length,
+                                itemBuilder: (context,index){
+                                  return cartItem(w, h);
+                                }
+                              ),
                               ),
                             )
                           ],

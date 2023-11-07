@@ -2,19 +2,21 @@
 
 
 class CartModel {
-
+  String? id;
   String? name;
   String? number;
   String? email;
   List<Items>? items;
 
   CartModel({
+    this.id,
     this.name,
     this.number,
     this.email,
     this.items,
   });
   CartModel.fromJson(Map<String, dynamic> json) {
+    id = json["_id"]?.toString();
     name = json['name']?.toString();
     number = json['number']?.toString();
     email = json['email']?.toString();
@@ -29,6 +31,7 @@ class CartModel {
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
+    data["_id"] = id;
     data['name'] = name;
     data['number'] = number;
     data['email'] = email;

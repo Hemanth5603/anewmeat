@@ -1,6 +1,7 @@
 import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/models/cart_model.dart';
 import 'package:anewmeat/views/authorized/product_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -18,7 +19,7 @@ class ProductCard extends StatefulWidget {
     required this.originalPrice,
     required this.finalPrice,
     required this.quantity,
-    required this.value,
+    this.value,
     required this.cartController
   });
 
@@ -31,7 +32,7 @@ class ProductCard extends StatefulWidget {
   String? servings;
   String? originalPrice;
   String? finalPrice;
-  int? value;
+  int? value = 1;
   String? quantity;
   CartController cartController;
 
@@ -89,7 +90,7 @@ class _ProductCardState extends State<ProductCard> {
                 Text(widget.productName!,style:const TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold),),
                 Text(widget.productDesc!,style:const TextStyle(fontFamily: 'poppins',fontSize: 10,color: Colors.grey),),
                 const SizedBox(height: 5,),
-                Text("500g | ${widget.pieces!}pieces | Serves ${widget.servings!}",style:const TextStyle(fontFamily: 'poppins',fontSize: 12,color:  Color.fromARGB(255, 118, 118, 118)),),
+                Text("${widget.quantity} | ${widget.pieces!}pieces | Serves ${widget.servings!}",style:const TextStyle(fontFamily: 'poppins',fontSize: 12,color:  Color.fromARGB(255, 118, 118, 118)),),
                 const SizedBox(height: 10,),
                 Row(
                   children: [
@@ -125,15 +126,20 @@ class _ProductCardState extends State<ProductCard> {
                       ),
                       onTap: () async{
                         setState(() {
-                          print("clicked");
+                          if (kDebugMode) {
+                            print("clicked");
+                          }
                           if(widget.cartController.cartList.contains(widget.productName)){
                             widget.cartController.cartList.remove(widget.productName);
                           }else{
                             widget.cartController.cartList.add(widget.productName!);
-                            //await widget.cartController.addToCart(widget.productName,widget.imageURL, widget.originalPrice, widget.finalPrice, widget.quantity,widget.value);
+                            widget.cartController.isCartEmpty = false;
+                            widget.cartController.addToCart(widget.productName,widget.imageURL, widget.originalPrice, widget.finalPrice, widget.quantity,widget.value);
                           }
                         });
-                        print(widget.cartController.cartList);
+                        if (kDebugMode) {
+                          print(widget.cartController.cartList);
+                        }
                       },
                     ) 
                   ],
