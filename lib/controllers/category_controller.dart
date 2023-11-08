@@ -19,7 +19,7 @@ class CategoryController extends GetxController{
     fetchCategories();
   }
 
-  void fetchCategories()async {
+  Future<void> fetchCategories()async {
 
     try{
       isLoading(true);

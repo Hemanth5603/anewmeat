@@ -1,3 +1,4 @@
+import 'package:anewmeat/utils/shared_prefs.dart';
 import 'package:anewmeat/views/authentication/login.dart';
 import 'package:anewmeat/views/authorized/cart_page.dart';
 import 'package:anewmeat/views/home.dart';
@@ -5,7 +6,8 @@ import 'package:anewmeat/views/authorized/products_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
-void main() {
+Future<void> main()async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MainApp());
 }
 

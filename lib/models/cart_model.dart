@@ -1,7 +1,130 @@
 
-
-
 class CartModel {
+  CartModel({
+    required this.products,
+  });
+  late final List<Products> products;
+  
+  CartModel.fromJson(Map<String, dynamic> json){
+    products = List.from(json['products']).map((e)=>Products.fromJson(e)).toList();
+  }
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['products'] = products.map((e)=>e.toJson()).toList();
+    return _data;
+  }
+}
+
+class Products {
+  Products({
+    required this.id,
+    required this.name,
+    required this.number,
+    required this.email,
+    required this.items,
+    required this.V,
+  });
+  late final String id;
+  late final String name;
+  late final String number;
+  late final String email;
+  late final List<Items> items;
+  late final int V;
+  
+  Products.fromJson(Map<String, dynamic> json){
+    id = json['_id'];
+    name = json['name'];
+    number = json['number'];
+    email = json['email'];
+    items = List.from(json['items']).map((e)=>Items.fromJson(e)).toList();
+    V = json['__v'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['_id'] = id;
+    _data['name'] = name;
+    _data['number'] = number;
+    _data['email'] = email;
+    _data['items'] = items.map((e)=>e.toJson()).toList();
+    _data['__v'] = V;
+    return _data;
+  }
+}
+
+class Items {
+  Items({
+    required this.productName,
+    this.finalPrice,
+    required this.originalPrice,
+    required this.productImage,
+    required this.quantity,
+    required this.value,
+  });
+  late final String productName;
+  late final String? finalPrice;
+  late final String? originalPrice;
+  late final String productImage;
+  late final String quantity;
+  late final int value;
+  
+  Items.fromJson(Map<String, dynamic> json){
+    productName = json['productName'];
+    finalPrice = json['finalPrice'];
+    originalPrice = json['originalPrice'];
+    productImage = json['productImage'];
+    quantity = json['quantity'];
+    value = json['value'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['productName'] = productName;
+    _data['finalPrice'] = finalPrice;
+    _data['originalPrice'] = originalPrice;
+    _data['productImage'] = productImage;
+    _data['quantity'] = quantity;
+    _data['value'] = value;
+    return _data;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*class CartModel {
   String? id;
   String? name;
   String? number;
@@ -20,14 +143,15 @@ class CartModel {
     name = json['name']?.toString();
     number = json['number']?.toString();
     email = json['email']?.toString();
-  if (json['items'] != null) {
+    items: json["items"] == null ? [] : List<Items>.from(json["items"]!.map((x) => Items.fromJson(x)));
+  /*if (json['items'] != null) {
   final v = json['items'];
   final arr0 = <Items>[];
   v.forEach((v) {
   arr0.add(Items.fromJson(v));
   });
     items = arr0;
-    }
+    }*/
   }
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
@@ -84,4 +208,4 @@ class Items {
     return data;
   }
 }
-
+*/

@@ -1,14 +1,19 @@
 import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/controllers/products_controller.dart';
+import 'package:anewmeat/views/authorized/cart_page.dart';
 import 'package:anewmeat/views/authorized/product_page.dart';
 import 'package:anewmeat/views/widgets/product_card.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/routes/default_transitions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 CartController cartController = Get.put(CartController());
+
+
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key,required this.heroImage,required this.title});
@@ -19,34 +24,49 @@ class ProductsPage extends StatefulWidget {
   State<ProductsPage> createState() => _ProductsPageState();
 }
 
+
 class _ProductsPageState extends State<ProductsPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     var cartController = Get.put(CartController());
     var productsController = Get.put(ProductController());
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
+    
     return Scaffold(
-      floatingActionButton:  Visibility(
-        visible: !cartController.isCartEmpty,
+      floatingActionButton: GestureDetector(
         child: Container(
-          width: w * 0.92,
-          height: h * 0.05,
-          padding:const EdgeInsets.symmetric(horizontal: 15),
-          decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child:const Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("5 Items",style: TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.white),),
-                Text("View Cart",style: TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.white),)
-              ],
+            width: w * 0.92,
+            height: h * 0.055,
+            padding:const EdgeInsets.symmetric(horizontal: 15),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(15),
             ),
+            child:Obx(() => Center(
+              child:Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("${cartController.totalCartItems[0].toString()} items",style:const TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.white),),
+                  const Row(
+                    children: [
+                      Text("View Cart",style: TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.white),),
+                      Gap(5),
+                      Icon(Icons.chevron_right_outlined,color: Colors.white,)
+                    ],
+                  )
+                ],
+              ),
+            ),)
           ),
-        ),
+          onTap: (){
+            Get.to(const CartPage(),transition: Transition.rightToLeft,duration: 300.milliseconds);
+          }
       ),
       appBar: AppBar(
         title: Row(
@@ -150,6 +170,7 @@ class _ProductsPageState extends State<ProductsPage> {
                         return ProductCard(
                             w:w, 
                             h:h,
+                            id: productsController.productCategoryModel?.categoryProducts[index].id,
                             imageURL: productsController.productCategoryModel?.categoryProducts[index].productImage,
                             productName: productsController.productCategoryModel?.categoryProducts[index].productName,
                             productDesc: productsController.productCategoryModel?.categoryProducts[index].productDesc,

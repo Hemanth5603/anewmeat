@@ -59,7 +59,6 @@ class ProductController extends GetxController{
       if(response.statusCode == 200){
         var data = jsonDecode(response.body.toString());
         productCategoryModel = ProductCategoryModel.fromJson(data);
-        print(data);
       }else{
         print("Error Fetching specific products");
       }

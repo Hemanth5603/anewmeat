@@ -8,5 +8,6 @@ class APIConstants{
   static String getBanners = "getBanners";
   static String saveToCart = "saveCart";
   static String getCart = "getCart";
+  static String deleteCart = "deleteCart";
 
 }

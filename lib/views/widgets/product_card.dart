@@ -5,12 +5,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductCard extends StatefulWidget {
   ProductCard({
     super.key,
     required this.w,
     required this.h,
+    required this.id,
     required this.imageURL,
     required this.productName,
     required this.productDesc,
@@ -25,6 +27,7 @@ class ProductCard extends StatefulWidget {
 
   double w;
   double h;
+  String? id;
   String? imageURL;
   String? productName;
   String? productDesc;
@@ -131,10 +134,11 @@ class _ProductCardState extends State<ProductCard> {
                           }
                           if(widget.cartController.cartList.contains(widget.productName)){
                             widget.cartController.cartList.remove(widget.productName);
+                            widget.cartController.deleteCartItem(widget.id);
                           }else{
                             widget.cartController.cartList.add(widget.productName!);
                             widget.cartController.isCartEmpty = false;
-                            widget.cartController.addToCart(widget.productName,widget.imageURL, widget.originalPrice, widget.finalPrice, widget.quantity,widget.value);
+                            widget.cartController.addToCart(widget.id,widget.productName,widget.imageURL, widget.originalPrice, widget.finalPrice, widget.quantity,widget.value);
                           }
                         });
                         if (kDebugMode) {

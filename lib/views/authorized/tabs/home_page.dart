@@ -27,6 +27,7 @@ class _HomePageState extends State<HomePage> {
   var productController = Get.put(ProductController());
   var bannerController = Get.put(BannersController());
 
+
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -117,8 +118,8 @@ class _HomePageState extends State<HomePage> {
                     width: w,
                     child:Obx(() => 
                       bannerController.isLoading.value ? 
-                      const Center(
-                        child: CircularProgressIndicator(),
+                       Center(
+                        child: Container(),
                       ) :
                       CarouselSlider.builder(
                         itemCount: bannerController.bannerModel!.banners?.length ?? 0,
@@ -159,8 +160,8 @@ class _HomePageState extends State<HomePage> {
                     margin:const EdgeInsets.only(top:10),
                     child: Obx(
                       () => categoryController.isLoading.value 
-                      ? const Center(
-                        child: CircularProgressIndicator(),
+                      ? Center(
+                        child: Container()
                       ) 
                         : ListView.builder(
                           scrollDirection: Axis.horizontal,

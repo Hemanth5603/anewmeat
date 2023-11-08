@@ -1,19 +1,23 @@
 import 'dart:convert';
-
 import 'package:anewmeat/constants/api_constants.dart';
 import 'package:anewmeat/models/cart_model.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartController extends GetxController{
 
   List<dynamic> cartList = [].obs;
   CartModel? cartModel;
   CartModel? getCartModel;
+  CartModel? deleteCartModel;
   bool isCartEmpty = true;
+  List<dynamic> totalCartItems = [].obs;
   var isLoading = false.obs;
 
-  Future addToCart(productName,productImage,originalPrice,finalPrice,quantity,value)async{
+  Future addToCart(id,productName,productImage,originalPrice,finalPrice,quantity,value)async{
     try{
       final uri = Uri.parse(APIConstants.baseUrl + APIConstants.saveToCart);
 
@@ -24,48 +28,83 @@ class CartController extends GetxController{
       };
 
       final body = {
+        "id": id,
         "productName": productName,
         "finalPrice": finalPrice,
         "originalPrice": originalPrice,
         "productImage":productImage,
         "quantity": quantity,
         "value": "1"
-
       };
+
       var response = await http.post(uri,headers: headers,body:body);
-      print(response.statusCode);
-      if(response.statusCode == 200 && response.body != null){
+      if(kDebugMode) print(response.statusCode);
+      if(response.statusCode == 200){
         var data = jsonDecode(response.body.toString());
-        print(data);
+        if(kDebugMode)print(data);
         cartModel = CartModel.fromJson(data);
       }else{
-        print("Error Fetching Products Data");
+        if(kDebugMode)print("Error Fetching Products Data");
       }
     }catch(e){
-      print('Error while getting data $e');
+      if(kDebugMode)print('Error while getting data $e');
     }
   }
 
 
   Future getCartItems() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     try{
+      isLoading(true);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       final uri = Uri.parse(APIConstants.baseUrl + APIConstants.getCart);
-      final body  = {
+      final headers = {
         "number":"7997435603"
       };
-      isLoading(true);
-      var response = await http.post(uri,body:body);
+      var response = await http.get(uri,headers: headers);
       if(response.statusCode == 200){
         var data = jsonDecode(response.body.toString());
         getCartModel = CartModel.fromJson(data);
       }else{
-        print("Error Fetching Products Data");
+        if(kDebugMode) print("Error Fetching Products Data");
       }
-      print(getCartModel?.items?.length);
-      isLoading(false);
+      prefs.setString("_cartLength",getCartModel!.products[0].items.length.toString());
+      totalCartItems.add(prefs.getString("_cartLength"));
     }catch(e){
-      print("Cannot fetch cart items $e");
+      if(kDebugMode) print("Cannot fetch cart items $e");
+    }finally{
+      /*prefs.setInt("cartItemsLength",getCartModel!.products[0].items.length);
+      print(getCartModel!.products[0].items.length);
+      totalCartItems = getCartModel!.products[0].items.length as RxInt;*/
+      isLoading(false);
     }
-
   }
+
+  Future deleteCartItem(id) async{
+    try{
+      final uri = Uri.parse(APIConstants.baseUrl + APIConstants.deleteCart);
+      final headers = {
+        "number":"7997435603"
+      };
+      final body = {
+        "id":id,
+      };
+      var response = await http.post(uri,headers: headers,body: body);
+      if(response.statusCode == 200){
+        var data = jsonDecode(response.body.toString());
+        deleteCartModel = CartModel.fromJson(data);
+      }else{
+        if(kDebugMode) print("Error while Deleting Item");
+      }
+       if(kDebugMode) print(response.body);
+    }catch(e){
+      if(kDebugMode){
+        print("Error $e");
+      }
+    }finally{
+
+    }
+  }
+
+
 }

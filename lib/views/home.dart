@@ -1,4 +1,5 @@
 import 'package:anewmeat/constants/app_constants.dart';
+import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/controllers/category_controller.dart';
 import 'package:anewmeat/views/authorized/product_page.dart';
 import 'package:anewmeat/views/authorized/products_page.dart';
@@ -24,6 +25,10 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   
+  late bool isLoading = false;
+  CategoryController categoriesController = Get.put(CategoryController());
+  CartController cartController = Get.put(CartController());
+
 
   final _controller = NotchBottomBarController(index: 0);
   var selectedIndex = 0;
@@ -31,14 +36,23 @@ class _HomeState extends State<Home> {
   
   @override
   void initState() {
+    super.initState();
     pageController = PageController(initialPage: selectedIndex);
+    isLoading = true;
+     WidgetsBinding.instance.addPostFrameCallback((_)async {
+      await initializeHome();
+     }
+    );
+    
+    
   }
+
 
   @override
   Widget build(BuildContext context) {
+
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
-    var categoriesController = Get.put(CategoryController());
     return Scaffold(
        bottomNavigationBar:WaterDropNavBar(
         backgroundColor: Constants.customRed,
@@ -61,7 +75,7 @@ class _HomeState extends State<Home> {
           ],
       ) ,
       body: Skeletonizer(
-        enabled: false,
+        enabled: isLoading,
         child: PageView(
           controller: pageController,
           physics: const NeverScrollableScrollPhysics(),
@@ -75,6 +89,18 @@ class _HomeState extends State<Home> {
       )
     );
   }
+  
+Future initializeHome() async{
+  setState(() {
+    isLoading = true;
+  });
+  await categoriesController.fetchCategories();
+  await cartController.getCartItems();
+  setState(() {
+    isLoading = false;
+  });
+}
+
 }
 
 
@@ -113,4 +139,5 @@ Widget BottomNavbarItem(icon,iconName){
     ),
   );
 }
+
 
