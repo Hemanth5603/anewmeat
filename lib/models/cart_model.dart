@@ -55,31 +55,35 @@ class Products {
 
 class Items {
   Items({
+    required this.id,
     required this.productName,
-    this.finalPrice,
+    required this.finalPrice,
     required this.originalPrice,
     required this.productImage,
     required this.quantity,
     required this.value,
   });
+  late final String id;
   late final String productName;
   late final String? finalPrice;
   late final String? originalPrice;
   late final String productImage;
   late final String quantity;
-  late final int value;
+  int? value = 1;
   
   Items.fromJson(Map<String, dynamic> json){
+    id = json["id"];
     productName = json['productName'];
     finalPrice = json['finalPrice'];
     originalPrice = json['originalPrice'];
     productImage = json['productImage'];
     quantity = json['quantity'];
-    value = json['value'];
+    value =  int.parse(json['value']);
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
+    _data['id'] = id;
     _data['productName'] = productName;
     _data['finalPrice'] = finalPrice;
     _data['originalPrice'] = originalPrice;

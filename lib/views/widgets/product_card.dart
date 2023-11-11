@@ -1,6 +1,7 @@
 import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/models/cart_model.dart';
 import 'package:anewmeat/views/authorized/product_page.dart';
+import 'package:anewmeat/views/authorized/products_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

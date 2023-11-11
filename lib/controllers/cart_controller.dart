@@ -10,9 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CartController extends GetxController{
 
   List<dynamic> cartList = [].obs;
-  CartModel? cartModel;
-  CartModel? getCartModel;
-  CartModel? deleteCartModel;
+  CartModel? cartModel,getCartModel,deleteCartModel,updateCartModel;
   bool isCartEmpty = true;
   List<dynamic> totalCartItems = [].obs;
   var isLoading = false.obs;
@@ -68,14 +66,18 @@ class CartController extends GetxController{
       }else{
         if(kDebugMode) print("Error Fetching Products Data");
       }
-      prefs.setString("_cartLength",getCartModel!.products[0].items.length.toString());
-      totalCartItems.add(prefs.getString("_cartLength"));
+      
+      if(getCartModel!.products.isEmpty){
+        totalCartItems.add("0");
+      }else{
+        totalCartItems.add(prefs.getString("_cartLength"));
+        prefs.setString("_cartLength",getCartModel!.products[0].items.length.toString());
+      }
+        
+        
     }catch(e){
       if(kDebugMode) print("Cannot fetch cart items $e");
     }finally{
-      /*prefs.setInt("cartItemsLength",getCartModel!.products[0].items.length);
-      print(getCartModel!.products[0].items.length);
-      totalCartItems = getCartModel!.products[0].items.length as RxInt;*/
       isLoading(false);
     }
   }
@@ -102,9 +104,39 @@ class CartController extends GetxController{
         print("Error $e");
       }
     }finally{
-
     }
   }
+
+
+
+  Future incrementCartItemValue(id,value) async{
+    try{
+      final uri = Uri.parse(APIConstants.baseUrl + APIConstants.updateCart);
+      final headers = {
+        "number":"7997435603"
+      };
+      final body = {
+        "id":id,
+        "value":value
+      };
+      var response = await http.post(uri,headers: headers,body: body);
+      if(response.statusCode == 200){
+        var data = jsonDecode(response.body.toString());
+        updateCartModel = CartModel.fromJson(data);
+      }else{
+        if(kDebugMode) print("Error while incrementing Item value");
+      }
+       if(kDebugMode) print(response.body);
+    }catch(e){
+      if(kDebugMode){
+        print("Error $e");
+      }
+    }finally{
+    }
+  }
+
+
+
 
 
 }

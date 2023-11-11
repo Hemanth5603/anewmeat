@@ -52,6 +52,7 @@ class _ProductsPageState extends State<ProductsPage> {
               child:Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  
                   Text("${cartController.totalCartItems[0].toString()} items",style:const TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.white),),
                   const Row(
                     children: [

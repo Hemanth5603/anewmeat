@@ -1,6 +1,7 @@
 import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/views/authorized/products_page.dart';
+import 'package:anewmeat/views/widgets/cart_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -20,8 +21,8 @@ class _CartPageState extends State<CartPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    cartController.getCartItems();
   }
   @override
   Widget build(BuildContext context){
@@ -108,7 +109,7 @@ class _CartPageState extends State<CartPage> {
                       ),
                       Container(
                         width: w,
-                        height: h * cartController.getCartModel!.products[0].items.length * 0.14,
+                        height: h * cartController.getCartModel!.products[0].items.length * 0.15,
                         color: const Color.fromRGBO(255, 255, 255, 1),
                         child: Padding(
                           padding: const EdgeInsets.all(10.0),
@@ -126,14 +127,15 @@ class _CartPageState extends State<CartPage> {
                                  
                                   itemCount: cartController.getCartModel!.products[0].items.length,
                                   itemBuilder: (context,index){
-                                    return cartItem(w, h,
-                                      cartController.getCartModel?.products[0].items[index].productName ?? "",
-                                      cartController.getCartModel?.products[0].items[index].productImage ?? "",
-                                      cartController.getCartModel?.products[0].items[index].originalPrice ?? "",
-                                      cartController.getCartModel?.products[0].items[index].finalPrice ?? "",
-                                      cartController.getCartModel?.products[0].items[index].quantity ?? "",
-                                      cartController,
-                                      
+                                    return CartCard(w :w,h: h,
+                                      index:index,
+                                      id: cartController.getCartModel?.products[0].items[index].id ?? "",
+                                      productName: cartController.getCartModel?.products[0].items[index].productName ?? "",
+                                      productImage:cartController.getCartModel?.products[0].items[index].productImage ?? "",
+                                      originalPrice: cartController.getCartModel?.products[0].items[index].originalPrice ?? "",
+                                      finalPrice: cartController.getCartModel?.products[0].items[index].finalPrice ?? "",
+                                      quantity:cartController.getCartModel?.products[0].items[index].quantity ?? "",
+                                      cartController: cartController,
                                     );
                                   }
                                   ),
@@ -290,100 +292,7 @@ Widget billItem(title,amount,color){
 
 
 
-Widget cartItem(w,h,productName,productImage,originalPrice,finalPrice,quantity,cartController){
-  return Container(
-    width: w,
-    height: h * 0.1,
-    margin:const EdgeInsets.symmetric(vertical: 5),
-    
-    child: Row(
-      children: [
-        Container(
-          width: w * 0.21,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            image:DecorationImage(
-              image: NetworkImage(productImage),
-              fit: BoxFit.cover
-            )
-          ),
-        ),
-        const SizedBox(width: 10,),
-        SizedBox(
-          width: w * 0.7,
-          height: h * 0.1,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: w * 0.46,
-                    height: h *0.035,
-                    child: Text(productName,style:const TextStyle(fontFamily: 'poppins',fontSize: 15,fontWeight: FontWeight.bold),),
-                  ),
-                  Row(
-                    children: [
-                      Text("₹$originalPrice",style:const TextStyle(decoration: TextDecoration.lineThrough,fontFamily: 'poppins',fontSize: 12,color: Colors.grey),),
-                      const Gap(5),
-                      Text("₹$finalPrice",style:const TextStyle(fontFamily: 'poppins',fontSize: 14,color: Color.fromARGB(255, 0, 0, 0),fontWeight: FontWeight.bold),)
-                    ],
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(quantity,style:const TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.grey),),
-                  changeQuantity(w, h),
-                ],
-              )
-            ],
-          ),
-        )
-      ],
-    ),
-  );
-}
 
 
 
 
-
-Widget changeQuantity(w,h){
-  return SizedBox(
-    width: w * 0.22,
-    child: Row(
-      children: [
-        GestureDetector(
-          child: Container(
-            width: w * 0.07,
-            height: w * 0.07,
-            decoration: BoxDecoration(
-              color: Constants.customRed,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child:const Icon(Icons.add,color: Colors.white,size: 20,),
-          ),
-        ),
-        SizedBox(
-          width: w * 0.08,
-          child:const Center(child: Text("1",style: TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold),)),
-        ),
-        GestureDetector(
-          child: Container(
-            width: w * 0.07,
-            height: w * 0.07,
-            decoration: BoxDecoration(
-              color: Constants.customRed,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child:const Icon(Icons.remove,color: Colors.white,size: 20,),
-          ),
-        ),
-      ],
-    ),
-  );
-}
