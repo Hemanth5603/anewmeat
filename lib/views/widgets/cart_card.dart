@@ -1,6 +1,9 @@
 import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/cart_controller.dart';
+import 'package:anewmeat/controllers/category_controller.dart';
 import 'package:anewmeat/views/authorized/products_page.dart';
+import 'package:anewmeat/views/components/category_item.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -16,7 +19,8 @@ class CartCard extends StatefulWidget {
     required this.originalPrice,
     required this.finalPrice,
     required this.quantity,
-    required this.cartController
+    required this.cartController,
+    required this.isLoading
   });
   int index;
   String id;
@@ -28,6 +32,7 @@ class CartCard extends StatefulWidget {
   String finalPrice;
   String quantity;
   CartController cartController;
+  bool isLoading;
 
   @override
   State<CartCard> createState() => _CartCardState();
@@ -98,8 +103,10 @@ class _CartCardState extends State<CartCard> {
                           ),
                           onTap: (){
                             setState(() {
-                              cartController.getCartModel!.products[0].items[widget.index].value! + 1;
-                              // cartController.incrementCartItemValue(widget.id, cartController.getCartModel?.products[0].items[widget.index].value);
+                              widget.isLoading = true;
+                              cartController.incrementCartItemValue(widget.id,widget.index);
+                              print(cartController.getCartModel!.products[0].items[widget.index].value!);
+                              widget.isLoading = false;
                             });
                           },
                         ),
@@ -119,7 +126,36 @@ class _CartCardState extends State<CartCard> {
                           ) ,
                           onTap: (){
                             setState(() {
-                              cartController.getCartModel!.products[0].items[widget.index].value! - 1;
+                              if(cartController.getCartModel!.products[0].items[widget.index].value! > 1){
+                                 cartController.decrementCartItemValue(widget.id,widget.index);
+                              }else{
+                                showDialog(context: context, 
+                                  builder: (context){
+                                    return CupertinoAlertDialog(
+                                  title: const Text("Want to delete item ?"),
+                                  actions: [
+                                    CupertinoDialogAction(
+                                      onPressed: (){
+                                        Get.back();
+                                      },
+                                      child:const Text("Back"),
+                                    ),
+                                    CupertinoDialogAction(
+                                      onPressed: (){
+                                        cartController.deleteCartItem(widget.id);
+                                        cartController.getCartItems();
+                                        Get.back();
+                                      },
+                                      child: const Text("Delete"),
+                                    )
+                                  ],
+                                  );
+                                  }
+                                );
+                                
+                                //
+                              }
+                              print(cartController.getCartModel!.products[0].items[widget.index].value!);
                             });
                           },
                         ),

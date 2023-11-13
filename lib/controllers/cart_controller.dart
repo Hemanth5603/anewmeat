@@ -51,7 +51,6 @@ class CartController extends GetxController{
 
 
   Future getCartItems() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     try{
       isLoading(true);
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -109,7 +108,8 @@ class CartController extends GetxController{
 
 
 
-  Future incrementCartItemValue(id,value) async{
+  Future incrementCartItemValue(id,index) async{
+    getCartModel!.products[0].items[index].value = getCartModel!.products[0].items[index].value! + 1 ;
     try{
       final uri = Uri.parse(APIConstants.baseUrl + APIConstants.updateCart);
       final headers = {
@@ -117,7 +117,7 @@ class CartController extends GetxController{
       };
       final body = {
         "id":id,
-        "value":value
+        "value":getCartModel!.products[0].items[index].value.toString()
       };
       var response = await http.post(uri,headers: headers,body: body);
       if(response.statusCode == 200){
@@ -136,7 +136,32 @@ class CartController extends GetxController{
   }
 
 
-
+  Future decrementCartItemValue(id,index) async{
+    getCartModel!.products[0].items[index].value = getCartModel!.products[0].items[index].value! - 1 ;
+    try{
+      final uri = Uri.parse(APIConstants.baseUrl + APIConstants.updateCart);
+      final headers = {
+        "number":"7997435603"
+      };
+      final body = {
+        "id":id,
+        "value":getCartModel!.products[0].items[index].value.toString()
+      };
+      var response = await http.post(uri,headers: headers,body: body);
+      if(response.statusCode == 200){
+        var data = jsonDecode(response.body.toString());
+        updateCartModel = CartModel.fromJson(data);
+      }else{
+        if(kDebugMode) print("Error while decrementing Item value");
+      }
+       if(kDebugMode) print(response.body);
+    }catch(e){
+      if(kDebugMode){
+        print("Error $e");
+      }
+    }finally{
+    }
+  }
 
 
 }
