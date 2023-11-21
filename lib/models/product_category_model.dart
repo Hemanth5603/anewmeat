@@ -44,6 +44,7 @@ class Product {
         required this.quantity,
         this.value,
         required this.v,
+        this.isAdded
     });
 
     final String? id;
@@ -59,6 +60,7 @@ class Product {
     final String? quantity;
     int? value = 1;
     final int? v;
+    bool? isAdded = false;
 
     Product copyWith({
         String? id,
