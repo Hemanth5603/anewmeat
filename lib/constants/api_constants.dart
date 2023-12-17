@@ -1,3 +1,5 @@
+
+
 class APIConstants{
 
   static final headers = {'Content-Type': 'application/json'};
@@ -10,5 +12,6 @@ class APIConstants{
   static String getCart = "getCart";
   static String deleteCart = "deleteCart";
   static String updateCart = "updateCart";
+  static String getCoupons = "getCoupons";
 
 }
