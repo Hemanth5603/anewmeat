@@ -1,12 +1,8 @@
 import 'package:anewmeat/controllers/cart_controller.dart';
-import 'package:anewmeat/models/cart_model.dart';
 import 'package:anewmeat/views/authorized/product_page.dart';
-import 'package:anewmeat/views/authorized/products_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductCard extends StatefulWidget {
   ProductCard({
@@ -23,7 +19,11 @@ class ProductCard extends StatefulWidget {
     required this.finalPrice,
     required this.quantity,
     this.value,
-    required this.cartController
+    this.isAdded,
+    required this.isLoading,
+    required this.cartController,
+    required this.length,
+    required this.index,
   });
 
   double w;
@@ -38,7 +38,11 @@ class ProductCard extends StatefulWidget {
   String? finalPrice;
   int? value = 1;
   String? quantity;
+  bool? isAdded;
+  var isLoading = false.obs;
   CartController cartController;
+  int index;
+  int length;
 
 
 
@@ -52,7 +56,9 @@ class _ProductCardState extends State<ProductCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
     child: Container(
-      margin: EdgeInsets.only(bottom: widget.h * 0.02),
+      margin: widget.index == widget.length - 1
+      ? EdgeInsets.only(bottom: widget.h * 0.3)
+      : EdgeInsets.only(bottom: widget.h * 0.02),
       width: widget.w,
       height: widget.h * 0.35,
   
@@ -122,24 +128,29 @@ class _ProductCardState extends State<ProductCard> {
                         child:Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            !widget.cartController.cartList.contains(widget.productName) 
-                            ? const Text("Add",style: TextStyle(fontFamily: 'poppins',color: Colors.white,fontSize: 15),) 
-                            : const Text("Remove",style: TextStyle(fontFamily: 'poppins',color: Colors.white,fontSize: 15),)
+                            /*!widget.cartController.cartList.contains(widget.productName) ||*/ widget.isAdded == true
+                            ? const Text("Remove",style: TextStyle(fontFamily: 'poppins',color: Colors.white,fontSize: 15),) 
+                            : const Text("Add",style: TextStyle(fontFamily: 'poppins',color: Colors.white,fontSize: 15),)
                           ],
                         ),
                       ),
                       onTap: () async{
-                        setState(() {
+                        setState((){
                           if (kDebugMode) {
                             print("clicked");
                           }
-                          if(widget.cartController.cartList.contains(widget.productName)){
-                            widget.cartController.cartList.remove(widget.productName);
+                          if(widget.isAdded == true){
+                            widget.isLoading(true);
                             widget.cartController.deleteCartItem(widget.id);
+                            widget.isAdded = false;
+                            widget.cartController.getCartItems();
+                            widget.isLoading(false);
                           }else{
-                            widget.cartController.cartList.add(widget.productName!);
+                            /*widget.cartController.cartList.add(widget.productName!);*/
                             widget.cartController.isCartEmpty = false;
                             widget.cartController.addToCart(widget.id,widget.productName,widget.imageURL, widget.originalPrice, widget.finalPrice, widget.quantity,widget.value);
+                            widget.isAdded = true;
+                            widget.cartController.getCartItems();
                           }
                         });
                         if (kDebugMode) {
@@ -149,7 +160,7 @@ class _ProductCardState extends State<ProductCard> {
                     ) 
                   ],
                 )
-              ],
+              ], 
             ),
           )
         ],

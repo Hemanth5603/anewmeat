@@ -1,19 +1,19 @@
-
-
 import 'dart:convert';
-
 import 'package:anewmeat/constants/api_constants.dart';
+import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/models/product_category_model.dart';
 import 'package:anewmeat/models/product_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class ProductController extends GetxController{
 
-  var isLoading = false.obs;
+  RxBool isLoading = false.obs;
   var categoryName = "";
   ProductModel? productModel;
   ProductCategoryModel? productCategoryModel;
+  CartController cartController = Get.put(CartController());
 
 
   @override
@@ -32,11 +32,18 @@ class ProductController extends GetxController{
       if(response.statusCode == 200){
         var data = jsonDecode(response.body.toString());
         productModel = ProductModel.fromJson(data);
+        for(int i = 0;i < productModel!.products.length;i++ ){
+          for(int j = 0;j< cartController.getCartModel!.products[0].items.length;j++){
+            if(productModel!.products[i].id == cartController.getCartModel!.products[0].items[j].id){
+              productModel!.products[i].isAdded = true;
+            }
+          }
+        }
       }else{
-        print("Error Fetching Products Data");
+        if(kDebugMode) print("Error Fetching Products Data");
       } 
     }catch (e) {
-      print('Error while getting data is $e');
+      if(kDebugMode) print('Error while getting data is $e');
     } finally {
       isLoading(false);
     }
@@ -47,25 +54,34 @@ class ProductController extends GetxController{
 
   Future<void> fetchCategoryProducts() async{
     try{
+      print("Called fetch");
       isLoading(true);
       final uri = Uri.parse(APIConstants.baseUrl +APIConstants.getProducts);
 
       final body = {
         "categorieName":categoryName
       };
-
       var response = await http.post(uri,body: body);
 
       if(response.statusCode == 200){
         var data = jsonDecode(response.body.toString());
         productCategoryModel = ProductCategoryModel.fromJson(data);
+
+        for(int i = 0;i < productCategoryModel!.categoryProducts.length;i++ ){
+          for(int j = 0;j< cartController.getCartModel!.products[0].items.length;j++){
+            if(productCategoryModel!.categoryProducts[i].id == cartController.getCartModel!.products[0].items[j].id){
+              productCategoryModel!.categoryProducts[i].isAdded = true;
+            }
+          }
+        }
+        isLoading(false);
       }else{
         print("Error Fetching specific products");
       }
     }catch(e){
       print("$e");
     }finally{
-      isLoading(false);
+      
     }
   }
 

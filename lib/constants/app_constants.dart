@@ -25,5 +25,6 @@ class Constants{
     ];
 
   static Color customRed =const Color.fromARGB(255, 206, 53, 65);
+  static Color customGreen =const Color.fromARGB(255,27,133,84);
 
 }

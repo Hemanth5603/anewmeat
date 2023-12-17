@@ -1,6 +1,9 @@
+import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/controllers/category_controller.dart';
 import 'package:anewmeat/controllers/products_controller.dart';
 import 'package:anewmeat/views/components/category_item.dart';
+import 'package:anewmeat/views/widgets/product_listing_card.dart';
+import 'package:anewmeat/views/widgets/search_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -14,10 +17,19 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+
+  ProductController productController = Get.put(ProductController());
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    productController.fetchAllProducts();
+  }
   @override
   Widget build(BuildContext context) {
     var categoryController = Get.put(CategoryController());
     var productController = Get.put(ProductController());
+    var cartController = Get.put(CartController());
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -27,7 +39,7 @@ class _SearchPageState extends State<SearchPage> {
       ),
       body: SafeArea(
         child: Padding(
-          padding:const EdgeInsets.all(10),
+          padding:const EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -76,6 +88,30 @@ class _SearchPageState extends State<SearchPage> {
                       )
                     )
                   ),
+              Container(
+                width: w,
+                height: h * 0.525,
+                child: Obx(() => cartController.isLoading.value
+                ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+                : ListView.builder(
+                  itemCount: productController.productModel?.products.length ?? 0,
+                  itemBuilder: (context,index){
+                    return SearchCard(
+                      w:w,
+                      h:h,
+                      name: productController.productModel?.products[index].productName ?? "",
+                      price:productController.productModel?.products[index].finalPrice ?? "",
+                      index: index,
+                      imageUrl: productController.productModel?.products[index].productImage ?? "",
+                      pieces: productController.productModel?.products[index].pieces ?? "",
+                      cartController: cartController,
+                    );
+                    } ,
+                  )
+                ),
+              )
             ],
           ),
         ),
@@ -83,4 +119,5 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
+
 

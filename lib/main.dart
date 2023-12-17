@@ -1,3 +1,4 @@
+import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/utils/shared_prefs.dart';
 import 'package:anewmeat/views/authentication/login.dart';
 import 'package:anewmeat/views/authorized/cart_page.dart';
@@ -18,9 +19,16 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       theme: ThemeData(
-        scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255),
+        fontFamily: 'poppins',
+        scaffoldBackgroundColor:const Color.fromARGB(255, 255, 255, 255),
+        primaryColor: Constants.customRed,
+        colorScheme: ColorScheme.light(
+          primary: Constants.customRed
+        ),
+
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.transparent,
+          
           elevation: 0,
         ),
       ),

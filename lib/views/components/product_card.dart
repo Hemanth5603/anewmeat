@@ -4,7 +4,7 @@ import 'package:anewmeat/views/components/add_button.dart';
 import 'package:anewmeat/views/components/free_delivery.dart';
 import 'package:flutter/material.dart';
 
-Widget productCard(w,h,imageURL,productName,productDescription,quantity,originalPrice,finalPrice,offer,isOffer,isFreeDelivery){
+Widget productCard(w,h,imageURL,productName,productDescription,quantity,originalPrice,finalPrice,offer,isOffer,isFreeDelivery,isAdded){
   return Container(
     width: w * 0.5,
     margin:const EdgeInsets.only(left: 10,right: 5),
@@ -52,7 +52,7 @@ Widget productCard(w,h,imageURL,productName,productDescription,quantity,original
                     const SizedBox(width: 5,),
                     Text("₹" + finalPrice,style: TextStyle(fontFamily: 'poppins',fontSize: 16,color: Constants.customRed,fontWeight: FontWeight.bold),),
                     const SizedBox(width: 12,),
-                    addButton(w, h)
+                    addButton(w, h,isAdded)
                   ],
                 )
               ],

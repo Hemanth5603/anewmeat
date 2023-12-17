@@ -41,27 +41,68 @@ class _HomeState extends State<Home> {
     isLoading = true;
      WidgetsBinding.instance.addPostFrameCallback((_)async {
       await initializeHome();
-     }
-    );
-    
-    
+     });
+    pageController.addListener(() {
+      int currentPage = pageController.page!.round();
+      if (currentPage != selectedIndex) {
+        setState(() {
+          selectedIndex = currentPage;
+        });
+      }
+    });
+
   }
+  
 
-
+  
   @override
   Widget build(BuildContext context) {
 
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
-       bottomNavigationBar:WaterDropNavBar(
+       bottomNavigationBar:BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Constants.customRed,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        elevation: 10,
+        currentIndex: selectedIndex,
+        onTap: (value){
+          setState(() {
+            selectedIndex = value;
+          });
+          pageController.animateToPage(selectedIndex,
+                duration: const Duration(milliseconds: 600),
+                curve: Curves.easeOutQuad);
+        },
+        items:const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Home'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search_outlined),
+            activeIcon: Icon(Icons.search_rounded),
+            label: 'Search'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outlined),
+            activeIcon: Icon(Icons.person),
+            label: 'Account'
+          )
+        ],
+       ),
+       
+       /*WaterDropNavBar(
         backgroundColor: Constants.customRed,
         onItemSelected: (index){
           setState(() {
             selectedIndex = index;
           });          
           pageController.animateToPage(selectedIndex,
-                duration: const Duration(milliseconds: 400),
+                duration: const Duration(milliseconds: 600),
                 curve: Curves.easeOutQuad);
         }, 
         selectedIndex: selectedIndex,
@@ -69,24 +110,21 @@ class _HomeState extends State<Home> {
         waterDropColor :Colors.white,
           barItems : <BarItem>[
             BarItem(filledIcon: Icons.home, outlinedIcon:Icons.home_outlined,),
-            BarItem(filledIcon: Icons.category, outlinedIcon:Icons.category_outlined),
             BarItem(filledIcon: Icons.search, outlinedIcon:Icons.search_outlined),
             BarItem(filledIcon: Icons.person, outlinedIcon:Icons.person_outlined),
           ],
-      ) ,
+      ) ,*/
       body: Skeletonizer(
         enabled: isLoading,
-        child: PageView(
-          controller: pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          children:const <Widget> [
-            HomePage(),
-            CartPage(),
-            SearchPage(),
-            ProfilePage(),
-          ],
+        child:  PageView(
+            controller: pageController,
+            children:const <Widget> [
+              HomePage(),
+              SearchPage(),
+              ProfilePage(),
+            ],
+          ),
         ),
-      )
     );
   }
   

@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:anewmeat/constants/api_constants.dart';
 import 'package:anewmeat/models/category_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
+
 
 class CategoryController extends GetxController{
   var isLoading = false.obs;
@@ -32,22 +31,15 @@ class CategoryController extends GetxController{
         var data = jsonDecode(response.body.toString());
         categoryModel = CategoryModel.fromJson(data);
       }else{
-        print("Error Fetching Data");
+        if(kDebugMode) print("Error Fetching Data");
       } 
     }catch (e) {
-      print('Error while getting data is $e');
+      if(kDebugMode) print('Error while getting data is $e');
     } finally {
       isLoading(false);
       isPageLoading = true;
     }
 
-    
-
-    /*if(response.statusCode == 200){
-      return CategoryModel.fromJson(data);
-    }else{
-      return CategoryModel.fromJson(data);
-    }*/
   }
 }
 

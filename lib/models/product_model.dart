@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 class ProductModel {
     ProductModel({
         required this.products,
@@ -43,6 +45,8 @@ class Product {
         required this.pieces,
         required this.value,
         required this.v,
+        this.isAdded,
+
     });
 
     final String? id;
@@ -57,6 +61,8 @@ class Product {
     final String? pieces;
     int? value = 1;
     final int? v;
+    bool? isAdded = false;
+    
 
     Product copyWith({
         String? id,
@@ -82,7 +88,7 @@ class Product {
             isFreeDelivery: isFreeDelivery ?? this.isFreeDelivery,
             servings: servings ?? this.servings,
             pieces: pieces ?? this.pieces,
-            value: value ?? this.value,
+            value: value ?? value,
             v: v ?? this.v,
         );
     }

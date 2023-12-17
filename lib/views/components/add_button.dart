@@ -1,7 +1,7 @@
 import 'package:anewmeat/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 
-Widget addButton(w,h){
+Widget addButton(w,h,isAdded){
   return Container(
     width: w * 0.2,
     height: h * 0.035,
@@ -16,7 +16,10 @@ Widget addButton(w,h){
       ]
       
     ),
-    child: Center(child: Text("ADD",style: TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold,color: Constants.customRed,),)),
+    child: Center(child: isAdded == true 
+     ? Text("Remove",style: TextStyle(fontFamily: 'poppins',fontSize: 12,fontWeight: FontWeight.bold,color: Constants.customRed,),)
+     : Text("Add",style: TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold,color: Constants.customRed,),)
+     ),
   );
 }
 

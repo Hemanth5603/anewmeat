@@ -4,6 +4,7 @@ import 'package:anewmeat/controllers/category_controller.dart';
 import 'package:anewmeat/views/authorized/products_page.dart';
 import 'package:anewmeat/views/components/category_item.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -76,9 +77,9 @@ class _CartCardState extends State<CartCard> {
                   ),
                   Row(
                     children: [
-                      Text("₹${widget.originalPrice}",style:const TextStyle(decoration: TextDecoration.lineThrough,fontFamily: 'poppins',fontSize: 12,color: Colors.grey),),
+                      Text("₹${cartController.getCartModel!.products[0].items[widget.index].originalPrice.toString()}",style:const TextStyle(decoration: TextDecoration.lineThrough,fontFamily: 'poppins',fontSize: 12,color: Colors.grey),),
                       const Gap(5),
-                      Text("₹${widget.finalPrice}",style:const TextStyle(fontFamily: 'poppins',fontSize: 14,color: Color.fromARGB(255, 0, 0, 0),fontWeight: FontWeight.bold),)
+                      Text("₹${cartController.getCartModel!.products[0].items[widget.index].finalPrice.toString()}",style:const TextStyle(fontFamily: 'poppins',fontSize: 14,color: Color.fromARGB(255, 0, 0, 0),fontWeight: FontWeight.bold),)
                     ],
                   ),
                 ],
@@ -104,8 +105,9 @@ class _CartCardState extends State<CartCard> {
                           onTap: (){
                             setState(() {
                               widget.isLoading = true;
-                              cartController.incrementCartItemValue(widget.id,widget.index);
-                              print(cartController.getCartModel!.products[0].items[widget.index].value!);
+                              cartController.incrementCartItemValue(widget.id,widget.index,widget.originalPrice,widget.finalPrice);
+                              cartController.totalAmount = cartController.calculateTotalAmount();
+                              if(kDebugMode) print(cartController.getCartModel!.products[0].items[widget.index].value!);
                               widget.isLoading = false;
                             });
                           },
@@ -127,11 +129,14 @@ class _CartCardState extends State<CartCard> {
                           onTap: (){
                             setState(() {
                               if(cartController.getCartModel!.products[0].items[widget.index].value! > 1){
-                                 cartController.decrementCartItemValue(widget.id,widget.index);
+                                widget.isLoading = true;
+                                cartController.decrementCartItemValue(widget.id,widget.index,widget.originalPrice,widget.finalPrice);
+                                cartController.totalAmount = cartController.calculateTotalAmount();
+                                widget.isLoading = false;
                               }else{
                                 showDialog(context: context, 
                                   builder: (context){
-                                    return CupertinoAlertDialog(
+                                    return AlertDialog.adaptive(
                                   title: const Text("Want to delete item ?"),
                                   actions: [
                                     CupertinoDialogAction(
@@ -141,10 +146,16 @@ class _CartCardState extends State<CartCard> {
                                       child:const Text("Back"),
                                     ),
                                     CupertinoDialogAction(
-                                      onPressed: (){
-                                        cartController.deleteCartItem(widget.id);
-                                        cartController.getCartItems();
+                                      onPressed: () {
                                         Get.back();
+                                        setState(()async{
+                                          await cartController.deleteCartItem(widget.id);
+                                          await cartController.getCartItems();
+                                          cartController.cartItemsLength = cartController.getCartLength();
+                                          cartController.totalAmount -= int.parse(widget.finalPrice);
+                                          cartController.totalAmount = cartController.calculateTotalAmount();
+                                          
+                                        });
                                       },
                                       child: const Text("Delete"),
                                     )
@@ -152,10 +163,8 @@ class _CartCardState extends State<CartCard> {
                                   );
                                   }
                                 );
-                                
-                                //
                               }
-                              print(cartController.getCartModel!.products[0].items[widget.index].value!);
+                              if(kDebugMode) print(cartController.getCartModel!.products[0].items[widget.index].value!);
                             });
                           },
                         ),

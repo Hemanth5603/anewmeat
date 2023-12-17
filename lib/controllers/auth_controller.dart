@@ -27,7 +27,6 @@ class AuthController extends GetxController{
   }
 
   void register() async {
-    print("Clicked");
     final uri = Uri.parse(APIConstants.baseUrl + APIConstants.register);
     final headers = {'Content-Type': 'application/json'};
     Map<String,dynamic> body = {
