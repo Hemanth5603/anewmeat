@@ -1,4 +1,5 @@
 import 'package:anewmeat/constants/app_constants.dart';
+import 'package:anewmeat/controllers/billing_controller.dart';
 import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/controllers/category_controller.dart';
 import 'package:anewmeat/views/authorized/products_page.dart';
@@ -21,6 +22,7 @@ class CartCard extends StatefulWidget {
     required this.finalPrice,
     required this.quantity,
     required this.cartController,
+    required this.billingController,
     required this.isLoading
   });
   int index;
@@ -33,6 +35,7 @@ class CartCard extends StatefulWidget {
   String finalPrice;
   String quantity;
   CartController cartController;
+  BillingController billingController;
   bool isLoading;
 
   @override
@@ -106,7 +109,7 @@ class _CartCardState extends State<CartCard> {
                             setState(() {
                               widget.isLoading = true;
                               cartController.incrementCartItemValue(widget.id,widget.index,widget.originalPrice,widget.finalPrice);
-                              cartController.totalAmount = cartController.calculateTotalAmount();
+                              widget.billingController.totalAmount = widget.billingController.calculateTotalAmount();
                               if(kDebugMode) print(cartController.getCartModel!.products[0].items[widget.index].value!);
                               widget.isLoading = false;
                             });
@@ -131,7 +134,7 @@ class _CartCardState extends State<CartCard> {
                               if(cartController.getCartModel!.products[0].items[widget.index].value! > 1){
                                 widget.isLoading = true;
                                 cartController.decrementCartItemValue(widget.id,widget.index,widget.originalPrice,widget.finalPrice);
-                                cartController.totalAmount = cartController.calculateTotalAmount();
+                                widget.billingController.totalAmount = widget.billingController.calculateTotalAmount();
                                 widget.isLoading = false;
                               }else{
                                 showDialog(context: context, 
@@ -152,8 +155,8 @@ class _CartCardState extends State<CartCard> {
                                           await cartController.deleteCartItem(widget.id);
                                           await cartController.getCartItems();
                                           cartController.cartItemsLength = cartController.getCartLength();
-                                          cartController.totalAmount -= int.parse(widget.finalPrice);
-                                          cartController.totalAmount = cartController.calculateTotalAmount();
+                                          widget.billingController.totalAmount -= int.parse(widget.finalPrice);
+                                          widget.billingController.totalAmount = widget.billingController.calculateTotalAmount();
                                           
                                         });
                                       },

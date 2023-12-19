@@ -1,4 +1,5 @@
 import 'package:anewmeat/constants/app_constants.dart';
+import 'package:anewmeat/controllers/billing_controller.dart';
 import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/views/authorized/coupon_page.dart';
 import 'package:anewmeat/views/authorized/products_page.dart';
@@ -19,22 +20,27 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  BillingController billingController = Get.put(BillingController());
+  var isLoading = false.obs;
 
   @override
   void initState() {
     super.initState();
     cartController.getCartItems();
     setState(() {
-      cartController.totalAmount  = cartController.calculateTotalAmount();
-      cartController.cartItemsLength = cartController.getCartLength()!;
+      isLoading.value = true;
+      billingController.totalAmount  = billingController.calculateTotalAmount();
+      cartController.cartItemsLength = cartController.getCartLength();
+      isLoading.value = false;
 
     });
     
   }
   @override
   Widget build(BuildContext context){
-    var isLoading = false.obs;
+    
     CartController cartController = Get.put(CartController());
+    
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return WillPopScope(
@@ -97,7 +103,7 @@ class _CartPageState extends State<CartPage> {
                       child: CircularProgressIndicator(),
                     ) 
                     : Center(
-                      child: Text("Pay ₹${cartController.totalAmount.toString()}",style:const TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold),),
+                      child: Text("Pay ₹${billingController.totalAmount.toString()}",style:const TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold),),
                     ),)
                   ),
                 )
@@ -156,6 +162,7 @@ class _CartPageState extends State<CartPage> {
                                             finalPrice: cartController.getCartModel?.products[0].items[index].finalPrice ?? "",
                                             quantity:cartController.getCartModel?.products[0].items[index].quantity ?? "",
                                             cartController: cartController,
+                                            billingController: billingController,
                                             isLoading: isLoading.value,
                                           );
                                         }
@@ -178,7 +185,7 @@ class _CartPageState extends State<CartPage> {
                                 const Text("Offers & Benefits",style: TextStyle(fontFamily: 'poppins',fontSize: 18,fontWeight: FontWeight.bold),),
                                 SizedBox(height: h * 0.02,),
                                 GestureDetector(
-                                  onTap: () => Get.to(const CouponPage()),
+                                  onTap: () => Get.to(()=> const CouponPage()),
                                   child: Container(
                                     width: w,
                                     height: h * 0.06,
@@ -255,7 +262,7 @@ class _CartPageState extends State<CartPage> {
                                 SizedBox(height: h * 0.01,),
                                 billItem("Delivery fee","₹50",Colors.black),
                                 SizedBox(height: h * 0.01,),
-                                billItem("Total","₹${cartController.totalAmount.toString()}",Colors.black),
+                                billItem("Total","₹${billingController.totalAmount.toString()}",Colors.black),
                               ],
                             ),
                           ),

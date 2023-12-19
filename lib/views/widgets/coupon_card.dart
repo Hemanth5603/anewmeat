@@ -1,6 +1,10 @@
+import 'dart:isolate';
+
 import 'package:anewmeat/constants/app_constants.dart';
+import 'package:anewmeat/controllers/billing_controller.dart';
 import 'package:anewmeat/models/coupon_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 
 // ignore: must_be_immutable
@@ -9,16 +13,22 @@ class CouponCard extends StatefulWidget {
     super.key,
     required this.w,
     required this.h,
+    required this.index,
     required this.name,
     required this.code,
     required this.conditions,
+    required this.billingController,
+    required this.isLoading
   });
   
   double w;
   double h;
+  int index;
   String name;
   String code;
+  var isLoading;
   List<Conditions>? conditions;
+  BillingController billingController;
   @override
   State<CouponCard> createState() => _CouponCardState();
 }
@@ -50,16 +60,22 @@ class _CouponCardState extends State<CouponCard> {
             children: [
               Icon(Icons.local_offer_rounded,color: Constants.customGreen,),
               const SizedBox(width: 10,),
-              Container(
+              SizedBox(
                 width: widget.w * 0.55,
                 child: Text(widget.name,style: const TextStyle(fontSize: 14,fontFamily: 'poppins',fontWeight: FontWeight.bold),)),
               const SizedBox(width: 20,),
               TextButton(onPressed: (){
-              },
-              child:Text("Apply",style: TextStyle(fontFamily: 'poppins',fontSize: 14,color: Constants.customRed,fontWeight: FontWeight.bold),)
-              )
+                setState(()  {
+                  widget.isLoading(true);
+                  widget.billingController.discount = widget.billingController.applyCoupon(widget.index);
+                  widget.isLoading(false);
+                  Get.back();
+                });
+                
+              },child: Text("Apply",style: TextStyle(fontFamily: 'poppins',fontSize: 14,color: Constants.customRed,fontWeight: FontWeight.bold))) 
             ],
           ),
+          
           const SizedBox(height: 20,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,14 +118,14 @@ class _CouponCardState extends State<CouponCard> {
           const SizedBox(height: 20,),
           Visibility(
             visible: isExtended,
-            child: Container(
+            child: SizedBox(
               height: widget.h * 0.1,
               child: ListView.builder(
                 itemCount: widget.conditions?.length,
                 itemBuilder: (context,index){
                   return Container(
-                    margin: EdgeInsets.only(left: 10,bottom: 10),
-                    child: Text(" - " + widget.conditions![index].description,style:const TextStyle(fontFamily: 'poppins'),)
+                    margin: const EdgeInsets.only(left: 10,bottom: 10),
+                    child: Text(" - ${widget.conditions![index].description}",style:const TextStyle(fontFamily: 'poppins'),)
                   );
                 }
               ),

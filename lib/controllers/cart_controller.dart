@@ -14,7 +14,7 @@ class CartController extends GetxController{
   List<dynamic> totalCartItems = [].obs;
   var isLoading = false.obs;
   var isCalculating = false.obs;
-  double totalAmount = 0.0;
+  //double totalAmount = 0.0;
   int cartItemsLength = 0;
   var totalItemsLength = 0.obs;
 
@@ -193,6 +193,7 @@ class CartController extends GetxController{
     }
   }
 
+
   int getCartLength(){
     isLoading(true);
     int len = getCartModel!.products[0].items.length;
@@ -202,16 +203,10 @@ class CartController extends GetxController{
   }
 
 
-  double calculateTotalAmount(){
-    double total = 0;
-    
-    for(int i = 0; i < getCartModel!.products[0].items.length;i++){
-      total += double.parse(getCartModel!.products[0].items[i].finalPrice);
-    }
-    getCartModel?.totalAmount = total;
-    totalAmount = total;
-    return total;
-  }
+
+
+
+
 
 
   

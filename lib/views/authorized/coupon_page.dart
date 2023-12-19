@@ -1,4 +1,4 @@
-import 'package:anewmeat/controllers/coupon_controller.dart';
+import 'package:anewmeat/controllers/billing_controller.dart';
 import 'package:anewmeat/views/widgets/coupon_card.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +18,12 @@ class _CouponPageState extends State<CouponPage> {
   @override
   void initState() {
     super.initState();
-    couponController.getCoupons();
+    billingController.getCoupons();
   }
-  CouponController couponController = Get.put(CouponController());
+  BillingController billingController = Get.put(BillingController());
   @override
   Widget build(BuildContext context) {
+    var isLoading = false.obs();
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -37,20 +38,22 @@ class _CouponPageState extends State<CouponPage> {
           padding:const EdgeInsets.all(12),
           width: w,
           height: h,
-            child:Obx(() => couponController.isLoading.value 
+            child:Obx(() => billingController.isLoading.value 
              ? const Center(
               child: CircularProgressIndicator(),
              ) 
              : ListView.builder(
-              itemCount: couponController.couponModel?.coupons.length,
+              itemCount: billingController.couponModel?.coupons.length,
               itemBuilder: (context,index){
                 return CouponCard(
                   w:w,
                   h:h,
-                  name: couponController.couponModel?.coupons[index].name ?? " ",
-                  code: couponController.couponModel?.coupons[index].code ?? " ",
-                  conditions: couponController.couponModel?.coupons[index].conditions,
-                  
+                  index:index,
+                  name: billingController.couponModel?.coupons[index].name ?? " ",
+                  code: billingController.couponModel?.coupons[index].code ?? " ",
+                  conditions: billingController.couponModel?.coupons[index].conditions,
+                  isLoading:isLoading,
+                  billingController: billingController,
                 );
               },
             )   
