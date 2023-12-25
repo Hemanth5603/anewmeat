@@ -1,20 +1,13 @@
 import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/controllers/category_controller.dart';
-import 'package:anewmeat/views/authorized/product_page.dart';
-import 'package:anewmeat/views/authorized/products_page.dart';
-import 'package:anewmeat/views/authorized/cart_page.dart';
-import 'package:anewmeat/views/authorized/tabs/categories_page.dart';
 import 'package:anewmeat/views/authorized/tabs/home_page.dart';
 import 'package:anewmeat/views/authorized/tabs/profile_page.dart';
 import 'package:anewmeat/views/authorized/tabs/search_page.dart';
 import 'package:flutter/material.dart';
-import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:water_drop_nav_bar/water_drop_nav_bar.dart';
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -30,7 +23,6 @@ class _HomeState extends State<Home> {
   CartController cartController = Get.put(CartController());
 
 
-  final _controller = NotchBottomBarController(index: 0);
   var selectedIndex = 0;
   late PageController pageController;
   
@@ -171,7 +163,7 @@ Widget BottomNavbarItem(icon,iconName){
     child: Column(
       children: [
         Icon(icon,size: 30,color: Colors.white,),
-        const Gap(5),
+        SizedBox(height: 5,),
         Text(iconName,style:const TextStyle(fontFamily: 'poppins',fontSize: 12,fontWeight: FontWeight.bold,color: Colors.white),)
       ],
     ),

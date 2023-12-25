@@ -1,4 +1,4 @@
-import 'package:anewmeat/controllers/auth_controller.dart';
+import 'package:anewmeat/controllers/user_controller.dart';
 import 'package:anewmeat/views/components/custom_button.dart';
 import 'package:anewmeat/views/components/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +12,15 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
-AuthController authController = Get.put(AuthController());
+UserController userController = Get.put(UserController());
 
 class _LoginState extends State<Login> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    userController.getCurrentLocation();
+  }
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -43,7 +49,7 @@ class _LoginState extends State<Login> {
               SizedBox(
                 width: w,
                 height : h * 0.15,
-                child: CustomButton(title: "Send OTP",height: h * 0.08,width: w * 0.82,callback: authController.sendOtp,)),
+                child: CustomButton(title: "Send OTP",height: h * 0.08,width: w * 0.82,callback: userController.sendOtp,)),
             ],
           ),
         ),

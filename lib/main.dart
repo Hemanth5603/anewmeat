@@ -2,6 +2,7 @@ import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/utils/shared_prefs.dart';
 import 'package:anewmeat/views/authentication/login.dart';
 import 'package:anewmeat/views/authorized/cart_page.dart';
+import 'package:anewmeat/views/authorized/location.dart';
 import 'package:anewmeat/views/home.dart';
 import 'package:anewmeat/views/authorized/products_page.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home:const Scaffold(
         body: Center(
-          child: Home(),
+          child: Login(),
         ),
       ),
     );

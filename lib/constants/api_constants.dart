@@ -13,5 +13,7 @@ class APIConstants{
   static String deleteCart = "deleteCart";
   static String updateCart = "updateCart";
   static String getCoupons = "getCoupons";
+  static String createOrder = "saveOrders";
+  static String getOrders = "getOrders";
 
 }

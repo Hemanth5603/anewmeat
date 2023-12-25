@@ -7,11 +7,14 @@ List<UserModel> productFromJson(String str) =>
 
 class UserModel{
   UserModel({
-    required this.id,
-    required this.name,
-    required this.phoneNumber,
-    required this.email,
-    required this.status,
+    this.id,
+    this.name,
+    this.phoneNumber,
+    this.email,
+    this.status,
+    this.address,
+    this.latitute,
+    this.longitude
 
   });
   final String? id;
@@ -19,6 +22,9 @@ class UserModel{
   final String? phoneNumber;
   final String? email;
   final String? status;
+  double? latitute;
+  double? longitude;
+  String? address = "null".obs();
 
 
   factory UserModel.fromJson(Map<String,dynamic> json){

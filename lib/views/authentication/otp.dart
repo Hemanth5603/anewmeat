@@ -82,7 +82,7 @@ class _OTPState extends State<OTP> {
               SizedBox(
                  width: w,
                 height : h * 0.15,
-                child: CustomButton(title: "Login", height: h*0.07, width: w * 0.8, callback: authController.verifyOtp)
+                child: CustomButton(title: "Login", height: h*0.07, width: w * 0.8, callback: userController.verifyOtp)
               )
               
 
