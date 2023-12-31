@@ -1,4 +1,6 @@
 
+
+
 import 'package:get/get.dart';
 
 class CartModel {
@@ -66,12 +68,16 @@ class Items {
     required this.productImage,
     required this.quantity,
     required this.value,
+    required this.fPrice,
+    required this.oPrice
   });
   late final String id;
   late final String productName;
   late String finalPrice;
   late String originalPrice;
   late String productImage;
+  late String fPrice;
+  late String oPrice;
   late final String quantity;
   int? value = 1;
   
@@ -94,6 +100,8 @@ class Items {
     _data['productImage'] = productImage;
     _data['quantity'] = quantity;
     _data['value'] = value;
+    _data['fprice'] = fPrice;
+    _data['oprice'] = oPrice;
     return _data;
   }
 }

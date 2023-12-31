@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import 'package:anewmeat/constants/api_constants.dart';
 import 'package:anewmeat/models/user_model.dart';
+import 'package:anewmeat/views/authentication/location.dart';
 import 'package:anewmeat/views/authentication/otp.dart';
-import 'package:anewmeat/views/authorized/location.dart';
 import 'package:anewmeat/views/authorized/tabs/home_page.dart';
 import 'package:anewmeat/views/home.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +16,16 @@ class UserController extends GetxController{
 
   var userModelList = <UserModel>[].obs;
   Rx<UserModel> userModel = UserModel().obs;
-  TextEditingController nameController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController(text: 'Hemanth');
+  TextEditingController lastNameController = TextEditingController(text: 'Srinivas');
   TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  
+
 
 
   void sendOtp(){
     Get.to(const OTP(),transition: Transition.rightToLeft,duration: 300.milliseconds);
-    print("call back");
   }
 
   void verifyOtp(){

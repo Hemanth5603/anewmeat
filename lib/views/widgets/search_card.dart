@@ -13,6 +13,7 @@ class SearchCard extends StatefulWidget {
     required this.imageUrl,
     required this.pieces,
     required this.price,
+    required this.isAdded,
     required this.cartController,
   });
   double w;
@@ -22,6 +23,7 @@ class SearchCard extends StatefulWidget {
   String name;
   String pieces;
   String price;
+  bool? isAdded;
   CartController cartController;
 
   @override
@@ -80,7 +82,9 @@ class _SearchCardState extends State<SearchCard> {
                               border: Border.all(color: Constants.customRed,width: 1),
                             ),
                             child: Center(
-                              child: Text("Add to Cart",style: TextStyle(fontFamily: 'poppins',fontSize: 14,fontWeight: FontWeight.bold,color: Constants.customRed),),
+                              child: widget.isAdded == true
+                              ? Text("Remove",style: TextStyle(fontFamily: 'poppins',fontSize: 14,fontWeight: FontWeight.bold,color: Constants.customRed),)
+                              : Text("Add to cart",style: TextStyle(fontFamily: 'poppins',fontSize: 14,fontWeight: FontWeight.bold,color: Constants.customRed),)
                             ),
                           )
                         ],

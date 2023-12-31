@@ -2,12 +2,11 @@ import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/controllers/category_controller.dart';
 import 'package:anewmeat/controllers/products_controller.dart';
 import 'package:anewmeat/views/components/category_item.dart';
-import 'package:anewmeat/views/widgets/product_listing_card.dart';
 import 'package:anewmeat/views/widgets/search_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+
+import '../../../models/product_model.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -16,17 +15,35 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> {
-
+class _SearchPageState extends State<SearchPage> { 
+  List<Product> filteredProducts = [];
+  String _query = '';
   ProductController productController = Get.put(ProductController());
+
+ 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     productController.fetchAllProducts();
   }
+  
+  void search(String query){
+    setState(() {
+      _query = query;
+      filteredProducts = productController.searchModel!.products
+        .where(
+          (item) => item.productName!.toLowerCase().contains(
+            query.toLowerCase()
+            )
+          ).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+
+
+
     var categoryController = Get.put(CategoryController());
     var productController = Get.put(ProductController());
     var cartController = Get.put(CartController());
@@ -35,6 +52,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title:const Text("Search",style: TextStyle(fontFamily: 'poppins',fontSize: 20,color: Colors.black,fontWeight: FontWeight.bold),),
       ),
       body: SafeArea(
@@ -53,11 +71,14 @@ class _SearchPageState extends State<SearchPage> {
                   border: Border.all(color: Colors.grey),
                   color: Colors.grey.shade100,
                 ),
-                child:const TextField(
-                  decoration: InputDecoration(
+                child:TextField(
+                  onChanged: (value){
+                    search(value);
+                  },
+                  decoration:const InputDecoration(
                     border: InputBorder.none,
                     hintText: "Search for categories, tem etc ...",
-                    hintStyle: TextStyle(fontFamily: 'poppins',fontSize: 16,color: const Color.fromARGB(255, 104, 104, 104))
+                    hintStyle: TextStyle(fontFamily: 'poppins',fontSize: 16,color: Color.fromARGB(255, 104, 104, 104))
                   ),
                   cursorColor: Colors.black,
                 ),
@@ -88,15 +109,34 @@ class _SearchPageState extends State<SearchPage> {
                       )
                     )
                   ),
-              Container(
+              SizedBox(
                 width: w,
-                height: h * 0.525,
+                height: h * 0.6,
                 child: Obx(() => cartController.isLoading.value
                 ? const Center(
                   child: CircularProgressIndicator(),
                 )
-                : ListView.builder(
-                  itemCount: productController.productModel?.products.length ?? 0,
+                : filteredProducts.isNotEmpty || _query.isNotEmpty 
+                  ? filteredProducts.isEmpty 
+                    ? const Center(
+                      child: Text("No Results Found",style: TextStyle(fontFamily: 'poppins',fontWeight: FontWeight.bold),),
+                    ) : ListView.builder(
+                  itemCount: filteredProducts.length ?? 0,
+                  itemBuilder: (context,index){
+                    return SearchCard(
+                      w:w,
+                      h:h,
+                      name: filteredProducts[index].productName ?? "",
+                      price:filteredProducts[index].finalPrice ?? "",
+                      index: index,
+                      isAdded: filteredProducts[index].isAdded,
+                      imageUrl: filteredProducts[index].productImage ?? "",
+                      pieces: filteredProducts[index].pieces ?? "",
+                      cartController: cartController,
+                    );
+                    } ,
+                  ) : ListView.builder(
+                  itemCount: productController.searchModel?.products.length ?? 0,
                   itemBuilder: (context,index){
                     return SearchCard(
                       w:w,
@@ -106,6 +146,7 @@ class _SearchPageState extends State<SearchPage> {
                       index: index,
                       imageUrl: productController.productModel?.products[index].productImage ?? "",
                       pieces: productController.productModel?.products[index].pieces ?? "",
+                      isAdded: productController.searchModel!.products[index].isAdded,
                       cartController: cartController,
                     );
                     } ,

@@ -1,6 +1,4 @@
-import 'package:anewmeat/views/authentication/login.dart';
 import 'package:anewmeat/views/authentication/otp.dart';
-import 'package:anewmeat/views/components/custom_button.dart';
 import 'package:anewmeat/views/components/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
