@@ -1,5 +1,6 @@
 import 'package:anewmeat/constants/app_constants.dart';
-import 'package:anewmeat/views/authorized/tabs/account/edit_profile.dart';
+import 'package:anewmeat/views/authorized/tabs/account/orders/orders_page.dart';
+import 'package:anewmeat/views/authorized/tabs/account/profile/edit_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -46,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               Row(
                                 children: [
-                                  Text("Hemanth Srinivas",style: TextStyle(fontSize: 20,fontFamily: 'poppins',fontWeight: FontWeight.bold),),
+                                  const Text("Hemanth Srinivas",style: TextStyle(fontSize: 20,fontFamily: 'poppins',fontWeight: FontWeight.bold),),
                                   SizedBox(width: w * 0.09,),
                                   TextButton(
                                     onPressed: (){
@@ -68,7 +69,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 const SizedBox(height: 8,),
-                Tile(w,h,Icons.shopping_bag_outlined,"Orders","Total Orders: 10",true,false),
+                GestureDetector(
+                  child: Tile(w,h,Icons.shopping_bag_outlined,"Orders","Total Orders: 10",true,false),
+                  onTap: (){
+                    Get.to(()=> const OrdersPage());
+                  },
+                ),
                 Tile(w,h,Icons.location_on_outlined,"Addresses","Saved Addresses: 2",true,false),
                 Tile(w,h,Icons.call_outlined,"Contact us","",false,false),
                 Tile(w,h,Icons.edit_document,"Terms & Conditions","",false,true),
