@@ -8,22 +8,30 @@ class SearchCard extends StatefulWidget {
     super.key,
     required this.h,
     required this.w,
+    required this.id,
     required this.index,
-    required this.name,
+    required this.productName,
     required this.imageUrl,
     required this.pieces,
-    required this.price,
+    required this.originalPrice,
+    required this.finalPrice,
     required this.isAdded,
+    required this.quantity,
+    this.value,
     required this.cartController,
   });
   double w;
   double h;
+  String id;
   int index;
   String imageUrl;
-  String name;
+  String productName;
   String pieces;
-  String price;
+  String quantity;
+  String originalPrice;
+  String finalPrice;
   bool? isAdded;
+  int? value = 1;
   CartController cartController;
 
   @override
@@ -63,7 +71,7 @@ class _SearchCardState extends State<SearchCard> {
                     SizedBox(
                       width: widget.w * 0.72,
                       height: widget.h * 0.03,
-                      child: Text(widget.name,style:const TextStyle(fontFamily: 'poppins',fontSize: 15),),
+                      child: Text(widget.productName,style:const TextStyle(fontFamily: 'poppins',fontSize: 15),),
                     ),
                     const SizedBox(height: 20,),
                     SizedBox(
@@ -72,20 +80,34 @@ class _SearchCardState extends State<SearchCard> {
                       child: Row(
                         children: [
                           Text("Pcs ${widget.pieces}  | ",style:const TextStyle(fontFamily: 'poppins',color: Colors.grey),),
-                          Text("₹${widget.price}",style:const TextStyle(fontFamily: 'poppins',fontSize: 14,fontWeight: FontWeight.bold),),
+                          Text("₹${widget.finalPrice}",style:const TextStyle(fontFamily: 'poppins',fontSize: 14,fontWeight: FontWeight.bold),),
                           SizedBox(width: widget.w * 0.18,),
-                          Container(
-                            width: widget.w * 0.3,
-                            height: widget.h * 0.038,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(color: Constants.customRed,width: 1),
+                          GestureDetector(
+                            child: Container(
+                              width: widget.w * 0.3,
+                              height: widget.h * 0.038,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: widget.isAdded == true ? Border.all(color: Constants.customRed,width: 1) : Border.all(color: Constants.customGreen,width: 1),
+                              ),
+                              child: Center(
+                                child: widget.isAdded == true
+                                ? Text("Remove",style: TextStyle(fontFamily: 'poppins',fontSize: 14,fontWeight: FontWeight.bold,color: Constants.customRed),)
+                                : Text("Add to cart",style: TextStyle(fontFamily: 'poppins',fontSize: 14,fontWeight: FontWeight.bold,color: Constants.customGreen),)
+                              ),
                             ),
-                            child: Center(
-                              child: widget.isAdded == true
-                              ? Text("Remove",style: TextStyle(fontFamily: 'poppins',fontSize: 14,fontWeight: FontWeight.bold,color: Constants.customRed),)
-                              : Text("Add to cart",style: TextStyle(fontFamily: 'poppins',fontSize: 14,fontWeight: FontWeight.bold,color: Constants.customRed),)
-                            ),
+                            onTap: () async{
+                              setState(() {
+                                if(widget.isAdded == true){
+                                  widget.cartController.deleteCartItem(widget.id);
+                                  widget.isAdded = false;
+                                }else{
+                                  widget.cartController.addToCart(widget.id,widget.productName,widget.imageUrl, widget.originalPrice, widget.finalPrice, widget.quantity,widget.value);
+                                  widget.isAdded = true;
+                                } 
+                                }
+                              );
+                            },
                           )
                         ],
                       ),
