@@ -18,7 +18,7 @@ class _CouponPageState extends State<CouponPage> {
   @override
   void initState() {
     super.initState();
-    billingController.getCoupons();
+    
   }
   BillingController billingController = Get.put(BillingController());
   @override
@@ -63,4 +63,3 @@ class _CouponPageState extends State<CouponPage> {
     );
   }
 }
-

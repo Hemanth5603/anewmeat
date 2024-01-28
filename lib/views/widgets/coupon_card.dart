@@ -1,5 +1,3 @@
-import 'dart:isolate';
-
 import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/billing_controller.dart';
 import 'package:anewmeat/models/coupon_model.dart';
@@ -26,6 +24,7 @@ class CouponCard extends StatefulWidget {
   int index;
   String name;
   String code;
+  // ignore: prefer_typing_uninitialized_variables
   var isLoading;
   List<Conditions>? conditions;
   BillingController billingController;
@@ -66,11 +65,10 @@ class _CouponCardState extends State<CouponCard> {
               const SizedBox(width: 20,),
               TextButton(onPressed: (){
                 setState(()  {
-                  widget.isLoading(true);
-                  widget.billingController.discount = widget.billingController.applyCoupon(widget.index);
-                  widget.isLoading(false);
-                  Get.back();
+                  widget.billingController.checkCoupon(widget.code.toString());         
                 });
+                
+                Get.back();
                 
               },child: Text("Apply",style: TextStyle(fontFamily: 'poppins',fontSize: 14,color: Constants.customRed,fontWeight: FontWeight.bold))) 
             ],
@@ -119,7 +117,7 @@ class _CouponCardState extends State<CouponCard> {
           Visibility(
             visible: isExtended,
             child: SizedBox(
-              height: widget.h * 0.1,
+              height: widget.h * 0.1, 
               child: ListView.builder(
                 itemCount: widget.conditions?.length,
                 itemBuilder: (context,index){
@@ -131,7 +129,6 @@ class _CouponCardState extends State<CouponCard> {
               ),
             ),
           )
-
         ],
       ),
     );
