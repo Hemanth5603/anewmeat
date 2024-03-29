@@ -30,6 +30,7 @@ class Orders {
     required this.couponCode,
     required this.deliveryFee,
     required this.deliveryAddress,
+    required this.isDelivered,
     required this.V,
   });
   late final String id;
@@ -45,6 +46,7 @@ class Orders {
   late final String couponCode;
   late final String deliveryFee;
   late final DeliveryAddress deliveryAddress;
+  late final bool isDelivered;
   late final int V;
   
   Orders.fromJson(Map<String, dynamic> json){

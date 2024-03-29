@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 
 
 class CategoryController extends GetxController{
+
   var isLoading = false.obs;
   bool isPageLoading = false;
 
@@ -19,7 +20,6 @@ class CategoryController extends GetxController{
   }
 
   Future<void> fetchCategories()async {
-
     try{
       isLoading(true);
       final uri = Uri.parse(APIConstants.baseUrl + APIConstants.getCategories);

@@ -29,7 +29,7 @@ class _CouponPageState extends State<CouponPage> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 246, 245, 250),
       appBar: AppBar(
-        leading: Icon(Icons.arrow_back_ios_rounded ,color: Colors.black,),
+        leading:const Icon(Icons.arrow_back_ios_rounded ,color: Colors.black,),
         backgroundColor: Colors.white,
         title:const Text("Apply Coupon",style: TextStyle(fontFamily:'poppins',fontSize: 18,fontWeight: FontWeight.bold,color: Colors.black),),
       ),

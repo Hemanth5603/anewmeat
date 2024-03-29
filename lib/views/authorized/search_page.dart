@@ -6,7 +6,7 @@ import 'package:anewmeat/views/widgets/search_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../models/product_model.dart';
+import '../../models/product_model.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -16,7 +16,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> { 
-  List<Product> filteredProducts = [];
+  List<Products> filteredProducts = [];
   String _query = '';
   ProductController productController = Get.put(ProductController());
 
@@ -126,9 +126,12 @@ class _SearchPageState extends State<SearchPage> {
                     return SearchCard(
                       w:w,
                       h:h,
-                      name: filteredProducts[index].productName ?? "",
-                      price:filteredProducts[index].finalPrice ?? "",
+                      id:filteredProducts[index].id ?? "",
+                      productName: filteredProducts[index].productName ?? "",
+                      finalPrice:filteredProducts[index].finalPrice ?? "",
+                      originalPrice: filteredProducts[index].originalPrice ?? "",
                       index: index,
+                      quantity: filteredProducts[index].quantity ?? "",
                       isAdded: filteredProducts[index].isAdded,
                       imageUrl: filteredProducts[index].productImage ?? "",
                       pieces: filteredProducts[index].pieces ?? "",
@@ -141,8 +144,11 @@ class _SearchPageState extends State<SearchPage> {
                     return SearchCard(
                       w:w,
                       h:h,
-                      name: productController.productModel?.products[index].productName ?? "",
-                      price:productController.productModel?.products[index].finalPrice ?? "",
+                      id: productController.productModel?.products[index].id ?? "",
+                      productName: productController.productModel?.products[index].productName ?? "",
+                      originalPrice:productController.productModel?.products[index].originalPrice ?? "",
+                      quantity: productController.productModel?.products[index].quantity ?? "",
+                      finalPrice:productController.productModel?.products[index].finalPrice ?? "",
                       index: index,
                       imageUrl: productController.productModel?.products[index].productImage ?? "",
                       pieces: productController.productModel?.products[index].pieces ?? "",

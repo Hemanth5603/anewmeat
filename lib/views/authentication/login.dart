@@ -1,7 +1,9 @@
+import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/user_controller.dart';
 import 'package:anewmeat/views/components/custom_button.dart';
 import 'package:anewmeat/views/components/custom_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
@@ -25,6 +27,10 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Color.fromARGB(255, 255, 255, 255), // Change the color to your desired color
+      statusBarIconBrightness: Brightness.dark, // Change the brightness of icons
+    ));
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
@@ -32,26 +38,139 @@ class _LoginState extends State<Login> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: h * 0.45,
-                width: w,
-                child: Padding(
-                  padding: EdgeInsets.only(left: w * 0.02,top: h * 0.1),
-                  child: Image.asset("assets/icons/appicon.png",filterQuality: FilterQuality.high,)
+              Stack(
+              children: [
+                Container(
+                  width: w,
+                  height: h * 0.4,
+                  decoration:const BoxDecoration(
+                    image: DecorationImage( 
+                      image: AssetImage("assets/images/loginHero.jpg"),
+                      fit: BoxFit.fitHeight,
+                    )
+                  )
+                ),
+                Container(
+                  width: w,
+                  height: h * 0.4,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: FractionalOffset.topCenter,
+                      end: FractionalOffset.bottomCenter,
+                      colors: [
+                       const Color.fromARGB(255, 0, 0, 0).withOpacity(0.0),
+                       const Color.fromARGB(191, 26, 26, 26),
+                      ],stops: const [
+                        0.0,
+                        1.0
+                        ]
+                      )
+                    ),
+                  ),
+                  const Positioned(
+                    bottom: 60,
+                    left: 15,
+                    child: Text("Hi there!",style: TextStyle(fontSize: 40,fontFamily: 'poppins',fontWeight: FontWeight.bold,color: Colors.white),
+                  ),
+                ),
+                const Positioned(
+                    bottom: 20,
+                    left: 15,
+                    child: Text("Welcome to Anewmeat",style: TextStyle(fontSize: 25,fontFamily: 'poppins',fontWeight: FontWeight.bold,color: Color.fromARGB(221, 255, 255, 255)),
+                  ),
                 )
+              ],
+            ),
+              const SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left:10.0),
+                    child: Text("Login or Sign in with..",style: TextStyle(fontFamily: 'poppins',fontSize: 25,fontWeight: FontWeight.bold,color: Constants.customRed)),
+                  ),
+                  const SizedBox(height: 16,),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Container(
+                      height: 45,
+                      width: w,
+                      decoration:const BoxDecoration(
+                        color: Color.fromARGB(255, 230, 230, 230),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 7,),
+                          const Text("+91",style: TextStyle(fontSize: 16,fontFamily: 'poppins'),),
+                          const SizedBox(width: 7,),
+                          const VerticalDivider(width: 1,color: Color.fromARGB(255, 182, 182, 182),),
+                          const SizedBox(width: 10,),
+                          SizedBox(
+                            height: h * 0.1,
+                            width: w* 0.7,
+                            child: const Center(
+                              child: TextField(
+                                keyboardType: TextInputType.phone,
+                                textAlignVertical: TextAlignVertical.bottom,
+                                
+                                style:TextStyle(fontFamily: 'poppins'),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Phone number",
+
+                                  hintStyle: TextStyle(color: Color.fromARGB(255, 106, 106, 106))
+                                ),
+                              ),
+                            ),
+                          ),
+                          
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10,),
+                  InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Container(
+                        height: 50,
+                        width: w * 0.89,
+                        decoration:BoxDecoration(
+                          border: Border.all(color:Color.fromARGB(255, 244, 55, 55),width: 2),
+                          color:Constants.customRed,
+                          borderRadius:const BorderRadius.all(Radius.circular(10))
+                        ),
+                        child:const Center(
+                          child: Text("Send Otp",style: TextStyle(fontSize: 20,color: Colors.white),),
+                        ),
+                      ),
+                    ),
+                    onTap: ()async{
+                      userController.sendOtp();
+
+                    }
+                  ),
+             
+                  
+                  SizedBox(height: h * 0.22),
+                  Container(
+                    margin: EdgeInsets.only(left: 80),
+                    child:const Column(
+                      children: [
+                        Text("By Continuing you agree ",style: TextStyle(fontSize: 12,color: Colors.grey),),
+                        SizedBox(height: 2,),
+                        Text("Terms of Service   Privacy Policy ",style: TextStyle(fontSize: 12,color: Colors.grey))
+                      ],
+                    ) ,
+                  )
+                ],
               ),
-              SizedBox(height: h * 0.03,),
-              const Padding(
-                padding: EdgeInsets.only(left: 40),
-                child: Text("Enter Mobile Number to Login",style:TextStyle(fontFamily: 'poppins',fontSize: 16),),
-              ),
-              CustomTextField(w:w,h: h * 0.07,maxLines: 1,keyboardType: TextInputType.number,hint:"Phone Number"),
-              SizedBox(
-                width: w,
-                height : h * 0.15,
-                child: CustomButton(title: "Send OTP",height: h * 0.08,width: w * 0.82,callback: userController.sendOtp,)),
-            ],
-          ),
+            )
+          ],
+        ),
         ),
       ),
     );

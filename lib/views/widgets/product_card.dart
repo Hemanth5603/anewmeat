@@ -136,21 +136,20 @@ class _ProductCardState extends State<ProductCard> {
                       ),
                       onTap: () async{
                         setState((){
-                          if (kDebugMode) {
-                            print("clicked");
-                          }
                           if(widget.isAdded == true){
                             widget.isLoading(true);
                             widget.cartController.deleteCartItem(widget.id);
-                            widget.isAdded = false;
                             widget.cartController.getCartItems();
+                            widget.isAdded = false;
                             widget.isLoading(false);
                           }else{
-                            /*widget.cartController.cartList.add(widget.productName!);*/
+                            widget.isLoading(true);
                             widget.cartController.isCartEmpty = false;
                             widget.cartController.addToCart(widget.id,widget.productName,widget.imageURL, widget.originalPrice, widget.finalPrice, widget.quantity,widget.value);
-                            widget.isAdded = true;
                             widget.cartController.getCartItems();
+                            widget.isAdded = true;
+                            widget.isLoading(false);
+                            
                           }
                         });
                         if (kDebugMode) {
@@ -167,12 +166,12 @@ class _ProductCardState extends State<ProductCard> {
       ),
     ),
     onTap: (){
-      Get.to(ProductPage(
+      /*Get.to(ProductPage(
         imageURL:widget.imageURL!,
         productName: widget.productName!,
         productDesc:widget.productDesc!,
         price:widget.finalPrice!,
-      ),transition: Transition.rightToLeft,duration:const Duration(milliseconds: 300));
+      ),transition: Transition.rightToLeft,duration:const Duration(milliseconds: 300));*/
     },
   );
   }

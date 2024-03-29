@@ -1,20 +1,21 @@
 import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/banners_controller.dart';
+import 'package:anewmeat/controllers/billing_controller.dart';
 import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/controllers/category_controller.dart';
 import 'package:anewmeat/controllers/products_controller.dart';
+import 'package:anewmeat/controllers/user_controller.dart';
+import 'package:anewmeat/views/authentication/location.dart';
 import 'package:anewmeat/views/authorized/cart_page.dart';
-import 'package:anewmeat/views/authorized/tabs/search_page.dart';
+import 'package:anewmeat/views/authorized/search_page.dart';
 import 'package:anewmeat/views/components/all_button.dart';
 import 'package:anewmeat/views/components/category_item.dart';
-import 'package:anewmeat/views/components/order_again_card.dart';
 import 'package:anewmeat/views/components/product_card.dart';
 import 'package:anewmeat/views/widgets/product_listing_card.dart';
-import 'package:anewmeat/views/authorized/products_page.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,14 +25,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var userController = Get.put(UserController());
   var categoryController = Get.put(CategoryController());
   var productController = Get.put(ProductController());
   var bannerController = Get.put(BannersController());
   var cartController = Get.put(CartController());
+  var billingController = Get.put(BillingController());
 
   Future pullRefresh() async {
     await categoryController.fetchCategories();
   }
+
+  @override
+  void initState() {
+    super.initState();
+    
+  }
+ 
 
 
   @override
@@ -39,330 +49,349 @@ class _HomePageState extends State<HomePage> {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
-      floatingActionButton: GestureDetector(
-        onTap: () {
-          cartController.getCartItems();
-          cartController.getCartLength();
-          Get.to(const CartPage());
-        },
-        child: Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            color:const Color.fromARGB(255, 26, 26, 26),
+        floatingActionButton: GestureDetector(
+          onTap: () {
+            billingController.checkCoupon("");
+            cartController.getCartItems();
+            Get.to(const CartPage());
+          },
+          child: Stack(
+            children: [
+              Container(
+                width: w * 0.15,
+                height: w * 0.15,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color:Colors.white,
+                  border: Border.all(color: Constants.customRed,width: 1)
+                ),
+                child:Icon(Icons.shopping_cart_outlined,color: Constants.customRed,size: 28,),
+              ),
+              /*Positioned(
+                right:0,
+                top:0,
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    color: Colors.black
+                  ),
+                  child: Center(
+                    child:Text(cartController.getCartModel!.productsLength.toString() ?? "0",style: TextStyle(fontFamily: 'poppins',fontSize: 10,color: Colors.white),)
+                  ),
+                )
+              )*/
+            ],
           ),
-          child:const Icon(Icons.shopping_bag_rounded,color: Colors.white,),
         ),
-      ),
-      body: RefreshIndicator.adaptive(
-        onRefresh: pullRefresh,
-        child: SafeArea(
-          child: DefaultTabController(
-            length: 1,
-            child: NestedScrollView(
-              physics:const AlwaysScrollableScrollPhysics(),
-              headerSliverBuilder: (context,isScrolled){
-                return [
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding:const EdgeInsets.only(top: 5,left: 10),
-                       child: Row(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+        body: RefreshIndicator.adaptive(
+          onRefresh: pullRefresh,
+          child:  DefaultTabController(
+              length: 1,
+              child: NestedScrollView(
+                physics:const AlwaysScrollableScrollPhysics(),
+                headerSliverBuilder: (contcext,isScrolled){
+                  return [
+                    SliverToBoxAdapter(
+                      child: GestureDetector(
+                        child: Container(
+                          margin:const EdgeInsets.only(top:30),
+                          padding:const EdgeInsets.only(top: 5,left: 10),
+                           child: Row(
                             children: [
-                              const Icon(Icons.home,color: Color.fromARGB(255, 48, 48, 48),size: 35,),
-                              const SizedBox(width: 5,),
-                              SizedBox(
-                                width: w * 0.8,
-                                child:const Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const Icon(Icons.home,color: Color.fromARGB(255, 48, 48, 48),size: 35,),
+                                  const SizedBox(width: 5,),
+                                  SizedBox(
+                                    width: w * 0.8,
+                                    child:Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text("Home",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                                        Text(userController.userModel.value.address.toString(),style: const TextStyle(fontSize: 14,color: Colors.grey,overflow: TextOverflow.ellipsis),)
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        onTap: (){
+                          Get.to(()=> const LocationScreen(), transition: Transition.downToUp,duration: 300.milliseconds);
+                        },
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: GestureDetector(
+                        child: Padding(
+                          padding:const EdgeInsets.all(10),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: w * 0.94,
+                                height: h * 0.05,
+                                padding:const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color:const Color.fromARGB(255, 228, 228, 228),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child:const Row(
                                   children: [
-                                    Text("Home",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                                    Text("11-9-29A1, Daspalla Hills, Siripuram, visakhapatnam",style: TextStyle(fontSize: 14,color: Colors.grey,overflow: TextOverflow.ellipsis),)
+                                    Icon(Icons.search,color: Color.fromARGB(255, 33, 33, 33),),
+                                    SizedBox(width: 10,),
+                                    Text("Search for Meat Items",style: TextStyle(fontFamily: 'poppins',fontSize: 14),)
                                   ],
                                 ),
                               ),
                             ],
                           ),
-                        ],
+                        ),
+                        onTap: (){
+                          Get.to(const SearchPage(),transition: Transition.downToUp,duration: 300.milliseconds);
+                        },
                       ),
                     ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: GestureDetector(
-                      child: Padding(
-                        padding:const EdgeInsets.all(10),
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: h * 0.22,
+                        width: w,
+                        child:Obx(() => 
+                          bannerController.isLoading.value ? 
+                           Center(
+                            child: Container(),
+                          ) :
+                          CarouselSlider.builder(
+                            itemCount: bannerController.bannerModel!.banners?.length ?? 0,
+                            itemBuilder:(context,index,realIndex){
+                              return Container(
+                                width: w,
+                                margin:const EdgeInsets.all(12),
+                                height: h * 0.18,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                    image: NetworkImage(bannerController.bannerModel!.banners![index]!.imageURL),
+                                    fit: BoxFit.cover
+                                  )
+                                ),
+                              );
+                            } ,
+                            options: CarouselOptions(
+                              height: h * 0.22,
+                              aspectRatio: 16/3,
+                              viewportFraction: 0.9,
+                              autoPlay: true,
+                              autoPlayCurve: Curves.ease,
+                              enableInfiniteScroll: true,
+                              autoPlayAnimationDuration: const Duration(seconds: 1),
+                              enlargeCenterPage: false,
+                              onPageChanged: (index,reason){
+                              }
+                            ),
+                          )
+                        )
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Container(
+                        width: w,
+                        height: h * 0.14,
+                        margin:const EdgeInsets.only(top:10),
+                        child: Obx(
+                          () => categoryController.isLoading.value 
+                          ? Center(
+                            child: Container()
+                          ) 
+                            : ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: categoryController.categoryModel?.categories.length ?? 0,
+                              itemBuilder:(context,index){
+                                return categoryItem(
+                                  w:w,
+                                  h: h,
+                                  imageURL: categoryController.categoryModel!.categories[index].imageUrl,
+                                  categoryName: categoryController.categoryModel!.categories[index].name!,
+                                  productsController: productController,
+                                );
+                              },
+                          )
+                        )
+                      ),
+                    ),
+                   
+                     SliverToBoxAdapter(
+                      child:Padding(
+                        padding:const EdgeInsets.only(left: 10.0,right: 10, bottom: 10),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              width: w * 0.94,
-                              height: h * 0.05,
-                              padding:const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color:const Color.fromARGB(255, 228, 228, 228),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child:const Row(
+                            SizedBox(
+                              width: w * 0.7,
+                              child:const Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(Icons.search,color: Color.fromARGB(255, 33, 33, 33),),
-                                  SizedBox(width: 10,),
-                                  Text("Search for Meat Items",style: TextStyle(fontFamily: 'poppins',fontSize: 14),)
+                                  Text("Top Picks only for You !!",style: TextStyle(fontFamily: 'poppins',fontSize: 20,fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis,),
+                                  Text("Here's what you might like",style: TextStyle(fontFamily: 'poppins',fontSize: 16,))
                                 ],
                               ),
                             ),
+                            allButton(w, h)
+                          ],
+                        ),
+                      ) ,
+                    ),
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        width: w,
+                        height: h * 0.32,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: productController.productModel?.products.length ?? 0,
+                          itemBuilder: (context,index){
+                            if(productController.productModel?.products[index].categorieName.toString() == "chicken" && productController.productModel?.products[index].isOffer == true){
+                              return ProductCard(
+                                w:w, 
+                                h:h,
+                                id: productController.productModel?.products[index].id ?? "",
+                                imageURL:productController.productModel?.products[index].productImage ?? "",
+                                productName: productController.productModel?.products[index].productName ?? "",
+                                productDescription: productController.productModel?.products[index].productDesc ?? "",
+                                finalPrice: productController.productModel?.products[index].finalPrice ?? "",
+                                originalPrice: productController.productModel?.products[index].originalPrice ?? "",
+                                offer: "20",
+                                quantity: productController.productModel?.products[index].quantity ?? "",
+                                isAdded: productController.productModel?.products[index].isAdded,
+                                isFreeDelivery: productController.productModel?.products[index].isFreeDelivery ?? "",
+                                isOffer: productController.productModel?.products[index].isOffer,
+                                value:productController.productModel?.products[index].value ?? 0,
+                                controller: cartController,
+                              );
+                            }else{
+                              return Container();
+                            }
+                          },
+                        )
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child:Padding(
+                        padding:const EdgeInsets.all(10.0),
+                        child: Row(
+                          
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: w * 0.76,
+                              child:const Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Flat 50% off on SEA FOODS",style: TextStyle(fontFamily: 'poppins',fontSize: 20,fontWeight: FontWeight.bold),),
+                                  Text("Here's what you might like",style: TextStyle(fontFamily: 'poppins',fontSize: 16,))
+                                ],
+                              ),
+                            ),
+                            allButton(w,h)
+                          ],
+                        ),
+                      ) ,
+                    ),
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        width: w,
+                        height: h * 0.32,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: productController.productModel?.products.length ?? 0,
+                          itemBuilder: (context,index){
+                            if(productController.productModel?.products[index].categorieName.toString() == "mutton" && productController.productModel?.products[index].isOffer == true){
+                              return ProductCard(
+                                w:w, 
+                                h:h,
+                                id: productController.productModel?.products[index].id ?? "",
+                                imageURL:productController.productModel?.products[index].productImage ?? "",
+                                productName: productController.productModel?.products[index].productName ?? "",
+                                productDescription: productController.productModel?.products[index].productDesc ?? "",
+                                finalPrice: productController.productModel?.products[index].finalPrice ?? "",
+                                originalPrice: productController.productModel?.products[index].originalPrice ?? "",
+                                offer: "20",
+                                quantity: productController.productModel?.products[index].quantity ?? "",
+                                isAdded: productController.productModel?.products[index].isAdded,
+                                isFreeDelivery: productController.productModel?.products[index].isFreeDelivery ?? "",
+                                isOffer: productController.productModel?.products[index].isOffer,
+                                value:productController.productModel!.products[index].value ?? 0,
+                                controller: cartController,
+                              );
+                            }else{
+                              return Container();
+                            }
+                          },
+                        )
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Container(
+                        padding:const EdgeInsets.all(10),
+                        child:Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: w * 0.75,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text("ALL Products",style: TextStyle(fontSize:20,fontFamily: 'poppins',fontWeight: FontWeight.bold),),
+                                  Text("${productController.productModel?.products.length} Total Items",style: const TextStyle(fontFamily: 'poppins',fontSize: 14,color: Colors.grey))
+                                ],
+                              ),
+                            ),
+                            allButton(w, h),
                           ],
                         ),
                       ),
-                      onTap: (){
-                        Get.to(const SearchPage(),transition: Transition.downToUp,duration: 300.milliseconds);
-                      },
                     ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: h * 0.22,
-                      width: w,
-                      child:Obx(() => 
-                        bannerController.isLoading.value ? 
-                         Center(
-                          child: Container(),
-                        ) :
-                        CarouselSlider.builder(
-                          itemCount: bannerController.bannerModel!.banners?.length ?? 0,
-                          itemBuilder:(context,index,realIndex){
-                            return Container(
-                              width: w,
-                              margin:const EdgeInsets.all(12),
-                              height: h * 0.18,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: NetworkImage(bannerController.bannerModel!.banners![index]!.imageURL),
-                                  fit: BoxFit.cover
-                                )
-                              ),
+                  ];
+                },
+                body: TabBarView(
+                  children: [
+                    Obx(
+                      () => productController.isLoading.value 
+                        ?const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                        : ListView.builder(
+                          itemCount: productController.productModel?.products.length ?? 0,
+                          itemBuilder:(context,index){
+                            return ProductListingItem(
+                              w:w, 
+                              h:h,
+                              id: productController.productModel?.products[index].id ?? "",
+                              imageUrl:productController.productModel?.products[index].productImage ?? "",
+                              productName:productController.productModel?.products[index].productName ?? "", 
+                              productDesc: productController.productModel?.products[index].productDesc ?? "",
+                              quantity: productController.productModel?.products[index].quantity ?? "", 
+                              originalPrice: productController.productModel?.products[index].originalPrice ?? "",
+                              finalPrice:productController.productModel?.products[index].finalPrice ?? "",
+                              offer:productController.productModel?.products[index].discount ?? "",
+                              isOffer:true, 
+                              servings: productController.productModel?.products[index].servings ?? "",
+                              pieces: productController.productModel?.products[index].pieces ?? "",
+                              isFreeDelivery:productController.productModel?.products[index].isFreeDelivery ?? "",
+                              isAdded:productController.productModel?.products[index].isAdded,
+                              cartController: cartController,
+
                             );
                           } ,
-                          options: CarouselOptions(
-                            height: h * 0.22,
-                            aspectRatio: 16/3,
-                            viewportFraction: 0.9,
-                            autoPlay: true,
-                            autoPlayCurve: Curves.ease,
-                            enableInfiniteScroll: true,
-                            autoPlayAnimationDuration: const Duration(seconds: 1),
-                            enlargeCenterPage: false,
-                            onPageChanged: (index,reason){
-                            }
-                          ),
                         )
-                      )
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Container(
-                      width: w,
-                      height: h * 0.15,
-                      margin:const EdgeInsets.only(top:10),
-                      child: Obx(
-                        () => categoryController.isLoading.value 
-                        ? Center(
-                          child: Container()
-                        ) 
-                          : ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: categoryController.categoryModel?.categories.length ?? 0,
-                            itemBuilder:(context,index){
-                              return categoryItem(
-                                w:w,
-                                h: h,
-                                imageURL: categoryController.categoryModel!.categories[index].imageUrl,
-                                categoryName: categoryController.categoryModel!.categories[index].name!,
-                                productsController: productController,
-                              );
-                            },
-                        )
-                      )
-                    ),
-                  ),
-                  
-                   SliverToBoxAdapter(
-                    child:Padding(
-                      padding:const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: w * 0.75,
-                            child:const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Looking for Frest Meat?",style: TextStyle(fontFamily: 'poppins',fontSize: 20,fontWeight: FontWeight.bold),),
-                                Text("Here's what you might like",style: TextStyle(fontFamily: 'poppins',fontSize: 16,))
-                              ],
-                            ),
-                          ),
-                          allButton(w, h)
-                        ],
-                      ),
-                    ) ,
-                  ),
-                  SliverToBoxAdapter(
-                    child: SizedBox(
-                      width: w,
-                      height: h * 0.34,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal, 
-                        children: [
-                          productCard(w,h,"https://assets.tendercuts.in/product/P/R/63c42955-a41b-45ce-98e1-cb7510eeac4f.jpg",
-                            "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true,false,
-                          ),
-                          productCard(w,h,"https://assets.tendercuts.in/product/C/H/a6b6b1db-2b6b-4129-a557-fbd9811c8888.webp",
-                            "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,false,false,
-                          ),
-                          productCard(w,h,"https://assets.tendercuts.in/product/P/R/f9d8d6f5-26df-44bf-9e1b-bf5687801870.jpg",
-                            "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true,false,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child:Padding(
-                      padding:const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: w * 0.76,
-                            child:const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Flat 50% off on SEA FOODS",style: TextStyle(fontFamily: 'poppins',fontSize: 20,fontWeight: FontWeight.bold),),
-                                Text("Here's what you might like",style: TextStyle(fontFamily: 'poppins',fontSize: 16,))
-                              ],
-                            ),
-                          ),
-                          allButton(w,h)
-                        ],
-                      ),
-                    ) ,
-                  ),
-                  SliverToBoxAdapter(
-                    child: SizedBox(
-                      width: w,
-                      height: h * 0.34,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal, 
-                        children: [
-                          productCard(w,h,"https://www.licious.in/_next/image?url=https%3A%2F%2Fdao54xqhg9jfa.cloudfront.net%2FOMS-ProductMerchantdising%2F1ea5ff1f-52f3-c7aa-953a-a4d287e40247%2Foriginal%2Fp0_tile_images-15_(2).jpg&w=384&q=75",
-                            "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true,false
-                          ),
-                          productCard(w,h,"https://www.licious.in/_next/image?url=https%3A%2F%2Fdao54xqhg9jfa.cloudfront.net%2FOMS-ProductMerchantdising%2F4f3ba1b6-7a8d-5938-5415-07789653b203%2Foriginal%2FMurrel_Fry_Cut.jpg&w=384&q=75",
-                            "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,false,false
-                          ),
-                          productCard(w,h,"https://www.licious.in/_next/image?url=https%3A%2F%2Fassets.licious.in%2FOMS-ProductMerchantdising%2F7eb50f35-dfa1-87db-aa2e-04eda16267f3%2Foriginal%2F1694450355159.jpg&w=384&q=75",
-                            "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true,false
-                          ),
-                          productCard(w,h,"https://www.licious.in/_next/image?url=https%3A%2F%2Fassets.licious.in%2FOMS-ProductMerchantdising%2F5b5f3fc7-a78e-c207-b643-24fb3123f92d%2Foriginal%2F1694596151996.jpg&w=384&q=75",
-                            "Chicken Curry Cut","Cut and cleaned chicken for rich curries","250 grams","250","200","20",true,true,false
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Container(
-                      padding:const EdgeInsets.all(10),
-                      child:Row(
-                        children: [
-                          SizedBox(
-                            width: w * 0.75,
-                            child: const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Order Again",style: TextStyle(fontSize:20,fontFamily: 'poppins',fontWeight: FontWeight.bold),),
-                                Text("You Ordered 3 Items",style: TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.grey))
-                              ],
-                            ),
-                          ),
-                          allButton(w, h),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: SizedBox(
-                      width: w,
-                      height: h * 0.22,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          orderAgainCard(w, h,"Chicken/Fish/Combo","1250","4 aug 2023","1 Chicken . 1 Fish Combo with Prawns",),
-                          orderAgainCard(w, h,"Chicken/Fish/Combo","1250","4 aug 2023","1 Chicken . 1 Fish Combo with Prawns",),
-                          orderAgainCard(w, h,"Chicken/Fish/Combo","1250","4 aug 2023","1 Chicken . 1 Fish Combo with Prawns",),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Container(
-                      padding:const EdgeInsets.all(10),
-                      child:Row(
-                        children: [
-                          SizedBox(
-                            width: w * 0.75,
-                            child: const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("ALL Products",style: TextStyle(fontSize:20,fontFamily: 'poppins',fontWeight: FontWeight.bold),),
-                                Text("26 Total Items",style: TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.grey))
-                              ],
-                            ),
-                          ),
-                          allButton(w, h),
-                        ],
-                      ),
-                    ),
-                  ),
-                ];
-              },
-              body: TabBarView(
-                children: [
-                  Obx(
-                    () => productController.isLoading.value 
-                      ?const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                      : ListView.builder(
-                        itemCount: productController.productModel?.products.length ?? 0,
-                        itemBuilder:(context,index){
-                          return ProductListingItem(
-                            w:w, 
-                            h:h,
-                            id: productController.productModel?.products[index].id ?? "",
-                            imageUrl:productController.productModel?.products[index].productImage ?? "",
-                            productName:productController.productModel?.products[index].productName ?? "", 
-                            productDesc: productController.productModel?.products[index].productDesc ?? "",
-                            quantity: productController.productModel?.products[index].servings ?? "", 
-                            originalPrice: productController.productModel?.products[index].originalPrice ?? "",
-                            finalPrice:productController.productModel?.products[index].finalPrice ?? "",
-                            offer:productController.productModel?.products[index].discount ?? "",
-                            isOffer:true, 
-                            isFreeDelivery:productController.productModel?.products[index].isFreeDelivery ?? "",
-                            isAdded:productController.productModel?.products[index].isAdded,
-                            cartController: cartController,
-                          );
-                        } ,
-                      )
-                  )
-                ],
-              )
+                    )
+                  ],
+                )
+              ),
             ),
           ),
-        ),
-      ),
     ); 
   }
 }

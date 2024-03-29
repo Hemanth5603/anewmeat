@@ -23,6 +23,8 @@ class ProductListingItem extends StatefulWidget {
     required this.isOffer,
     required this.isAdded,
     required this.cartController,
+    required this.pieces,
+    required this.servings,
     this.value,
   });
   double w;
@@ -37,6 +39,8 @@ class ProductListingItem extends StatefulWidget {
   String offer;
   late bool isOffer;
   String isFreeDelivery;
+  String servings;
+  String pieces;
   bool? isAdded;
   int? value = 1;
   CartController cartController;
@@ -51,6 +55,7 @@ class _ProductListingItemState extends State<ProductListingItem> {
   Widget build(BuildContext context) {
     return Container(
     margin:const EdgeInsets.all(10),
+    
     height: widget.h * 0.2,
     child: Row(
       children: [
@@ -59,9 +64,9 @@ class _ProductListingItemState extends State<ProductListingItem> {
             GestureDetector(
               child: Container(
                 width: widget.w * 0.35,
-                height: widget.h * 0.2,
+                height: widget.h * 0.18,
                 decoration:BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(15),
                   image: DecorationImage(
                     image: NetworkImage(widget.imageUrl),
                     fit: BoxFit.cover
@@ -69,11 +74,30 @@ class _ProductListingItemState extends State<ProductListingItem> {
                 ),
               ),
             ),
+            Container(
+              width: widget.w * 0.35,
+              height: widget.h * 0.18,
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),
+                gradient:  LinearGradient(
+                  stops: [
+                    0.5,
+                    0.9
+                  ],
+                  colors: [
+                    Color.fromARGB(0, 255, 255, 255),
+                    Color.fromARGB(179, 0, 0, 0)
+                  ],
+                  
+                  begin: Alignment.topLeft,
+                  end:Alignment.bottomRight
+                )
+              ),
+            ),
             Positioned(
               bottom: 8,
-              left:30,
+              right: 10,
               child: GestureDetector(
-                child: addButton(widget.w, widget.h,widget.isAdded),
+                child: addButton2(widget.w, widget.h,widget.isAdded),
                 onTap: () async{
                   setState(() {
                     if(widget.isAdded == true){
@@ -91,32 +115,52 @@ class _ProductListingItemState extends State<ProductListingItem> {
           ],
         ),
         const SizedBox(width: 10,),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.productName,style:const TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold),),
-            SizedBox(width:widget.w * 0.56,height: widget.h * 0.04, child: Text(widget.productDesc,style:const TextStyle(fontSize: 12,color: Colors.grey,fontFamily: 'poppins'),maxLines: 2,)),
-            SizedBox(
-              width: widget.w * 0.56,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Padding(
+          padding:const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("${widget.offer}% OFF",style:const TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold,color: Colors.green),),
-                  freeDelivery(widget.w, widget.h)
+                  Text(widget.productName,style:const TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold),),
+                  Text("${widget.quantity} | ${widget.pieces} Pieces | Serves ${widget.servings} ",style: TextStyle(fontSize: 10,color: const Color.fromARGB(255, 58, 58, 58),fontFamily: 'poppins'),),
+                  Container(
+                    width:widget.w * 0.56,
+                    height: widget.h * 0.06,
+                    padding: EdgeInsets.symmetric(vertical: 5),
+                    child: Text(widget.productDesc,style:const TextStyle(fontSize: 10,color: Colors.grey,fontFamily: 'poppins'),maxLines: 2,overflow: TextOverflow.ellipsis,)
+                  ),
                 ],
               ),
-            ),
-            SizedBox(height: widget.h * 0.03,),
-            Row(
-              children: [
-                Text("₹${widget.originalPrice}",style:const TextStyle(decoration: TextDecoration.lineThrough,fontSize: 14,color: Colors.grey,),),
-                const SizedBox(width: 10,),
-                Text("₹${widget.finalPrice}",style: TextStyle(fontSize: 18,color: Constants.customRed,fontWeight: FontWeight.bold,fontFamily: 'poppins'),),
-                SizedBox(width: widget.w * 0.12,),
-                
-              ],
-            )
-          ],
+              
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                  width: widget.w * 0.56,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("${widget.offer}% OFF",style:const TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold,color: Colors.green),),
+                      freeDelivery(widget.w, widget.h)
+                    ],
+                  ),
+                ),
+                SizedBox(height: widget.h * 0.01,),
+                Row(
+                  children: [
+                    Text("₹${widget.originalPrice}",style:const TextStyle(decoration: TextDecoration.lineThrough,fontSize: 14,color: Colors.grey,),),
+                    const SizedBox(width: 10,),
+                    Text("₹${widget.finalPrice}",style: TextStyle(fontSize: 18,color: Constants.customRed,fontWeight: FontWeight.bold,fontFamily: 'poppins'),),
+                    SizedBox(width: widget.w * 0.12,),
+                  ],
+                )
+                ],
+              )
+            ],
+          ),
         ),
       ],
     )

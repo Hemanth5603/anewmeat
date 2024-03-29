@@ -1,10 +1,15 @@
 import 'dart:convert';
 import 'package:anewmeat/constants/api_constants.dart';
 import 'package:anewmeat/controllers/cart_controller.dart';
+import 'package:anewmeat/controllers/user_controller.dart';
 import 'package:anewmeat/models/bill_model.dart';
+import 'package:anewmeat/views/authorized/tabs/account/orders/orders_page.dart';
+import 'package:intl/intl.dart';
 import 'package:anewmeat/models/coupon_model.dart';
 import 'package:anewmeat/models/order_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/list_notifier.dart';
 import 'package:http/http.dart' as http;
@@ -21,6 +26,7 @@ class BillingController extends GetxController{
   double discount = 0.0.obs();
   late Razorpay razorpay;
   CartController cartController = Get.put(CartController());
+  UserController userController = Get.put(UserController());
 
   @override
   void onInit() {
@@ -58,15 +64,81 @@ class BillingController extends GetxController{
     }
   }
 
+ 
+
+
+  Future<void> createOrder() async{
+    DateTime now = DateTime.now();
+    String formattedOrderID = DateFormat('yyyyMMddHHmmss').format(now);
+    String time = DateFormat("HH:mm:ss").format(now);
+    String date = DateFormat("dd:MM:yyyy").format(now);
+    String orderID = 'ORD_$formattedOrderID';
+
+    try{
+      final ref = FirebaseFirestore.instance
+        .collection("orders").doc();
+        await ref.set({
+          "_id":1,
+          "uid":ref.id,
+          "order_id":orderID,
+          "name":"Hemanth",
+          "number":7997435603,
+          "date": date,
+          "time":time,
+          "totalAmount":billingController.billModel?.toPay,
+          "payment_method":"UPI",
+          "coupon_code":"DIWALI10",
+          "delivery_fee":billingController.billModel?.deliveryFees,
+          "delivery_address":userController.userModel.value.address.toString(),
+          "is_delivered": false,
+          "out_for_delivery": false,
+          "order_recieved": false
+
+        });
+
+      for(int i=0;i< cartController.getCartModel!.products[0].items.length; i++){
+        final itemsRef = FirebaseFirestore.instance
+        .collection("orders")
+        .doc(ref.id)
+        .collection("items")
+        .doc();
+
+        await itemsRef.set({
+          "id": cartController.getCartModel?.products[0].items[i].id,
+          "productName": cartController.getCartModel?.products[0].items[i].productName,
+          "finalPrice": cartController.getCartModel?.products[0].items[i].finalPrice,
+          "originalPrice": cartController.getCartModel?.products[0].items[i].originalPrice,
+          "productImage": cartController.getCartModel?.products[0].items[i].productImage,
+          "quantity": cartController.getCartModel?.products[0].items[i].quantity,
+          "value": cartController.getCartModel?.products[0].items[i].value.toString(),
+          "fPrice": cartController.getCartModel?.products[0].items[i].fPrice,
+          "oPrice": cartController.getCartModel?.products[0].items[i].oPrice,
+        });
+      }
+      
+      print("Order successfully --------------------------////////");
+
+
+    }catch(e){
+      if(kDebugMode) print("error: $e");
+      if(kDebugMode) print("cannot insert Orders");
+    }
+
+  }
+
   Future<void> getOrders() async{
     try{
       isLoading(true);
       loading = true;
+      final headers = {
+        "number":"7997435603",
+      };
       final uri = Uri.parse(APIConstants.baseUrl + APIConstants.getOrders);
-      var response = await http.get(uri);
+      var response = await http.get(uri,headers: headers);
       if(response.statusCode == 200){
         var data = jsonDecode(response.body.toString());
         orderModel = OrderModel.fromJson(data);
+        print(response.body);
       }else{
         if(kDebugMode) print("Error while fetching orders");
       }
@@ -75,6 +147,7 @@ class BillingController extends GetxController{
         print("Error fetching orders $e");
       }
     }finally{
+      
       isLoading(false);
       loading = false;
     }
@@ -179,7 +252,7 @@ class BillingController extends GetxController{
   }
 
 
-
+  
 
 
 

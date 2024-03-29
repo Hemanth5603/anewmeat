@@ -1,9 +1,11 @@
+import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/controllers/products_controller.dart';
 import 'package:anewmeat/views/authorized/cart_page.dart';
+import 'package:anewmeat/views/authorized/tabs/account/orders/orders_page.dart';
+import 'package:anewmeat/views/home.dart';
 import 'package:anewmeat/views/widgets/product_card.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -42,24 +44,27 @@ class _ProductsPageState extends State<ProductsPage> {
               color: Colors.black,
               borderRadius: BorderRadius.circular(15),
             ),
-            child:Center(
+            child:const Center(
               child:Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Obx(() => cartController.isLoading.value ?
+                  SizedBox(
+                    child: Icon(Icons.shopping_cart_rounded,color: Colors.white,),
+                  ),
+                  /*Obx(() => cartController.isLoading.value ?
                     const Center(
                       child: SizedBox(
                         width: 20,
                         height: 20,
                         child: CircularProgressIndicator(),
                       ) 
-                    ) :
-                    Text("${cartController.getCartModel?.products[0].items.length} items",style:const TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.white),),
-                  ),
-                  const Row(
+                    ) ://cartController.getCartModel?.products[0].items.length
+                    Text("${cartController.getCartModel!.productsLength.toString()} items",style:const TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.white),),
+                  ),*/
+                  Row(
                     children: [
                       Text("View Cart",style: TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.white),),
-                      Gap(5),
+                      SizedBox(height: 5,),
                       Icon(Icons.chevron_right_outlined,color: Colors.white,)
                     ],
                   )
@@ -68,16 +73,18 @@ class _ProductsPageState extends State<ProductsPage> {
             ),
           ),
           onTap: () {
-            Get.to(const CartPage(),transition: Transition.rightToLeft,duration: 300.milliseconds);
+            setState(() {
+              billingController.checkCoupon("");
+              cartController.getCartItems();
+            });
+            Get.to(() => const CartPage(),transition: Transition.rightToLeft,duration: 300.milliseconds);
           }
       ),
       appBar: AppBar(
         title: Row(
           children: [
             Text(widget.title,style: const TextStyle(color: Colors.black,fontFamily: 'poppins',fontWeight: FontWeight.bold),),
-            IconButton(
-              onPressed: (){
-            }, icon:const Icon(Icons.keyboard_arrow_down,color: Colors.black,size: 30,))
+            
           ],
         ),
         leading: IconButton(
@@ -93,7 +100,7 @@ class _ProductsPageState extends State<ProductsPage> {
         enabled: isLoading.value,
         child: SingleChildScrollView(
           child: SafeArea(
-            child: Column(
+            child: productsController.productCategoryModel?.categoryProducts.isNotEmpty != false ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Stack(
@@ -133,7 +140,7 @@ class _ProductsPageState extends State<ProductsPage> {
                       
                       ),),
                     ),
-                    Positioned(
+                    /*Positioned(
                       bottom: 20,right: 20,
                       child: Container(
                         padding:const EdgeInsets.symmetric(horizontal: 8),
@@ -151,7 +158,7 @@ class _ProductsPageState extends State<ProductsPage> {
                           ],
                         ),
                       ),
-                    )
+                    )*/
                   ],
                 ),
                 const SizedBox(height: 0,),
@@ -191,6 +198,20 @@ class _ProductsPageState extends State<ProductsPage> {
                   )
                 ),
               ],
+            ) : Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: h * 0.35,),
+                    const Text("Hold On !!",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+                    const Text("We are working hard to make these items available"),
+                    TextButton(onPressed: (){
+                      Get.to(() => const Home(),transition: Transition.leftToRight,duration:const  Duration(milliseconds: 300));
+                    }, child: Text("Checkout other items !",style: TextStyle(color: Constants.customRed),))
+                  ],
+              ),
             )
           ),
         ),

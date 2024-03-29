@@ -36,10 +36,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                        Row(
                         children: [
-                          CircleAvatar(
-                            radius: 35,
-                            backgroundImage: NetworkImage("https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"),
-                          ),
                           SizedBox(width: 10,),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               Row(
                                 children: [
                                   const Text("Hemanth Srinivas",style: TextStyle(fontSize: 20,fontFamily: 'poppins',fontWeight: FontWeight.bold),),
-                                  SizedBox(width: w * 0.09,),
+                                  SizedBox(width: w * 0.29,),
                                   TextButton(
                                     onPressed: (){
                                       Get.to(const EditProfile(),transition: Transition.rightToLeft,duration: const Duration(milliseconds: 400));
@@ -70,8 +66,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 8,),
                 GestureDetector(
-                  child: Tile(w,h,Icons.shopping_bag_outlined,"Orders","Total Orders: 10",true,false),
+                  child: Tile(w,h,Icons.shopping_bag_outlined,"Orders","",false,false),
                   onTap: (){
+                    setState(() {
+                      billingController.getOrders();
+                    });
                     Get.to(()=> const OrdersPage());
                   },
                 ),

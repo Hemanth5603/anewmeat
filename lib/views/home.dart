@@ -1,12 +1,14 @@
+import 'dart:io';
+
 import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/controllers/category_controller.dart';
 import 'package:anewmeat/views/authorized/tabs/home_page.dart';
-import 'package:anewmeat/views/authorized/tabs/profile_page.dart';
-import 'package:anewmeat/views/authorized/tabs/search_page.dart';
+import 'package:anewmeat/views/authorized/tabs/account/profile_page.dart';
+import 'package:anewmeat/views/authorized/search_page.dart';
+import 'package:anewmeat/views/authorized/tabs/order_tracking.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -42,8 +44,48 @@ class _HomeState extends State<Home> {
         });
       }
     });
-
   }
+
+  Future<bool> showExitPopup() async {
+      return await showDialog( //show confirm dialogue 
+        //the return value will be from "Yes" or "No" options
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: Colors.white,
+          content: Container(
+            height: 150,
+            width: 100,
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Really wanted to leave ??",style: TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold),),
+                const SizedBox(height: 25,),
+                SizedBox(
+                  width: 80,
+                  height: 80,
+                  child: Image.asset("assets/icons/sadchicken.png"),
+                ),
+              ],
+            ),
+          ),
+          actions:[
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(false),
+               //return false when click on "NO"
+              child:const Text('No'),
+            ),
+
+            ElevatedButton(
+              onPressed: () => exit(0),
+              //return true when click on "Yes"
+              child:const Text('Yes'),
+            ),
+
+          ],
+        ),
+      )??false; //if showDialouge had returned null, then return false
+    }
   
 
   
@@ -52,71 +94,43 @@ class _HomeState extends State<Home> {
 
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
-    return Scaffold(
-       bottomNavigationBar:BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Constants.customRed,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
-        elevation: 10,
-        currentIndex: selectedIndex,
-        onTap: (value){
-          setState(() {
-            selectedIndex = value;
-          });
-          pageController.animateToPage(selectedIndex,
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.easeOutQuad);
-        },
-        items:const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Home'
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (_){
+        showExitPopup();
+        return;
+      },
+      child: Scaffold(
+         bottomNavigationBar:BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Constants.customRed,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white,
+          elevation: 10,
+          currentIndex: selectedIndex,
+          onTap: (value){
+            setState(() {
+              if(value == 0){ initializeHome();}
+              selectedIndex = value;
+            });
+            pageController.animateToPage(selectedIndex,
+                  duration: const Duration(milliseconds: 600),
+                  curve: Curves.easeOutQuad);
+          },
+          items:Constants.tabs
+         ),
+        body: Skeletonizer(
+          enabled: isLoading,
+          child:  PageView(
+              controller: pageController,
+              children:const <Widget> [
+                HomePage(),
+                OrderTrackPage(),
+                ProfilePage(),
+              ],
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search_outlined),
-            activeIcon: Icon(Icons.search_rounded),
-            label: 'Search'
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outlined),
-            activeIcon: Icon(Icons.person),
-            label: 'Account'
-          )
-        ],
-       ),
-       
-       /*WaterDropNavBar(
-        backgroundColor: Constants.customRed,
-        onItemSelected: (index){
-          setState(() {
-            selectedIndex = index;
-          });          
-          pageController.animateToPage(selectedIndex,
-                duration: const Duration(milliseconds: 600),
-                curve: Curves.easeOutQuad);
-        }, 
-        selectedIndex: selectedIndex,
-        bottomPadding: 10,
-        waterDropColor :Colors.white,
-          barItems : <BarItem>[
-            BarItem(filledIcon: Icons.home, outlinedIcon:Icons.home_outlined,),
-            BarItem(filledIcon: Icons.search, outlinedIcon:Icons.search_outlined),
-            BarItem(filledIcon: Icons.person, outlinedIcon:Icons.person_outlined),
-          ],
-      ) ,*/
-      body: Skeletonizer(
-        enabled: isLoading,
-        child:  PageView(
-            controller: pageController,
-            children:const <Widget> [
-              HomePage(),
-              SearchPage(),
-              ProfilePage(),
-            ],
-          ),
-        ),
+      ),
     );
   }
   
@@ -124,8 +138,9 @@ Future initializeHome() async{
   setState(() {
     isLoading = true;
   });
-  await categoriesController.fetchCategories();
   await cartController.getCartItems();
+  await categoriesController.fetchCategories();
+  cartController.getCartLength();
   setState(() {
     isLoading = false;
   });

@@ -54,7 +54,7 @@ class _categoryItemState extends State<categoryItem> {
     ),
     onTap: (){
       setState((){
-        widget.productsController.categoryName = widget.categoryName!;
+        widget.productsController.categoryName = widget.categoryName;
         widget.productsController.fetchCategoryProducts();
         Get.to(ProductsPage(
           heroImage: widget.imageURL,

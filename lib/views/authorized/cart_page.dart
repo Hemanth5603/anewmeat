@@ -1,14 +1,17 @@
 import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/billing_controller.dart';
 import 'package:anewmeat/controllers/cart_controller.dart';
+import 'package:anewmeat/controllers/products_controller.dart';
 import 'package:anewmeat/views/authorized/coupon_page.dart';
 import 'package:anewmeat/views/authorized/products_page.dart';
+import 'package:anewmeat/views/utils/order_acknowledgement.dart';
 import 'package:anewmeat/views/widgets/cart_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
+import 'package:googleapis/content/v2_1.dart' hide Row;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 
@@ -26,11 +29,11 @@ class _CartPageState extends State<CartPage> {
   @override
   void initState() {
     super.initState();
-    cartController.getCartItems();
+    
     setState(() {
       isLoading.value = true;
-      billingController.totalAmount  = billingController.calculateTotalAmount();
-      cartController.cartItemsLength = cartController.getCartLength();
+      //billingController.totalAmount  = billingController.calculateTotalAmount();
+      //cartController.cartItemsLength = cartController.getCartLength();
       isLoading.value = false;
 
     });
@@ -40,13 +43,15 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context){
     
     CartController cartController = Get.put(CartController());
+    ProductController productController = Get.put(ProductController());
     
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return WillPopScope(
       onWillPop: () async{
         Get.back();
-        await cartController.getCartItems();
+        await productController.fetchCategoryProducts();
+        
         return false;
       },
       child: Scaffold(
@@ -98,21 +103,27 @@ class _CartPageState extends State<CartPage> {
                       borderRadius: BorderRadius.circular(10),
                       color: Constants.customRed,
                     ), 
-                    child:Obx(() => cartController.isCalculating.value 
-                    ? const Center(
-                      child: CircularProgressIndicator(),
+                    child:Obx(() => billingController.isLoading.value 
+                    ? Center(
+                      child: LoadingAnimationWidget.horizontalRotatingDots(
+                        color: Colors.white, 
+                        size: 30,
+                      ),
                     ) 
                     : Center(
-                      child: Text("Pay ₹${billingController.totalAmount.toString()}",style:const TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold),),
+                      child: Text("Pay ₹${billingController.billModel?.toPay ?? ""}",style:const TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold),),
                     ),)
                   ),
+                  onTap: (){
+                    //billingController.openCheckout(1);
+                    billingController.createOrder();
+                    Get.to(OrderAcknowledgement(),transition: Transition.downToUp,duration:const Duration(milliseconds: 400));
+                  },
                 )
               ],
             ),
           ),
-          body: Skeletonizer(
-            enabled: isLoading.value,
-            child: SingleChildScrollView(
+          body:Obx(() => billingController.isLoading.value ? const Center(child: CircularProgressIndicator(),) : SingleChildScrollView(
               child: SafeArea(
                   child: Container(
                       width: w,
@@ -127,31 +138,31 @@ class _CartPageState extends State<CartPage> {
                             child: Row(
                               children: [
                                 SizedBox(width: w * 0.03,),
-                                const Text("You have saved ₹80!",style: TextStyle(fontFamily: 'poppins',fontSize: 12,color: Colors.green,fontWeight: FontWeight.bold),),
+                                Text("You have saved ₹${billingController.billModel?.savings.toString()}!",style: const TextStyle(fontSize: 12,color: Colors.green,fontWeight: FontWeight.bold),),
                               ],
                             ),
                           ),
                           Container(
                             width: w,
                             height:cartController.cartItemsLength == 1
-                            ? h * cartController.cartItemsLength * 0.19 
-                            : h * cartController.cartItemsLength * 0.15,
-                            color: const Color.fromRGBO(255, 255, 255, 1),
+                            ? h * cartController.getCartModel!.productsLength * 0.155 
+                            : h * cartController.getCartModel!.productsLength * 0.115,
+                            color:const Color.fromARGB(255, 255, 255, 255),
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text("Review Items",style: TextStyle(fontFamily: 'poppins',fontSize: 20,fontWeight: FontWeight.bold),),
-                                  SizedBox(height: h * 0.02,),
+                                  const Text("Review Items",style: TextStyle(fontFamily: 'poppins',fontSize: 18,fontWeight: FontWeight.bold),),
+                                  SizedBox(height: h * 0.01,),
                                     Obx(()=> SizedBox(
                                       width: w, 
-                                      height: h * cartController.cartItemsLength * 0.11,
+                                      height: h * cartController.getCartModel!.productsLength * 0.088,
                                       child: cartController.isLoading.value 
                                       ? const Center(
                                         child: CircularProgressIndicator(),
                                       ): ListView.builder(
-                                        itemCount: cartController.cartItemsLength,
+                                        itemCount: cartController.getCartModel!.productsLength,
                                         itemBuilder: (context,index){
                                           return CartCard(w :w,h: h,
                                             index:index,
@@ -161,6 +172,8 @@ class _CartPageState extends State<CartPage> {
                                             originalPrice: cartController.getCartModel?.products[0].items[index].originalPrice ?? "",
                                             finalPrice: cartController.getCartModel?.products[0].items[index].finalPrice ?? "",
                                             quantity:cartController.getCartModel?.products[0].items[index].quantity ?? "",
+                                            oPrice: cartController.getCartModel?.products[0].items[index].oPrice ?? "",
+                                            fPrice: cartController.getCartModel?.products[0].items[index].fPrice ?? "",
                                             cartController: cartController,
                                             billingController: billingController,
                                             isLoading: isLoading.value,
@@ -177,7 +190,7 @@ class _CartPageState extends State<CartPage> {
                           Container(
                             width: w,
                             padding:const EdgeInsets.all(12),
-                            height: h * 0.25,
+                            height: h * 0.15,
                             color: Colors.white,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,28 +198,37 @@ class _CartPageState extends State<CartPage> {
                                 const Text("Offers & Benefits",style: TextStyle(fontFamily: 'poppins',fontSize: 18,fontWeight: FontWeight.bold),),
                                 SizedBox(height: h * 0.02,),
                                 GestureDetector(
-                                  onTap: () => Get.to(()=> const CouponPage()),
+                                  onTap: (){
+                                    setState(() {
+                                      billingController.getCoupons();
+                                    });
+                                    Get.to(()=> const CouponPage());
+                                  },
                                   child: Container(
                                     width: w,
                                     height: h * 0.06,
                                     padding:const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(color: Colors.green)
+                                      border: Border.all(color: const Color.fromARGB(255, 48, 144, 51))
                                     ),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                    child:const Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        const Icon(Icons.local_offer_rounded,color: Color.fromARGB(255, 77, 160, 125),),
-                                        const SizedBox(width: 10,),
-                                        const Text("Apply Coupon",style: TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 77, 160, 125)),),
-                                        SizedBox(width: w * 0.4,),
-                                        const Icon(Icons.chevron_right_rounded,color: Color.fromARGB(255, 77, 160, 125),size: 30,)
+                                        Row(
+                                          children: [
+                                            Icon(Icons.local_offer_rounded,color: Color.fromARGB(255, 77, 160, 125),),
+                                            SizedBox(width: 10,),
+                                            Text("Apply Coupon",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 48, 144, 51)),),
+                                          ],
+                                        ),
+                                        Icon(Icons.chevron_right_rounded,color: Color.fromARGB(255, 77, 160, 125),size: 30,)
                                       ],
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: h * 0.02,),
+                                /*SizedBox(height: h * 0.02,),
                                 Row(
                                   children: [
                                     Container(
@@ -243,45 +265,35 @@ class _CartPageState extends State<CartPage> {
                                       )
                                     )
                                   ],
-                                ),
+                                ),*/
                               ],
                             ),
                           ),
                           SizedBox(height: h * 0.02,),
                           Container(
                             width: w,
-                            height: h * 0.17,
+                            height: h * 0.2,
                             color: Colors.white,
                             padding:const EdgeInsets.all(12),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text("Bill Summary",style: TextStyle(fontFamily: 'poppins',fontSize: 18,fontWeight: FontWeight.bold),),
+                                const Text("Bill Summary",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
                                 SizedBox(height: h * 0.01,),
-                                billItem("Item Total","₹709",Colors.black),
+                                billItem("Item Total","₹${billingController.billModel?.itemTotal}",Colors.black),
                                 SizedBox(height: h * 0.01,),
-                                billItem("Delivery fee","₹50",Colors.black),
+                                billItem("Delivery fee","₹${billingController.billModel?.deliveryFees}",Colors.black),
                                 SizedBox(height: h * 0.01,),
-                                billItem("Total","₹${billingController.totalAmount.toString()}",Colors.black),
+                                billItem("GST","₹${billingController.billModel?.gst}",Colors.black),
+                                const SizedBox(height:10,),
+                                billItem("Coupon Discount","₹${billingController.billModel?.couponDicount}", Colors.blue),
+                               
                               ],
                             ),
                           ),
-                          SizedBox(height: h * 0.008,),
-                          Container(
-                            width: w,
-                            color: Colors.white,
-                            height: h * 0.1,
-                            padding:const EdgeInsets.all(12),
-                            child: Column(
-                              children: [
-                                billItem("ANEWMEAT50", "-₹50", Colors.blue),
-                                const SizedBox(height:10,),
-                                billItem("Net Payable", "₹709", Colors.black)
-                              ],
-                            ),
-                          ),  
+                         
                           const SizedBox(height: 15,),
-                          const Text("CANCELLATION POLICY",style: TextStyle(fontFamily: 'poppins',fontWeight: FontWeight.bold,color: Colors.grey),),
+                          const Text("CANCELLATION POLICY",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.grey),),
                           const SizedBox(height: 10,),
                           Container(
                             width: w,
@@ -291,11 +303,11 @@ class _CartPageState extends State<CartPage> {
                             child:const Column(
                               children: [
                                 Text("100% Cancellation fee will be applicable only if you decide to cancel the order before it is dispatched.",
-                                  style: TextStyle(fontFamily: 'poppins',fontSize: 10,color: Colors.grey),  
+                                  style: TextStyle(fontSize: 10,color: Colors.grey),  
                                 ),
                                 SizedBox(height:10,),
                                 Text("You can reschedule your delivery to a later time only until items are dispatched",
-                                  style: TextStyle(fontFamily: 'poppins',fontSize: 10,color: Colors.grey),  
+                                  style: TextStyle(fontSize: 10,color: Colors.grey),  
                                 ),
                               ],
                             ),

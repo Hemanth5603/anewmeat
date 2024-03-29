@@ -30,8 +30,8 @@ class _ProductPageState extends State<ProductPage> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Total Price",style: TextStyle(fontFamily: 'poppins',fontSize: 16,fontWeight: FontWeight.bold),),
-                Text("₹"+widget.price,style: TextStyle(fontFamily: 'poppins',fontSize:20,color: Constants.customRed,fontWeight: FontWeight.bold),)
+                const Text("Total Price",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                Text("₹${widget.price}",style: TextStyle(fontSize:20,color: Constants.customRed,fontWeight: FontWeight.bold),)
               ],
             ),
             GestureDetector(
