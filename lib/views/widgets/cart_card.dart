@@ -83,7 +83,7 @@ class _CartCardState extends State<CartCard> {
                 await billingController.checkCoupon("");
                 setState((){
                   if(mounted){
-                    cartController.cartItemsLength = cartController.getCartLength();
+                    //cartController.cartItemsLength = cartController.getCartLength();
                     widget.billingController.totalAmount -= int.parse(widget.finalPrice);
                   }
                 });

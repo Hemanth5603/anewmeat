@@ -24,7 +24,7 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   void initState() {
     super.initState();
-    cartController.getCartItems();
+    //cartController.getCartItems();
   }
   @override
   Widget build(BuildContext context) {

@@ -14,12 +14,12 @@ class OrderTrack extends StatefulWidget {
     required this.orderDelivered,
     required this.outForDelivery,
   });
-  final String orderID;
-  final String orderDate;
-  final String estimatedDelivery;
-  final bool isOrderConfirmed;
-  final bool outForDelivery;
-  final bool orderDelivered;
+  final String? orderID;
+  final String? orderDate;
+  final String? estimatedDelivery;
+  final bool? isOrderConfirmed;
+  final bool? outForDelivery;
+  final bool? orderDelivered;
 
 
   @override
@@ -33,10 +33,13 @@ class _OrderTrackState extends State<OrderTrack> {
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
       bottomNavigationBar:  GestureDetector(
+        onTap: (){
+          Get.back();
+        },
         child: Container(
           margin: const EdgeInsets.all(10),
           width: MediaQuery.of(context).size.width,
-          height: 50,
+          height: MediaQuery.of(context).size.height * 0.05,
           decoration: BoxDecoration(
              color: Colors.white,
              border: Border.all(color: Constants.customRed,width: 2),
@@ -83,14 +86,14 @@ class _OrderTrackState extends State<OrderTrack> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Order ID:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14),),
-                          Text("12251555552")
+                          Text(widget.orderID.toString(),style: TextStyle(fontSize: 14,color: const Color.fromARGB(255, 60, 60, 60)),)
                         ],
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Order Date:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14),),
-                          Text("09-03-2024")
+                          Text(widget.orderDate.toString(),style: TextStyle(fontSize: 14,color: const Color.fromARGB(255, 60, 60, 60)),)
                         ],
                       ),
                     ],
@@ -100,7 +103,7 @@ class _OrderTrackState extends State<OrderTrack> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("Estimated Delivery: ",style: TextStyle(fontSize: 16,color: Constants.customGreen),),
-                      Text("March 11, 2024",style: TextStyle(fontSize: 16,color: Constants.customGreen),)
+                      Text(widget.estimatedDelivery.toString(),style: TextStyle(fontSize: 16,color: Constants.customGreen),)
                     ],
                   )
                 ],
@@ -127,13 +130,13 @@ class _OrderTrackState extends State<OrderTrack> {
                               height: 20,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
-                                color:widget.isOrderConfirmed ? Constants.customGreen : Colors.grey
+                                color:widget.isOrderConfirmed! ? Constants.customGreen : Colors.grey
                               ),
                             ),
                             Container(
                               width: 5,
                               height: 80,
-                              color: Colors.grey,
+                              color:widget.outForDelivery! || widget.orderDelivered! ? Constants.customGreen:  Colors.grey,
                             )
                           ],
                         ),
@@ -143,7 +146,7 @@ class _OrderTrackState extends State<OrderTrack> {
                           children: [
                             Text("Order Confirmed",style: TextStyle(
                               fontSize: 16,
-                              color:widget.isOrderConfirmed ? Constants.customGreen : Colors.grey,
+                              color:widget.outForDelivery! || widget.orderDelivered! ? Constants.customGreen : Colors.grey,
                               fontWeight: FontWeight.bold
                             ),),
                             SizedBox(height: 3,),
@@ -163,13 +166,13 @@ class _OrderTrackState extends State<OrderTrack> {
                               height: 20,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
-                                color:widget.outForDelivery ? Constants.customGreen : Colors.grey,
+                                color:widget.outForDelivery! || widget.orderDelivered! ? Constants.customGreen : Colors.grey,
                               ),
                             ),
                             Container(
                               width: 5,
                               height: 80,
-                              color: Colors.grey,
+                              color: widget.orderDelivered! ? Constants.customGreen : Colors.grey,
                             )
                           ],
                         ),
@@ -179,7 +182,7 @@ class _OrderTrackState extends State<OrderTrack> {
                           children: [
                             Text("Out for Delivery",style: TextStyle(
                               fontSize: 16,
-                              color: widget.outForDelivery ? Constants.customGreen : Colors.grey,
+                              color: widget.outForDelivery! || widget.orderDelivered! ? Constants.customGreen : Colors.grey,
                               fontWeight: FontWeight.bold
                             ),),
                             SizedBox(height: 3,),
@@ -199,7 +202,7 @@ class _OrderTrackState extends State<OrderTrack> {
                               height: 20,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
-                                color:widget.orderDelivered ? Constants.customGreen : Colors.grey,
+                                color:widget.orderDelivered! ? Constants.customGreen : Colors.grey,
                               ),
                             ),
                             
@@ -211,7 +214,7 @@ class _OrderTrackState extends State<OrderTrack> {
                           children: [
                             Text("Order Delivered",style: TextStyle(
                               fontSize: 16,
-                              color: widget.orderDelivered ? Constants.customGreen : Colors.grey,
+                              color: widget.orderDelivered! ? Constants.customGreen : Colors.grey,
                               fontWeight: FontWeight.bold,
                             ),),
                             SizedBox(height: 3,),

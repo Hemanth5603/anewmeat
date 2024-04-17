@@ -2,12 +2,14 @@ import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/billing_controller.dart';
 import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/controllers/products_controller.dart';
+import 'package:anewmeat/views/authentication/login.dart';
 import 'package:anewmeat/views/authorized/coupon_page.dart';
 import 'package:anewmeat/views/authorized/products_page.dart';
 import 'package:anewmeat/views/utils/order_acknowledgement.dart';
 import 'package:anewmeat/views/widgets/cart_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import 'package:googleapis/content/v2_1.dart' hide Row;
@@ -88,20 +90,20 @@ class _CartPageState extends State<CartPage> {
                     const SizedBox(width: 5,),
                     SizedBox(
                       width: w * 0.75,
-                      child: const Text("Home, 11-9-29A1,Daspalla Hills, Siripuram,visakhapatnam",style: TextStyle(fontFamily: 'poppins',fontSize: 14,overflow: TextOverflow.ellipsis,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 55, 55, 55)),),
+                      child: Text(userController.userModel.address.toString(),style: TextStyle(fontFamily: 'poppins',fontSize: 14,overflow: TextOverflow.ellipsis,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 55, 55, 55)),),
                     ),
                     const SizedBox(width: 10,),
                     const Icon(Icons.chevron_right_rounded)
                   ],
                 ),
                 const SizedBox(height: 15,),
-                GestureDetector(
+              GestureDetector(
                   child: Container(
                     width: w,
                     height: h * 0.055,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Constants.customRed,
+                      color:cartController.getCartModel!.products[0].items.isEmpty ? Colors.grey : Constants.customRed,
                     ), 
                     child:Obx(() => billingController.isLoading.value 
                     ? Center(
@@ -115,9 +117,19 @@ class _CartPageState extends State<CartPage> {
                     ),)
                   ),
                   onTap: (){
+                    if(cartController.getCartModel!.productsLength != 0){
+                      billingController.createOrder();
+                      Get.to(const OrderAcknowledgement(),transition: Transition.downToUp,duration:const Duration(milliseconds: 400));
+                    }else{
+                      Fluttertoast.showToast(
+                        msg: "Please add Items in cart",
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: Colors.red
+                      );
+                    }
+                  
                     //billingController.openCheckout(1);
-                    billingController.createOrder();
-                    Get.to(OrderAcknowledgement(),transition: Transition.downToUp,duration:const Duration(milliseconds: 400));
+                    
                   },
                 )
               ],
@@ -138,15 +150,15 @@ class _CartPageState extends State<CartPage> {
                             child: Row(
                               children: [
                                 SizedBox(width: w * 0.03,),
-                                Text("You have saved ₹${billingController.billModel?.savings.toString()}!",style: const TextStyle(fontSize: 12,color: Colors.green,fontWeight: FontWeight.bold),),
+                                Text("You have saved ₹${billingController.billModel?.savings.toString() ?? 0}!",style: const TextStyle(fontSize: 12,color: Colors.green,fontWeight: FontWeight.bold),),
                               ],
                             ),
                           ),
                           Container(
                             width: w,
-                            height:cartController.cartItemsLength == 1
-                            ? h * cartController.getCartModel!.productsLength * 0.155 
-                            : h * cartController.getCartModel!.productsLength * 0.115,
+                            height:cartController.getCartModel!.products[0].items.length == 1
+                            ? h * cartController.getCartModel!.products[0].items.length * 0.155 
+                            : h * cartController.getCartModel!.products[0].items.length * 0.115,
                             color:const Color.fromARGB(255, 255, 255, 255),
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
@@ -280,13 +292,13 @@ class _CartPageState extends State<CartPage> {
                               children: [
                                 const Text("Bill Summary",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
                                 SizedBox(height: h * 0.01,),
-                                billItem("Item Total","₹${billingController.billModel?.itemTotal}",Colors.black),
+                                billItem("Item Total","₹${billingController.billModel?.itemTotal ?? 0}",Colors.black),
                                 SizedBox(height: h * 0.01,),
-                                billItem("Delivery fee","₹${billingController.billModel?.deliveryFees}",Colors.black),
+                                billItem("Delivery fee","₹${billingController.billModel?.deliveryFees ?? 0}",Colors.black),
                                 SizedBox(height: h * 0.01,),
-                                billItem("GST","₹${billingController.billModel?.gst}",Colors.black),
+                                billItem("GST","₹${billingController.billModel?.gst ?? 0}",Colors.black),
                                 const SizedBox(height:10,),
-                                billItem("Coupon Discount","₹${billingController.billModel?.couponDicount}", Colors.blue),
+                                billItem("Coupon Discount","₹${billingController.billModel?.couponDicount ?? 0}", Colors.blue),
                                
                               ],
                             ),

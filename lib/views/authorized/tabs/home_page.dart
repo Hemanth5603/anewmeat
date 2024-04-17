@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         const Text("Home",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                                        Text(userController.userModel.value.address.toString(),style: const TextStyle(fontSize: 14,color: Colors.grey,overflow: TextOverflow.ellipsis),)
+                                        Text(userController.userModel.address.toString(),style: const TextStyle(fontSize: 14,color: Colors.grey,overflow: TextOverflow.ellipsis),)
                                       ],
                                     ),
                                   ),
@@ -201,12 +201,7 @@ class _HomePageState extends State<HomePage> {
                         width: w,
                         height: h * 0.14,
                         margin:const EdgeInsets.only(top:10),
-                        child: Obx(
-                          () => categoryController.isLoading.value 
-                          ? Center(
-                            child: Container()
-                          ) 
-                            : ListView.builder(
+                        child:  ListView.builder(
                               scrollDirection: Axis.horizontal,
                               itemCount: categoryController.categoryModel?.categories.length ?? 0,
                               itemBuilder:(context,index){
@@ -220,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                               },
                           )
                         )
-                      ),
+                      
                     ),
                    
                      SliverToBoxAdapter(

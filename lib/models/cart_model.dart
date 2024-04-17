@@ -83,6 +83,7 @@ class Items {
   late String oPrice;
   late final String quantity;
   int? value = 1;
+
   
   Items.fromJson(Map<String, dynamic> json){
     id = json["id"];
@@ -226,13 +227,6 @@ class Items {
     return _data;
   }
 }
-
-
-
-
-
-
-
 */
 
 

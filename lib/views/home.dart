@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/controllers/category_controller.dart';
+import 'package:anewmeat/controllers/products_controller.dart';
+import 'package:anewmeat/views/authentication/login.dart';
 import 'package:anewmeat/views/authorized/tabs/home_page.dart';
 import 'package:anewmeat/views/authorized/tabs/account/profile_page.dart';
 import 'package:anewmeat/views/authorized/search_page.dart';
-import 'package:anewmeat/views/authorized/tabs/order_tracking.dart';
+import 'package:anewmeat/views/authorized/tabs/active_orders.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -23,6 +25,7 @@ class _HomeState extends State<Home> {
   late bool isLoading = false;
   CategoryController categoriesController = Get.put(CategoryController());
   CartController cartController = Get.put(CartController());
+  ProductController productController = Get.put(ProductController());
 
 
   var selectedIndex = 0;
@@ -125,7 +128,7 @@ class _HomeState extends State<Home> {
               controller: pageController,
               children:const <Widget> [
                 HomePage(),
-                OrderTrackPage(),
+                ActiveOrdersPage(),
                 ProfilePage(),
               ],
             ),
@@ -138,9 +141,12 @@ Future initializeHome() async{
   setState(() {
     isLoading = true;
   });
+  await userController.getUser();
   await cartController.getCartItems();
+  await productController.fetchAllProducts();
   await categoriesController.fetchCategories();
-  cartController.getCartLength();
+
+  //cartController.getCartLength();
   setState(() {
     isLoading = false;
   });

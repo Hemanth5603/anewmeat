@@ -1,40 +1,46 @@
-import 'dart:convert';
-import 'package:get/get.dart';
-
-List<UserModel> productFromJson(String str) =>
-    List<UserModel>.from(json.decode(str).map((x) => UserModel.fromJson(x)));
-
-
-class UserModel{
+class UserModel {
   UserModel({
-    this.id,
-    this.name,
-    this.phoneNumber,
-    this.email,
-    this.status,
-    this.address,
-    this.latitute,
-    this.longitude
-
+   this.status,
+   this.name,
+   this.number,
+   this.email,
+   this.address,
+   this.id,
+   this.latitude,
+   this.longitude,
+   this.V,
   });
-  final String? id;
-  final String? name;
-  final String? phoneNumber;
-  final String? email;
-  final String? status;
-  double? latitute;
+
+  late final String? status;
+  late final String? name;
+  late final String? number;
+  late final String? email;
+  String? address;
+  late final String? id;
+  late final int? V;
+  double? latitude;
   double? longitude;
-  String? address = "null".obs();
 
+  
+  UserModel.fromJson(Map<String, dynamic> json){
+    status = json['status'];
+    name = json['name'];
+    number = json['number'];
+    email = json['email'];
+    address = json['address'];
+    id = json['id'];
+    V = json['_v'];
+  }
 
-  factory UserModel.fromJson(Map<String,dynamic> json){
-    return UserModel(
-      id: json["message"]["_id"], 
-      name: json["message"]["name"],
-      status: json["status"],
-      phoneNumber: json["message"]["number"], 
-      email: json["message"]["email"]
-    );
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['status'] = status;
+    _data['name'] = name;
+    _data['number'] = number;
+    _data['email'] = email;
+    _data['address'] = address;
+    _data['id'] = id;
+    _data['_v'] = V;
+    return _data;
   }
 }
-

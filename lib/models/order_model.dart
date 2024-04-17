@@ -2,7 +2,7 @@ class OrderModel {
   OrderModel({
     required this.orders,
   });
-  late final List<Orders> orders;
+  List<Orders> orders = [];
   
   OrderModel.fromJson(Map<String, dynamic> json){
     orders = List.from(json['orders']).map((e)=>Orders.fromJson(e)).toList();
@@ -33,21 +33,21 @@ class Orders {
     required this.isDelivered,
     required this.V,
   });
-  late final String id;
-  late final String uId;
-  late final String orderId;
-  late final String name;
-  late final String number;
-  late final String date;
-  late final String time;
+  String? id;
+  String? uId;
+  String? orderId;
+  String? name;
+  String? number;
+  String? date;
+  String? time;
   late final List<Items> items;
-  late final String totalAmount;
-  late final String paymentMethod;
-  late final String couponCode;
-  late final String deliveryFee;
-  late final DeliveryAddress deliveryAddress;
-  late final bool isDelivered;
-  late final int V;
+  String? totalAmount;
+  String? paymentMethod;
+  String? couponCode;
+  String? deliveryFee;
+  DeliveryAddress? deliveryAddress;
+  bool? isDelivered;
+  int? V;
   
   Orders.fromJson(Map<String, dynamic> json){
     id = json['_id'];
@@ -75,12 +75,12 @@ class Orders {
     _data['number'] = number;
     _data['date'] = date;
     _data['time'] = time;
-    _data['items'] = items.map((e)=>e.toJson()).toList();
+    _data['items'] = items?.map((e)=>e.toJson()).toList();
     _data['totalAmount'] = totalAmount;
     _data['payment_method'] = paymentMethod;
     _data['coupon_code'] = couponCode;
     _data['delivery_fee'] = deliveryFee;
-    _data['delivery_address'] = deliveryAddress.toJson();
+    _data['delivery_address'] = deliveryAddress?.toJson();
     _data['__v'] = V;
     return _data;
   }

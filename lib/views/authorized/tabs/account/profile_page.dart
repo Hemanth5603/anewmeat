@@ -1,8 +1,12 @@
 import 'package:anewmeat/constants/app_constants.dart';
+import 'package:anewmeat/controllers/user_controller.dart';
+import 'package:anewmeat/views/authentication/login.dart';
+import 'package:anewmeat/views/authentication/signup.dart';
 import 'package:anewmeat/views/authorized/tabs/account/orders/orders_page.dart';
 import 'package:anewmeat/views/authorized/tabs/account/profile/edit_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ProfilePage extends StatefulWidget {
@@ -17,6 +21,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     double h =MediaQuery.of(context).size.height;
     double w =MediaQuery.of(context).size.width;
+
+    UserController userController = Get.put(UserController());
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 248, 251, 255),
       body: SingleChildScrollView(
@@ -43,8 +50,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             children: [
                               Row(
                                 children: [
-                                  const Text("Hemanth Srinivas",style: TextStyle(fontSize: 20,fontFamily: 'poppins',fontWeight: FontWeight.bold),),
-                                  SizedBox(width: w * 0.29,),
+                                  SizedBox(
+                                    width: w * 0.76,
+                                    child: Text(userController.userModel.name.toString() ,style:const TextStyle(fontSize: 20,fontFamily: 'poppins',fontWeight: FontWeight.bold),),
+                                  ),                                  
                                   TextButton(
                                     onPressed: (){
                                       Get.to(const EditProfile(),transition: Transition.rightToLeft,duration: const Duration(milliseconds: 400));
@@ -54,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ],  
                               ),
                               const SizedBox(height: 0,),
-                              const Text("7997435603 | shemanth.kgp@gmail.com",style: TextStyle(fontSize: 12,fontFamily: 'poppins',),)
+                              Text("${userController.userModel.number.toString()} | ${userController.userModel.email.toString()}",style: TextStyle(fontSize: 12,fontFamily: 'poppins',),)
                             ],
                           )
                         ],
@@ -78,7 +87,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 Tile(w,h,Icons.call_outlined,"Contact us","",false,false),
                 Tile(w,h,Icons.edit_document,"Terms & Conditions","",false,true),
                 const SizedBox(height: 8,),
-                Tile(w,h,Icons.logout_outlined,"Logout","",false,true),
+                GestureDetector(
+                  onTap: () async{
+                    userController.logOut();
+                  },
+                  child: Tile(w,h,Icons.logout_outlined,"Logout","",false,true)),
               ],
             ),
           ), 

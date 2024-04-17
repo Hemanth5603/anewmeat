@@ -106,14 +106,16 @@ class _LocationScreenState extends State<LocationScreen> {
                               hideMoreOptions: true,
                               bottomCardIcon: Icon(Icons.navigate_next_rounded,size: 35,color: Constants.customRed,),
                               hideMapTypeButton: true,
-                              currentLatLng: LatLng(userController.userModel.value.latitute ?? 17.396234,userController.userModel.value.longitude ?? 78.474655),
+                              currentLatLng: LatLng(userController.userModel.latitude ?? 17.396234,userController.userModel.longitude ?? 78.474655),
                               onNext: (GeocodingResult? result) {
                                 if (result != null) {
                                   setState(() {
                                     address = result.formattedAddress ?? "";
                                     //final SharedPreferences prefs = await SharedPreferences.getInstance();
                                     //prefs.setString("address",result.formattedAddress.toString());
-                                    userController.userModel.value.address = result.formattedAddress ?? "";
+                                    
+                                    userController.userModel.address = result.formattedAddress ?? "";
+                                    
                                   });
                                 }
                               },
@@ -193,7 +195,7 @@ class _LocationScreenState extends State<LocationScreen> {
                                 if (result != null) {
                                   setState(() {
                                     address = result.formattedAddress ?? "";
-                                    userController.userModel.value.address = result.formattedAddress ?? "";
+                                    userController.userModel.address = result.formattedAddress ?? "";
                                   });
                                 }
                               },
@@ -223,12 +225,14 @@ class _LocationScreenState extends State<LocationScreen> {
                       borderRadius:const BorderRadius.all(Radius.circular(10)),
                       color: Constants.customRed
                     ),
-                    child: const Center(
+                    child: Obx(() => !userController.isLoading.value ? const Center(
                       child: Text("Continue ",style: TextStyle(fontFamily: 'poppins',color: Colors.white ,fontSize: 16),),
-                    )
+                    ):const Center(child: CircularProgressIndicator(strokeWidth: 2,color: Colors.white,),) )
                   ),
-                  onTap: (){
-                    Get.to(const Home(),transition: Transition.rightToLeft,duration: const Duration(milliseconds: 400));
+                  onTap: () async{
+                    await userController.saveAddress(address);
+                    Get.to(const Home(),transition: Transition.rightToLeft,duration:const Duration(milliseconds: 400));
+                    //userController.checkAppisAvailable(address);
                   },
                 ),
               ],

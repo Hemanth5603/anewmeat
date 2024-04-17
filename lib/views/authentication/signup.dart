@@ -1,7 +1,10 @@
-import 'package:anewmeat/views/authentication/otp.dart';
-import 'package:anewmeat/views/components/custom_textfield.dart';
+import 'package:anewmeat/constants/app_constants.dart';
+import 'package:anewmeat/controllers/user_controller.dart';
+import 'package:anewmeat/views/authentication/login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -10,77 +13,284 @@ class SignUp extends StatefulWidget {
   State<SignUp> createState() => _SignUpState();
 }
 
+UserController userController = Get.put(UserController());
+
 class _SignUpState extends State<SignUp> {
-  // ignore: prefer_typing_uninitialized_variables
-  var otpCode;
-  bool checkBoxValue = false;
+  @override
+  void initState() {
+    super.initState();
+    userController.getCurrentLocation();
+  }
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Color.fromARGB(255, 255, 255, 255), // Change the color to your desired color
+      statusBarIconBrightness: Brightness.dark, // Change the brightness of icons
+    ));
     return Scaffold(
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: IconButton(
-                  icon:const Icon(Icons.arrow_back_ios_new_rounded,size: 30,color: Color.fromARGB(255, 204, 32, 46),weight: 1,),
-                  onPressed: (){
-                    Get.to(const OTP(),transition: Transition.leftToRight,duration: 300.milliseconds);
-                  },
+              Stack(
+              children: [
+                Container(
+                  width: w,
+                  height: h * 0.4,
+                  decoration:const BoxDecoration(
+                    image: DecorationImage( 
+                      image: AssetImage("assets/images/loginHero.jpg"),
+                      fit: BoxFit.fitHeight,
+                    )
+                  )
                 ),
-              ),
-              SizedBox(
-                height: h * 0.3,
-                width: w,
-                //color: Colors.red,
-                child: Padding(
-                  padding: EdgeInsets.only(left: w * 0.02,top: h * 0),
-                  child: Image.asset("assets/icons/appicon.png",filterQuality: FilterQuality.high,)
-                )
-              ),
-              SizedBox(height: h * 0.03,),
-              Padding(
-                padding: EdgeInsets.only(left: w * 0.1),
-                child: Text("Enter Details",style:TextStyle(fontFamily: 'poppins',fontSize: 18,color: Colors.grey.shade700),),
-              ),
-              CustomTextField(w:w,h: h * 0.07,maxLines: 1,keyboardType: TextInputType.name,hint:"Full Name"),
-              CustomTextField(w:w,h: h * 0.07,maxLines: 1,keyboardType: TextInputType.emailAddress,hint:"Email"),
-              SizedBox(height: h * 0.1,),
-              Container(
-               margin:const EdgeInsets.only(left: 10),
-                child: Row(
-                  children: [
-                    Checkbox(
-                      activeColor: Colors.red,
-                      value: checkBoxValue, 
-                      onChanged: (value){
-                        setState(() {
-                          checkBoxValue = value!;
-                        });
-                      }
+                Container(
+                  width: w,
+                  height: h * 0.4,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: FractionalOffset.topCenter,
+                      end: FractionalOffset.bottomCenter,
+                      colors: [
+                       const Color.fromARGB(255, 0, 0, 0).withOpacity(0.0),
+                       const Color.fromARGB(191, 26, 26, 26),
+                      ],stops: const [
+                        0.0,
+                        1.0
+                        ]
+                      )
                     ),
-                    const SizedBox(width: 0,),
-                    const Text("I have read and agree to the terms and conditions",style: TextStyle(fontSize: 12,color: Colors.grey,fontFamily: 'poppins'),)
-                  ],
+                  ),
+                  const Positioned(
+                    bottom: 60,
+                    left: 15,
+                    child: Text("Hi there!",style: TextStyle(fontSize: 40,fontFamily: 'poppins',fontWeight: FontWeight.bold,color: Colors.white),
+                  ),
                 ),
+                const Positioned(
+                    bottom: 20,
+                    left: 15,
+                    child: Text("Welcome to Anewmeat",style: TextStyle(fontSize: 25,fontFamily: 'poppins',fontWeight: FontWeight.bold,color: Color.fromARGB(221, 255, 255, 255)),
+                  ),
+                )
+              ],
+            ),
+              const SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding:const EdgeInsets.only(left:10.0),
+                    child: Text("Create Account",style: TextStyle(fontFamily: 'poppins',fontSize: 25,fontWeight: FontWeight.bold,color: Constants.customRed)),
+                  ),
+                  const SizedBox(height: 16,),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Container(
+                      height: 45,
+                      width: w,
+                      padding: const EdgeInsets.only(left: 12),
+                      decoration:const BoxDecoration(
+                        color: Color.fromARGB(255, 230, 230, 230),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            height: h * 0.1,
+                            width: w* 0.7,
+                            child:  Center(
+                              child: TextField(
+                                controller: userController.nameController,
+                                keyboardType: TextInputType.name,
+                                textAlignVertical: TextAlignVertical.bottom,
+                                style:const TextStyle(fontFamily: 'poppins'),
+                                decoration:const InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Enter Name",
+                                  hintStyle: TextStyle(color: Color.fromARGB(255, 106, 106, 106))
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Container(
+                      height: 45,
+                      width: w,
+                      padding: const EdgeInsets.only(left: 12),
+                      decoration:const BoxDecoration(
+                        color: Color.fromARGB(255, 230, 230, 230),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            height: h * 0.12,
+                            width: w* 0.8,
+                            child:  Center(
+                              child: TextField(
+                                controller: userController.emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                textAlignVertical: TextAlignVertical.bottom,
+                                style:const TextStyle(fontFamily: 'poppins'),
+                                decoration:const InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Enter Email",
+                                  hintStyle: TextStyle(color: Color.fromARGB(255, 106, 106, 106))
+                                ),
+                              ),
+                            ),
+                          ),
+                          
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Container(
+                      height: 45,
+                      width: w,
+                      decoration:const BoxDecoration(
+                        color: Color.fromARGB(255, 230, 230, 230),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 7,),
+                          const Text("+91",style: TextStyle(fontSize: 16,fontFamily: 'poppins'),),
+                          const SizedBox(width: 7,),
+                          const VerticalDivider(width: 1,color: Color.fromARGB(255, 182, 182, 182),),
+                          const SizedBox(width: 10,),
+                          SizedBox(
+                            height: h * 0.1,
+                            width: w* 0.7,
+                            child:  Center(
+                              child: TextField(
+                                controller: userController.phoneController,
+                                keyboardType: TextInputType.phone,
+                                textAlignVertical: TextAlignVertical.bottom,
+                                style:const TextStyle(fontFamily: 'poppins'),
+                                decoration:const InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Phone number",
+                                  hintStyle: TextStyle(color: Color.fromARGB(255, 106, 106, 106))
+                                ),
+                              ),
+                            ),
+                          ),
+                          
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10,),
+                  InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Container(
+                        height: 50,
+                        width: w * 0.89,
+                        decoration:BoxDecoration(
+                          border: Border.all(color:const Color.fromARGB(255, 244, 55, 55),width: 2),
+                          color:Constants.customRed,
+                          borderRadius:const BorderRadius.all(Radius.circular(10))
+                        ),
+                        child:Obx(()=>!userController.isLoading.value ? const Center(
+                          child: Text("SignUp",style: TextStyle(fontSize: 20,color: Colors.white),),
+                        ): const Center(child: CircularProgressIndicator(color: Colors.white,strokeWidth: 2,))),
+                      ),
+                    ),
+                    onTap: ()async{
+                      userController.sendOtp(true);
+                    }
+                  ),
+                  const SizedBox(height: 15,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Already have an Account ? ",style: TextStyle(fontSize: 14,color: Colors.black),),
+                      GestureDetector(
+                        child: Text("Login",style: TextStyle(fontSize: 14,color: Constants.customRed,fontWeight: FontWeight.bold),),
+                        onTap: (){
+                          Get.to(const Login(),transition: Transition.rightToLeft,duration: 300.milliseconds);
+                        },
+                      )
+                    
+                    ],
+                  ),
+                  SizedBox(height: h * 0.22),
+                  Container(
+                    margin:const EdgeInsets.only(left: 80),
+                    child:const Column(
+                      children: [
+                        Text("By Continuing you agree ",style: TextStyle(fontSize: 12,color: Colors.grey),),
+                        SizedBox(height: 2,),
+                        Text("Terms of Service   Privacy Policy ",style: TextStyle(fontSize: 12,color: Colors.grey))
+                      ],
+                    ),
+                  )
+                ],
               ),
-
-              /*SizedBox(
-                 width: w,
-                height : h * 0.1,
-                child: CustomButton(title: "Continue", height: h * 0.07, width: w * 0.8, callback: authController.register)
-              )*/
-              
-
-
-            ],
-          ),
+            )
+          ],
+        )
         ),
       ),
     );
   }
+}
+
+Widget customTextField(w,h,maxLines,keyboardType,hint){
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: w * 0.09, vertical: 12.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          height: h,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+            boxShadow:const [
+            ]
+          ),
+          child: TextField(
+            decoration: InputDecoration(
+              fillColor: const Color.fromARGB(255, 13, 8, 8),
+              hintText: hint,
+              enabledBorder: getBorder(),
+              focusedBorder: getBorder(),
+              focusColor: Colors.black,
+              prefixStyle: const TextStyle(color: Colors.black),
+              hintStyle:const TextStyle(fontFamily: 'poppins',fontSize: 16,color: Color.fromARGB(255, 76, 76, 76)),
+              //prefixIcon: Icon(Icons.no,color: Color.fromARGB(200, 0, 44, 107)),
+            ),
+            maxLines: maxLines,
+            keyboardType: keyboardType,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+OutlineInputBorder getBorder() {
+    return const OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+      borderSide: BorderSide(width: 1.5, color: Color.fromARGB(255, 204, 32, 46)),
+      gapPadding: 2,
+  );
 }

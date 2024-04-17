@@ -88,10 +88,11 @@ class _LoginState extends State<Login> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left:10.0),
-                    child: Text("Login or Sign in with..",style: TextStyle(fontFamily: 'poppins',fontSize: 25,fontWeight: FontWeight.bold,color: Constants.customRed)),
+                    padding:const EdgeInsets.only(left:10.0),
+                    child: Text("Login with Phone Number",style: TextStyle(fontFamily: 'poppins',fontSize: 25,fontWeight: FontWeight.bold,color: Constants.customRed)),
                   ),
                   const SizedBox(height: 16,),
+
                   Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Container(
@@ -111,22 +112,20 @@ class _LoginState extends State<Login> {
                           SizedBox(
                             height: h * 0.1,
                             width: w* 0.7,
-                            child: const Center(
+                            child:  Center(
                               child: TextField(
+                                controller: userController.phoneController,
                                 keyboardType: TextInputType.phone,
                                 textAlignVertical: TextAlignVertical.bottom,
-                                
-                                style:TextStyle(fontFamily: 'poppins'),
-                                decoration: InputDecoration(
+                                style:const TextStyle(fontFamily: 'poppins'),
+                                decoration:const InputDecoration(
                                   border: InputBorder.none,
                                   hintText: "Phone number",
-
                                   hintStyle: TextStyle(color: Color.fromARGB(255, 106, 106, 106))
                                 ),
                               ),
                             ),
                           ),
-                          
                         ],
                       ),
                     ),
@@ -139,32 +138,30 @@ class _LoginState extends State<Login> {
                         height: 50,
                         width: w * 0.89,
                         decoration:BoxDecoration(
-                          border: Border.all(color:Color.fromARGB(255, 244, 55, 55),width: 2),
+                          border: Border.all(color:const Color.fromARGB(255, 244, 55, 55),width: 2),
                           color:Constants.customRed,
                           borderRadius:const BorderRadius.all(Radius.circular(10))
                         ),
-                        child:const Center(
+                        child:Obx(()=> !userController.isLoading.value ? const Center(
                           child: Text("Send Otp",style: TextStyle(fontSize: 20,color: Colors.white),),
-                        ),
+                        ): const Center(child: CircularProgressIndicator(color: Colors.white,strokeWidth: 2,),)),
                       ),
                     ),
                     onTap: ()async{
-                      userController.sendOtp();
-
+                      userController.sendOtp(false);
                     }
                   ),
-             
-                  
                   SizedBox(height: h * 0.22),
                   Container(
-                    margin: EdgeInsets.only(left: 80),
+                    margin:const EdgeInsets.only(left: 80),
                     child:const Column(
                       children: [
                         Text("By Continuing you agree ",style: TextStyle(fontSize: 12,color: Colors.grey),),
                         SizedBox(height: 2,),
                         Text("Terms of Service   Privacy Policy ",style: TextStyle(fontSize: 12,color: Colors.grey))
                       ],
-                    ) ,
+                    ),
+
                   )
                 ],
               ),

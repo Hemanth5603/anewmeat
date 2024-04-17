@@ -48,7 +48,7 @@ class _categoryItemState extends State<categoryItem> {
             ),
           ),
           const SizedBox(height: 5,),
-          Text(widget.categoryName!,style:const TextStyle(fontFamily: 'poppins',fontSize: 16,),)
+          Text(widget.categoryName,style:const TextStyle(fontFamily: 'poppins',fontSize: 16,),)
         ],
       ),
     ),

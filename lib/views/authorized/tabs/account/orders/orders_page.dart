@@ -1,4 +1,9 @@
+import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/billing_controller.dart';
+import 'package:anewmeat/views/authorized/tabs/account/profile_page.dart';
+import 'package:anewmeat/views/home.dart';
+import 'package:anewmeat/views/widgets/order_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -18,6 +23,7 @@ class _OrdersPageState extends State<OrdersPage> {
   @override
   void initState() {
     super.initState();
+    billingController.getOrders();
     
   }
   @override
@@ -41,7 +47,31 @@ class _OrdersPageState extends State<OrdersPage> {
         const Center(
           child: CircularProgressIndicator(),
         )
-       : Container(
+       : billingController.orderModel!.orders.isEmpty ? Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+         children: [
+           Center(
+              child: Text("No Orders Placed Yet !",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Color.fromARGB(255, 35, 35, 35)),),
+            ),
+            SizedBox(height: 10,),
+            GestureDetector(
+              onTap: (){
+                Get.to(const Home(), transition: Transition.leftToRight, duration: 200.milliseconds);
+              },
+              child: Center(
+                child: Container(
+                  width: w * 0.3,
+                  height: h * 0.04,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Constants.customRed,
+                  ),
+                  child: Center(child: Text("Order now ",style: TextStyle(color: Colors.white),)),
+                ),
+              ),
+            )
+         ],
+       ) : Container(
           height: h,
           width: w,
           padding: const EdgeInsets.all(10),
@@ -61,146 +91,3 @@ class _OrdersPageState extends State<OrdersPage> {
     );
   }
 }
-
-
-class OrderCard extends StatefulWidget {
-  OrderCard({
-    super.key,
-    required this.w,
-    required this.h,
-    required this.index,
-    required this.billingController
-  });
-  double w;
-  double h;
-  int index;
-  BillingController billingController;
-  @override
-  State<OrderCard> createState() => _OrderCardState();
-}
-
-class _OrderCardState extends State<OrderCard> {
-  final data =  billingController.orderModel?.orders[0];
-   late double cHeight = widget.h * data!.items.length * 0.125;
-  bool isExtended = false;
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration:const Duration(milliseconds: 200),
-      width: widget.w,
-      height: cHeight,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        boxShadow: [
-          const BoxShadow(
-            color: Color.fromARGB(111, 189, 189, 189),
-            blurRadius: 10
-          )
-        ],
-        borderRadius: BorderRadius.circular(5),
-        color: Color.fromARGB(255, 255, 255, 255),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Order ID: ${data?.orderId}",style: const TextStyle(fontFamily: 'poppins',color: Colors.grey,fontSize: 12),),
-          const SizedBox(height: 2,),
-          Text("${data?.date} | ${data?.time}",style: const TextStyle(fontFamily: 'poppins',color: Color.fromARGB(255, 110, 110, 110),fontSize: 12),),
-          const SizedBox(height: 10,),
-          const Text("Ordered Items",style: TextStyle(fontFamily: 'poppins',color: Color.fromARGB(255, 0, 0, 0),fontSize: 14,fontWeight: FontWeight.bold),),
-          const SizedBox(height: 5,),
-          SizedBox(
-            width: widget.w,
-            height: widget.h * data!.items.length * 0.04,
-            child: ListView.builder(
-              itemCount: data?.items.length,
-              itemBuilder: (context,index){
-                return itemTile(
-                  widget.w,
-                  widget.h,
-                  data?.items[index].productName,
-                  data?.items[index].value,
-                  data?.items[index].finalPrice
-                );
-              },
-            ),
-          ),
-          Container(
-            width: widget.w,
-            height: 1,
-            color: const Color.fromARGB(255, 213, 213, 213),
-          ),
-          const SizedBox(height: 0,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Bill Details",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,),),
-              IconButton(
-                onPressed:(){
-                  setState(() {
-                    if(isExtended){
-                      cHeight = widget.h * data!.items.length * 0.125;
-                      isExtended = false;
-                    }
-                    else{
-                      cHeight = widget.h * data!.items.length * 0.2;
-                      isExtended = true;
-                    }
-                  });
-                },
-                icon: isExtended
-                ? const Icon(Icons.arrow_drop_up_rounded,size: 30,)
-                : const Icon(Icons.arrow_drop_down_rounded,size: 30,)
-              ),
-            ],
-          ),
-          Visibility(
-            visible: isExtended,
-            child: Column(
-              children: [
-                billItemTile(widget.w, widget.h,"Items Total",data?.totalAmount,),
-                billItemTile(widget.w, widget.h,"Delivery fee",data?.deliveryFee,),
-                billItemTile(widget.w, widget.h,data?.couponCode,"-50",),
-              ],
-            )
-          )
-        ],
-      ),
-      
-    );
-  }
-}
-
-
-Widget itemTile(w,h,productName,value,price){
-  return Container(
-    width: w,
-    height: h * 0.02,
-    margin: EdgeInsets.all(2),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text("${productName} x ${value}",style:TextStyle(color: Colors.grey),),
-        Text("₹ ${price}",style:TextStyle(color: const Color.fromARGB(255, 87, 87, 87)),),
-      ],
-    ),
-  );
-}
-
-Widget billItemTile(w,h,name,amount){
-  return Container(
-    width: w,
-    height: h * 0.02,
-    margin: EdgeInsets.all(2),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text("${name}",style:TextStyle(color: Color.fromARGB(255, 88, 88, 88),fontSize: 12),),
-        Text("₹ ${amount}",style:TextStyle(color: const Color.fromARGB(255, 87, 87, 87)),),
-      ],
-    ),
-  );
-}
-
-
-

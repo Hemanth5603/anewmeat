@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/user_controller.dart';
+import 'package:anewmeat/views/home.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -48,10 +50,16 @@ class _EditProfileState extends State<EditProfile> {
               borderRadius: BorderRadius.circular(10),
               color: Constants.customRed,
             ),
-            child:const Center(
+            child:Obx(() => userController.isLoading.value ? const Center(child: CircularProgressIndicator(strokeWidth: 1,color: Colors.white,)) : const Center(
               child: Text("Update Profile",style: TextStyle(fontFamily: 'poppins',fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold),),
-            ),
-          ),
+            )
+          )),
+          onTap: () async{
+            await userController.updateUser();
+            await userController.getUser();
+            Get.to(const Home(), transition: Transition.leftToRight, duration: 300.milliseconds);
+
+          },
         )
       ),
       appBar: AppBar(
@@ -67,7 +75,7 @@ class _EditProfileState extends State<EditProfile> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Container(
+          /*Container(
             width: w,
             height: h * 0.2,
             alignment: Alignment.center,
@@ -119,7 +127,7 @@ class _EditProfileState extends State<EditProfile> {
                 )
               ],
             )
-          ),
+          ),*/
           Container(
             width: w,
             height: h * 0.1,
@@ -129,12 +137,12 @@ class _EditProfileState extends State<EditProfile> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  width: w * 0.45,
+                  width: w*0.92,
                   child: TextField(
-                    controller: userController.firstNameController,
+                    controller: userController.nameController,
                     keyboardType: TextInputType.name,
                     decoration: InputDecoration(
-                      labelText: 'Enter First Name',
+                      labelText: 'Updated Name',
                       labelStyle: const TextStyle(fontFamily: 'poppins',fontSize: 14),
                       border: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.grey)
@@ -145,7 +153,7 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ),
                 ),
-                SizedBox(
+                /*SizedBox(
                   width: w * 0.45,
                   child: TextField(
                     controller: userController.lastNameController,
@@ -161,7 +169,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                   ),
-                ),
+                ),*/
               ],
             ),
           ),
@@ -191,11 +199,12 @@ class _EditProfileState extends State<EditProfile> {
             margin: const EdgeInsets.symmetric(vertical: 8),
             padding:const EdgeInsets.symmetric(horizontal: 15),
             child: TextField(
+              readOnly: true,
               controller: userController.phoneController,
               keyboardType: TextInputType.phone,
               decoration: InputDecoration(
-                labelText: 'Phone Number',
-                labelStyle: const TextStyle(fontFamily: 'poppins',fontSize: 14),
+                hintText:userController.userModel.number.toString(),
+                labelText: "Phone Number",
                 border: const OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.grey)
                 ),

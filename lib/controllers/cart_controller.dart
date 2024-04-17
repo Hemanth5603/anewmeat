@@ -5,7 +5,6 @@ import 'package:anewmeat/models/cart_response.dart';
 import 'package:anewmeat/views/authorized/tabs/account/orders/orders_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:googleapis/recommender/v1.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,9 +34,9 @@ class CartController extends GetxController{
       SharedPreferences prefs = await SharedPreferences.getInstance();
       
       final headers = {
-        "name":"Hemanth",
-        "number": "7997435603",
-        "email": "shemanth.kgp@gmail.com",
+        "name":prefs.getString("name")!,
+        "number": prefs.getString("phone")!,
+        "email": prefs.getString("email")!,
       };
       final body = {
         "id": id,
@@ -74,8 +73,9 @@ class CartController extends GetxController{
       isCalculating(true);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final uri = Uri.parse(APIConstants.baseUrl + APIConstants.getCart);
+      print(prefs.getString("phone"));
       final headers = {
-        "number":"7997435603"
+        "number":prefs.getString("phone")!
       };
       var response = await http.get(uri,headers: headers);
       if(response.statusCode == 200){
@@ -84,18 +84,19 @@ class CartController extends GetxController{
       }else{
         if(kDebugMode) print("Error Fetching Cart Items data");
       }
-      totalItemsLength(getCartModel!.products[0].items.length);
+      /*totalItemsLength(getCartModel!.products[0].items.length);
       if(getCartModel!.products.isEmpty){
         totalCartItems.add("0");
       }else{
         prefs.setString("_cartLength",getCartModel!.products[0].items.length.toString());
         totalCartItems.add(prefs.getString("_cartLength"));
-      }
+      }*/
+      isLoading(false);
+      isCalculating(false);
     }catch(e){
       if(kDebugMode) print("Cannot fetch cart items $e");
     }finally{
-      isLoading(false);
-      isCalculating(false);
+      
     }
   }
 
@@ -104,9 +105,10 @@ class CartController extends GetxController{
       isLoading(true);
       billingController.isLoading(true);
       final uri = Uri.parse(APIConstants.baseUrl + APIConstants.deleteCart);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       
       final headers = {
-        "number":"7997435603"
+        "number":prefs.getString("phone")!,
       };
       final body = {
         "id":id,
@@ -144,8 +146,9 @@ class CartController extends GetxController{
       isCalculating(true);
       billingController.isLoading(true);
       final uri = Uri.parse(APIConstants.baseUrl + APIConstants.updateCart);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       final headers = {
-        "number":"7997435603"
+        "number":prefs.getString("phone")!
       };
       
       final body = {
@@ -185,8 +188,9 @@ class CartController extends GetxController{
       isCalculating(true);
       billingController.isLoading(true);
       final uri = Uri.parse(APIConstants.baseUrl + APIConstants.updateCart);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       final headers = {
-        "number":"7997435603"
+        "number":prefs.getString("phone")!
       };
       final body = {
         "id": id,
