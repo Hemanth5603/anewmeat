@@ -43,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                        Row(
                         children: [
-                          SizedBox(width: 10,),
+                          const SizedBox(width: 10,),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -75,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 const SizedBox(height: 8,),
                 GestureDetector(
-                  child: Tile(w,h,Icons.shopping_bag_outlined,"Orders","",false,false),
+                  child: Tile(w,h,Icons.shopping_bag_outlined,"Orders History","",false,false),
                   onTap: (){
                     setState(() {
                       billingController.getOrders();

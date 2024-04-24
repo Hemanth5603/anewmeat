@@ -206,7 +206,7 @@ class _ProductsPageState extends State<ProductsPage> {
                   children: [
                     SizedBox(height: h * 0.35,),
                     const Text("Hold On !!",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-                    const Text("We are working hard to make these items available"),
+                    SizedBox(width: w * 0.7, child: const Text("We are working hard to make these items available",textAlign: TextAlign.center,),),
                     TextButton(onPressed: (){
                       Get.to(() => const Home(),transition: Transition.leftToRight,duration:const  Duration(milliseconds: 300));
                     }, child: Text("Checkout other items !",style: TextStyle(color: Constants.customRed),))

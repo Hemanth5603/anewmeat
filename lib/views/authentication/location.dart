@@ -2,6 +2,7 @@ import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/controllers/user_controller.dart';
 import 'package:anewmeat/views/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:map_location_picker/map_location_picker.dart';
 
@@ -231,8 +232,75 @@ class _LocationScreenState extends State<LocationScreen> {
                   ),
                   onTap: () async{
                     await userController.saveAddress(address);
-                    Get.to(const Home(),transition: Transition.rightToLeft,duration:const Duration(milliseconds: 400));
-                    //userController.checkAppisAvailable(address);
+                    bool check = userController.checkAppisAvailable(address);
+                    if(!check){
+                      showModalBottomSheet(
+                        context: context, 
+                        builder: (BuildContext context){
+                          return Container(
+                            width: w,
+                            height: h * 0.25,
+                            padding: EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15)),
+                              color: Colors.white,
+                            ),
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: w * 0.15,
+                                        height: w * 0.15,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          color: Constants.customRed
+                                        ),
+                                        child: Center(
+                                          child: Icon(Icons.location_pin,color: Colors.white,size: 30,),
+                                        ),
+                                      ),
+                                      SizedBox(width: 15,),
+                                      Container(
+                                        width: w * 0.7,
+                                        child: Text("Anewmeat is Not availble in your Location",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                                        )
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10,),
+                                  Container(
+                                    width: w,
+                                    child: Text("Hang On!! We are trying hard to expand our services in your location..",style: TextStyle(fontSize: 16,color: Color.fromARGB(255, 56, 56, 56)),),
+                                  ),
+                                  const SizedBox(height: 15,),
+                                  GestureDetector(
+                                    onTap: (){
+                                      Get.to(const Home(),transition: Transition.rightToLeft,duration: 200.milliseconds);
+                                    },
+                                    child: Container(
+                                      width: w,
+                                      height: h * 0.06,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Constants.customRed,
+                                        
+                                      ),
+                                      child: Center(
+                                        child: Text("Browse App",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w700),)
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            ),
+                          );
+                        }
+                      );
+                    }else{
+                      Get.to(const Home(),transition: Transition.rightToLeft,duration:const Duration(milliseconds: 400));
+                    }
                   },
                 ),
               ],

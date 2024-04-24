@@ -162,7 +162,7 @@ class _HomePageState extends State<HomePage> {
                         child:Obx(() => 
                           bannerController.isLoading.value ? 
                            Center(
-                            child: Container(),
+                            child: Container(child: Text("It's Been an Year"),),
                           ) :
                           CarouselSlider.builder(
                             itemCount: bannerController.bannerModel!.banners?.length ?? 0,

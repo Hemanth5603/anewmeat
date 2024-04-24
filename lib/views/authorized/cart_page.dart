@@ -117,9 +117,10 @@ class _CartPageState extends State<CartPage> {
                     ),)
                   ),
                   onTap: (){
+                    billingController.openCheckout();
                     if(cartController.getCartModel!.productsLength != 0){
-                      billingController.createOrder();
-                      Get.to(const OrderAcknowledgement(),transition: Transition.downToUp,duration:const Duration(milliseconds: 400));
+                      //billingController.createOrder();
+                      //Get.to(const OrderAcknowledgement(),transition: Transition.downToUp,duration:const Duration(milliseconds: 400));
                     }else{
                       Fluttertoast.showToast(
                         msg: "Please add Items in cart",
@@ -127,9 +128,6 @@ class _CartPageState extends State<CartPage> {
                         backgroundColor: Colors.red
                       );
                     }
-                  
-                    //billingController.openCheckout(1);
-                    
                   },
                 )
               ],

@@ -252,11 +252,16 @@ class UserController extends GetxController{
     isLoading(false);
   }
 
-  void checkAppisAvailable(String address){
-    List<String> availableCities = ['Visakhapatnam'];
+  bool checkAppisAvailable(String address){
+    List<String> availableCities = ['Eluru','Visakhapatnam','USA'];
 
-    !address.contains(availableCities[0]) ?  print("App is not available") : Get.to(const Home(),transition: Transition.rightToLeft,duration:const Duration(milliseconds: 400));  
-    
+    //!address.contains(availableCities[0]) ?  print("App is not available") : Get.to(const Home(),transition: Transition.rightToLeft,duration:const Duration(milliseconds: 400)); 
+    for(int i=0;i<availableCities.length;i++){
+      if(address.contains(availableCities[i])){
+        return true;
+      }
+    } 
+    return false;
   }
 
 

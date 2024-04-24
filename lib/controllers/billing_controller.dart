@@ -265,20 +265,19 @@ class BillingController extends GetxController{
   } 
 
 
-  void openCheckout(amount) async{
-    amount = amount * 100;
+  void openCheckout() async{
+    SharedPreferences prefs =  await SharedPreferences.getInstance();
+    int payableAmount = billingController.billModel!.toPay;
+    payableAmount = payableAmount * 100;
     var options = {
       'key' : 'rzp_test_L9eApwy7Hv77Xf',
-      'amount': amount,
-
-      
-      'name': 'Hemanth',
+      'amount': payableAmount,
+      'name': prefs.getString("name"),
       'prefill': {
-        'contact': '7997435603',
-        'email': 'shemanth.kgp@gmail.com',
+        'contact': prefs.getString("phone"),
+        'email': prefs.getString("email"),
         'external':{
-          'wallets': ['paytm']
-
+          'wallets': ['paytm',"phonepe"]
         }
       }
     };
