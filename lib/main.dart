@@ -4,6 +4,7 @@ import 'package:anewmeat/constants/app_constants.dart';
 import 'package:anewmeat/firebase_options.dart';
 import 'package:anewmeat/views/authentication/login.dart';
 import 'package:anewmeat/views/authentication/signup.dart';
+import 'package:anewmeat/views/authorized/order_track_map.dart';
 import 'package:anewmeat/views/authorized/order_track_page.dart';
 import 'package:anewmeat/views/authorized/products_page.dart';
 import 'package:anewmeat/views/home.dart';
@@ -63,7 +64,7 @@ class MainApp extends StatelessWidget {
       home:Scaffold(
         body: Center(
           child: connection == true ?
-            isLogedIn == 1 ? const Home() : const SignUp()
+            isLogedIn == 1 ? const Home() : const SignUp() 
             : const InternetConnectionScreen(),
         ),
       ),

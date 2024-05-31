@@ -202,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                         height: h * 0.14,
                         margin:const EdgeInsets.only(top:10),
                         child:  ListView.builder(
-                              scrollDirection: Axis.horizontal,
+                            scrollDirection: Axis.horizontal,
                               itemCount: categoryController.categoryModel?.categories.length ?? 0,
                               itemBuilder:(context,index){
                                 return categoryItem(

@@ -54,6 +54,7 @@ class _CartPageState extends State<CartPage> {
         Get.back();
         await productController.fetchCategoryProducts();
         
+        
         return false;
       },
       child: Scaffold(
@@ -117,9 +118,9 @@ class _CartPageState extends State<CartPage> {
                     ),)
                   ),
                   onTap: (){
-                    billingController.openCheckout();
+                    //billingController.openCheckout();
                     if(cartController.getCartModel!.productsLength != 0){
-                      //billingController.createOrder();
+                      billingController.createOrder();
                       //Get.to(const OrderAcknowledgement(),transition: Transition.downToUp,duration:const Duration(milliseconds: 400));
                     }else{
                       Fluttertoast.showToast(
