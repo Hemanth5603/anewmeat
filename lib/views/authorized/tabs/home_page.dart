@@ -15,6 +15,7 @@ import 'package:anewmeat/views/widgets/product_listing_card.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:googleapis/texttospeech/v1.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -49,41 +50,44 @@ class _HomePageState extends State<HomePage> {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
-        floatingActionButton: GestureDetector(
-          onTap: () {
-            billingController.checkCoupon("");
-            cartController.getCartItems();
-            Get.to(const CartPage());
-          },
-          child: Stack(
-            children: [
-              Container(
-                width: w * 0.15,
-                height: w * 0.15,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color:Colors.white,
-                  border: Border.all(color: Constants.customRed,width: 1)
-                ),
-                child:Icon(Icons.shopping_cart_outlined,color: Constants.customRed,size: 28,),
+        floatingActionButton:
+            GestureDetector(
+              onTap: () {
+                billingController.checkCoupon("");
+                cartController.getCartItems();
+                Get.to(const CartPage());
+              },
+              child: Stack(
+                children: [
+                  Container(
+                    width: w * 0.15,
+                    height: w * 0.15,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color:Colors.white,
+                      border: Border.all(color: Constants.customRed,width: 1)
+                    ),
+                    child:Icon(Icons.shopping_cart_outlined,color: Constants.customRed,size: 28,),
+                  ),
+                  
+                  /*Positioned(
+                    right:0,
+                    top:0,
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        color: Colors.black
+                      ),
+                      child: Center(
+                        child:Text(cartController.getCartModel!.productsLength.toString() ?? "0",style: TextStyle(fontFamily: 'poppins',fontSize: 10,color: Colors.white),)
+                      ),
+                    )
+                  )*/
+                ],
               ),
-              /*Positioned(
-                right:0,
-                top:0,
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: Colors.black
-                  ),
-                  child: Center(
-                    child:Text(cartController.getCartModel!.productsLength.toString() ?? "0",style: TextStyle(fontFamily: 'poppins',fontSize: 10,color: Colors.white),)
-                  ),
-                )
-              )*/
-            ],
-          ),
+            
         ),
         body: RefreshIndicator.adaptive(
           onRefresh: pullRefresh,
@@ -91,10 +95,12 @@ class _HomePageState extends State<HomePage> {
               length: 1,
               child: NestedScrollView(
                 physics:const AlwaysScrollableScrollPhysics(),
-                headerSliverBuilder: (contcext,isScrolled){
+                headerSliverBuilder: (context,isScrolled){
                   return [
-                    SliverToBoxAdapter(
-                      child: GestureDetector(
+                    SliverToBoxAdapter( 
+                      
+                      child: GestureDetector( 
+
                         child: Container(
                           margin:const EdgeInsets.only(top:30),
                           padding:const EdgeInsets.only(top: 5,left: 10),
@@ -162,7 +168,7 @@ class _HomePageState extends State<HomePage> {
                         child:Obx(() => 
                           bannerController.isLoading.value ? 
                            Center(
-                            child: Container(child: Text("It's Been an Year"),),
+                            child: Container(child: const Text("It's Been an Year"),),
                           ) :
                           CarouselSlider.builder(
                             itemCount: bannerController.bannerModel!.banners?.length ?? 0,
@@ -217,7 +223,73 @@ class _HomePageState extends State<HomePage> {
                         )
                       
                     ),
-                   
+                    if(billingController.orderModel?.orders.length != 0) 
+                      if(billingController.orderModel?.orders[0].outForDelivery == true) SliverToBoxAdapter(
+                      child: Padding(
+                        padding:const EdgeInsets.only(left: 10.0,right: 10, bottom: 10),
+                        child: Container(
+                          width: w,
+                          height: h * 0.1,
+                          
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            border: Border.all(color: Color.fromARGB(185, 139, 139, 139),width: 0.5),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromARGB(64, 189, 189, 189),
+                                blurRadius: 5,
+                                
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(15),
+                          ),        
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  
+                                  Container( 
+                                    padding: EdgeInsets.all(10),
+                                    width: w * 0.74,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Your Order is on the Way 😍",style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'poppins',fontSize: 18,color: Constants.customRed),),
+                                        SizedBox(height: 5,),
+                                        Text("Delivery in 2 Hrs", style: TextStyle(fontSize: 14,fontFamily: 'poppins',fontWeight: FontWeight.bold)),
+                                        const SizedBox(height: 8,),
+                                        // Container(
+                                        //   width: w,
+                                        //   height: 1,
+                                        //   color: const Color.fromARGB(255, 206, 206, 206),
+                                        // )
+                                      ],
+                                    )),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.only(left: 10),
+                                    //   child: Text("Track Order",style: TextStyle(fontSize: 12,color: Colors.grey),),
+                                    // )
+                                ],
+                              ),
+                              Container(
+                                width: w * 0.2,
+                                height: h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(topRight: Radius.circular(15), bottomRight: Radius.circular(15)),
+                                  color: Constants.customRed,
+                                ),
+                                child: Center(
+                                  child: Icon(Icons.arrow_forward_ios_rounded,color: Colors.white,),
+                                ),
+                              )
+                            ],
+                            
+                          ),     
+                        ),
+                      ),
+                    ),
                      SliverToBoxAdapter(
                       child:Padding(
                         padding:const EdgeInsets.only(left: 10.0,right: 10, bottom: 10),
@@ -230,7 +302,7 @@ class _HomePageState extends State<HomePage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text("Top Picks only for You !!",style: TextStyle(fontFamily: 'poppins',fontSize: 20,fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis,),
-                                  Text("Here's what you might like",style: TextStyle(fontFamily: 'poppins',fontSize: 16,))
+                                  Text("Here's what you might like",style: TextStyle(fontFamily: 'poppins',fontSize: 12,))
                                 ],
                               ),
                             ),
@@ -285,7 +357,7 @@ class _HomePageState extends State<HomePage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text("Flat 50% off on SEA FOODS",style: TextStyle(fontFamily: 'poppins',fontSize: 20,fontWeight: FontWeight.bold),),
-                                  Text("Here's what you might like",style: TextStyle(fontFamily: 'poppins',fontSize: 16,))
+                                  Text("Here's what you might like",style: TextStyle(fontFamily: 'poppins',fontSize: 12,))
                                 ],
                               ),
                             ),

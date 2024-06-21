@@ -145,7 +145,7 @@ Future initializeHome() async{
   await cartController.getCartItems();
   await productController.fetchAllProducts();
   await categoriesController.fetchCategories();
-
+  await billingController.getOrders();
   //cartController.getCartLength();
   setState(() {
     isLoading = false;

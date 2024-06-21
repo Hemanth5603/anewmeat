@@ -3,6 +3,7 @@ import 'package:anewmeat/constants/api_constants.dart';
 import 'package:anewmeat/controllers/cart_controller.dart';
 import 'package:anewmeat/controllers/user_controller.dart';
 import 'package:anewmeat/models/bill_model.dart';
+import 'package:anewmeat/models/cart_model.dart';
 import 'package:anewmeat/views/authorized/tabs/account/orders/orders_page.dart';
 import 'package:anewmeat/views/authorized/tabs/account/profile/edit_profile.dart';
 import 'package:anewmeat/views/authorized/tabs/account/profile_page.dart';
@@ -10,7 +11,7 @@ import 'package:anewmeat/views/utils/no_orders_page.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:anewmeat/models/coupon_model.dart';
-import 'package:anewmeat/models/order_model.dart';
+import 'package:anewmeat/models/order_model.dart' hide Items;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -80,75 +81,42 @@ class BillingController extends GetxController{
     String orderID = 'ORD_$formattedOrderID';
 
     isLoading(true);
-
     try{
-      final ref = FirebaseFirestore.instance
-        .collection("orders").doc();
-        await ref.set({
-          "_id":1,
-          "uid":ref.id,
-          "order_id":orderID,
-          "name":"Hemanth",
-          "number":7997435603,
-          "date": date,
-          "time":time,
-          "totalAmount":billingController.billModel?.toPay,
-          "payment_method":"UPI",
-          "coupon_code":"DIWALI10",
-          "delivery_fee":billingController.billModel?.deliveryFees,
-          "delivery_address":userController.userModel.address.toString(),
-          "is_delivered": false,
-          "out_for_delivery": false,
-          "order_recieved": false,
-          "timestamp":FieldValue.serverTimestamp(),
-        });
-
-          
-
-      for(int i=0;i< cartController.getCartModel!.products[0].items.length; i++){
-        final itemsRef = FirebaseFirestore.instance
-        .collection("orders")
-        .doc(ref.id)
-        .collection("items")
-        .doc();
-
-        await itemsRef.set({
-          "id": cartController.getCartModel?.products[0].items[i].id,
-          "productName": cartController.getCartModel?.products[0].items[i].productName,
-          "finalPrice": cartController.getCartModel?.products[0].items[i].finalPrice,
-          "originalPrice": cartController.getCartModel?.products[0].items[i].originalPrice,
-          "productImage": cartController.getCartModel?.products[0].items[i].productImage,
-          "quantity": cartController.getCartModel?.products[0].items[i].quantity,
-          "value": cartController.getCartModel?.products[0].items[i].value.toString(),
-          "fPrice": cartController.getCartModel?.products[0].items[i].fPrice,
-          "oPrice": cartController.getCartModel?.products[0].items[i].oPrice,
-        });
-      }
-
-      final uri = Uri.parse(APIConstants.baseUrl + APIConstants.saveOrder);
-      
-      print("Products =-----------------------------------");
+      await userController.getCurrentLocation();
+      final uri = Uri.parse(APIConstants.baseUrl + APIConstants.createOrder);
+      List<Map<String, dynamic>> itemsJson = cartController.getCartModel!.products[0].items.map((item) => item.toJson()).toList();
+    
       print(json.encode(cartController.getCartModel?.products[0].items));
+      print(orderID.toString());
+     
       Map<String,dynamic> body = {
-        "uId":ref.id.toString(),
         "order_id":orderID.toString(),
         "name":userController.userModel.name.toString(),
         "number":userController.userModel.number.toString(),
         "date":date.toString(),
         "time":time.toString(),
-        "items":json.encode(cartController.getCartModel?.products[0].items),   
-        "totalAmount":billingController.billModel?.toPay.toString(),
+        "items":jsonEncode(cartController.getCartModel?.products[0].items),
+        "total_amount":billingController.billModel?.toPay.toString(),
         "payment_method":"UPI",
         "coupon_code" :"DIWALI10",
         "delivery_fee":billingController.billModel?.deliveryFees.toString(),
         "delivery_address":userController.userModel.address.toString(),
+        "order_accepted":false.toString(),
+        "out_for_delivery":false.toString(),
+        "order_delivered":false.toString(),
+        "delivery_latitude":userController.userModel.latitude.toString(),
+        "delivery_longitude":userController.userModel.longitude.toString(),
+        "admin_latitude":17.725028.toString(),
+        "admin_longitude":83.303416.toString(),
+        "delivery_person_phone":"7001189227",
       };
+      
       try{
         var response = await post(uri,body:body);
         print(response.statusCode);
         if(response.statusCode == 200){
           if(kDebugMode) print(response.body);
-          print("Created order in DB");
+          print("Created order in DB-------------");
         }else{
           if(kDebugMode) print("Cannot save order");
         }
@@ -159,13 +127,17 @@ class BillingController extends GetxController{
 
       isLoading(false);
 
-      print("Order successfully --------------------------////////");
+      
 
     }catch(e){
       if(kDebugMode) print("error: $e");
       if(kDebugMode) print("cannot insert Orders");
     }
 
+  }
+
+  List<Map<String, dynamic>> itemsToJson(List<Items> items) {
+    return items.map((item) => item.toJson()).toList();
   }
 
 

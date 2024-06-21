@@ -27,7 +27,7 @@ class CartModel {
 
 class Products {
   Products({
-    required this.id,
+  required this.id,
     required this.name,
     required this.number,
     required this.email,
@@ -38,7 +38,7 @@ class Products {
   late final String name;
   late final String number;
   late final String email;
-  late List<Items> items = [].obs as List<Items>;
+  late List<Items> items = [];
 
   
   Products.fromJson(Map<String, dynamic> json){
